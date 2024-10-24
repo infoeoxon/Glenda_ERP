@@ -5,6 +5,7 @@ from Glenda_App.models import Menu
 from purchase_app.forms import CategoryForm, RawMaterialForm
 
 from django.contrib import messages
+from django.db.models import Q
 
 from purchase_app.models import RawMaterials, RawMaterialCategory
 from register_app.models import MenuPermissions
@@ -14,14 +15,12 @@ from inventory_app.models import Raw_material_request
 # Create your views here.
 
 
-
-
-
 def view_rawmaterials(request):
     menus = Menu.objects.prefetch_related('submenus').all()
     view_ca=RawMaterialCategory.objects.all()
     view=RawMaterials.objects.all()
-    return render(request,'purchase/view_rawmaterials.html',{'view':view,'view_ca':view_ca,'menus':menus})
+    categories = RawMaterialCategory.objects.all()
+    return render(request,'purchase/view_rawmaterials.html',{'view':view,'view_ca':view_ca,'menus':menus, 'categories': categories})
 
 def add_category(request):
     menus = Menu.objects.prefetch_related('submenus').all()
@@ -100,7 +99,7 @@ def message_response(request, id):
 
         if 'accept' in request.POST:
             # If 'Accept' button is clicked, set status to 'completed'
-            request_data.status = 'completed'
+            request_data.status = 'Completed'
             request_data.save()
             return redirect('message_requests')
 
@@ -108,7 +107,7 @@ def message_response(request, id):
             decline_reason = request.POST.get('response')
 
             if decline_reason:
-                request_data.status = 'declined'
+                request_data.status = 'Declined'
                 request_data.response = decline_reason  # Save decline reason
                 request_data.save()
                 return redirect('message_requests')
@@ -124,3 +123,42 @@ def message_response(request, id):
         'data': request_data,
         'menus': menus
     })
+
+
+def raw_material_purchase_search(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    categories = RawMaterialCategory.objects.all()  # Get distinct categories
+    raw_materials = RawMaterials.objects.prefetch_related('stocks').all()
+
+    context = {
+        'view': raw_materials,
+        'categories': categories,
+        'menus': menus
+    }
+
+    if request.method == 'POST':
+        category = request.POST.get('category', None)  # Get category from form
+        name = request.POST.get('name', None)          # Get name from form
+
+        filters = Q()
+
+        # Apply category filter if selected
+        if category and category.isdigit():
+            filters &= Q(category_id=int(category))
+
+        # Apply name filter if provided
+        if name:
+            filters &= Q(name__icontains=name)
+
+        # Filter stock based on combined filters
+        if filters:
+            search_list = RawMaterials.objects.filter(filters)
+
+            # Debugging: Logging or print statement
+            print(f"Filters applied: {filters}")
+            print(f"Filtered records count: {search_list.count()}")
+
+    context['view'] = search_list # Filtered stock data
+
+    return render(request, 'purchase/view_rawmaterials.html', context)
+

@@ -31,7 +31,7 @@
                                 <div class="col-md-4">
                                     <!-- Category Dropdown Search -->
                                     <div class="input-group">
-                                        <select class="form-control" name="category">
+                                        <select class="form-control" name="category" >
                                             <option value="" disabled selected>Search by Category</option>
                                             {% for i in categories %}
                                             <option value="{{ i.id }}">{{ i.category_name }}</option>
@@ -54,10 +54,10 @@
                                     </button>
                                 </div>
                                 <div class="col-md-2">
-                                    <!-- Send request Button -->
-                                    <a href="{% url 'raw_material_message_request' %}">
+                                    <!-- View request list Button -->
+                                    <a href="{% url 'raw_material_request_list' %}">
                                         <button class="btn btn-primary" id="send-request">
-                                            Send Request
+                                            Request
                                         </button>
                                     </a>
                                 </div>
@@ -90,24 +90,16 @@
                                     <td>{{ i.color }}</td>
                                     <td>{{ i.total_stock }}</td>  <!-- Display total stock -->
                                     <td>
-                                        {% if i.id %}
-                                            <a href="{% url 'raw_materials_stock_history' i.id %}">
-                                                <button type="button" class="btn btn-purple waves-effect waves-light">
-                                                    <i class="mdi mdi-send mr-2"></i>History
-                                                </button>
-                                            </a>
-                                        {% else %}
-                                            No history available
-                                        {% endif %}
+                                        <a href="{% url 'raw_materials_stock_history' i.id %}">
+                                            <button type="button" class="btn btn-purple waves-effect waves-light">
+                                                <i class="mdi mdi-send mr-2"></i>History
+                                            </button>
+                                        </a>
                                     </td>
                                    <td>
-                                        {% if i.id %}
-                                            <a href="{% url 'update_stocks' i.id %}" class="btn btn-sm btn-success">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        {% else %}
-                                            <span>No stock to update</span>
-                                        {% endif %}
+                                        <a href="{% url 'update_stocks' i.id %}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
                                     </td>
 
                                 </tr>
@@ -126,7 +118,7 @@
 <script>
     document.getElementById('send-request').addEventListener('click', function(event) {
         event.preventDefault(); // Prevent form submission
-        window.location.href = "{% url 'raw_material_message_request' %}"; // Redirect to the request URL
+        window.location.href = "{% url 'raw_material_request_list' %}"; // Redirect to the request URL
     });
 </script>
 {%endblock%}

@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
 
 <div class="page-content-wrapper">
-
     <div class="container-fluid">
-
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
@@ -20,20 +19,53 @@
                 </div>
             </div>
         </div>
-        <!-- end page title end breadcrumb -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
 
+                        <!-- Search Bars at the top of the card -->
+                        <form method="POST" action="{% url 'raw_material_purchase_search' %}">
+                            {% csrf_token %}
+                            <div class="row mb-4">
+                                <!-- Search Section -->
+                                <div class="col-md-3">
+                                    <!-- Category Dropdown Search -->
+                                    <div class="input-group">
+                                        <select class="form-control" name="category">
+                                            <option value="" disabled selected>Search by Category</option>
+                                            {% for i in categories %}
+                                            <option value="{{ i.id }}">{{ i.category_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <!-- Name Search Bar -->
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="name" placeholder="Search by Name">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <!-- Single Search Button -->
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Add Buttons Section -->
+                                <div class="col-md-4 text-right">
+                                    <!-- Align the buttons on the same line as the search -->
+                                    <a href="{% url 'add_category' %}" class="btn btn-primary mr-2">Add Category</a>
+                                    <a href="{% url 'create_raw_material' %}" class="btn btn-primary">Add Raw Materials</a>
+                                </div>
+                            </div>
+                        </form>
+
                         <h4 class="mt-0 header-title"></h4>
                         <p class="text-muted mb-4 font-13"></p>
-
-                        <!-- Add User Button -->
-                        <div class="mb-3">
-                            <a href="{% url 'add_category' %}" class="btn btn-primary">Add Category</a>
-                            <a href="{% url 'create_raw_material' %}" class="btn btn-primary ml-2">Add Raw Materials</a>
-                        </div>
 
                         <table class="table mb-0" id="my-table">
                             <thead>
@@ -54,10 +86,11 @@
                                     <td>{{ i.name }}</td>
                                     <td>{{ i.size }}</td>
                                     <td>{{ i.color }}</td>
-                                    <td>
+                                   <td>
                                         <a href="{% url 'update_rawmaterials' i.id %}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
-                                        <a href="{% url 'delete_raw' i.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?');"><i class="fas fa-trash-alt"></i></a>
+                                       <a href="{% url 'delete_raw' i.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?');"><i class="fas fa-trash-alt"></i></a>
                                     </td>
+
                                 </tr>
                                 {% endfor %}
                             </tbody>
