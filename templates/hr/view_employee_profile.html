@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Employee Details</h4>
+                </div>
+                <div class="float-left">
+                        {% for i in view %}
+                                <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'update_employee_details' i.id %}"><i class="mdi mdi-alert-outline mr-2"></i> Update </a>
+                                <a type="button" class="btn btn-gradient-danger waves-effect waves-light" href="{% url 'delete_employee_details' i.id %}"><i class="mdi mdi-power mr-2"></i>Delete</a>
+                        {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mt-4" style="margin-top: 20px;">
+                    <div class="card-body" >
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        {% for i in view %}
+                        <table class="table mb-2 " id="my-table">
+                            <tbody>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>{{ i.user.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ i.user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Phone Number</th>
+                                    <td>{{ i.user.phone_number }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Pincode</th>
+                                    <td>{{ i.pincode }}</td>
+                                </tr>
+                                <tr>
+                                    <th>District</th>
+                                    <td>{{ i.district }}</td>
+                                </tr>
+                                <tr>
+                                    <th>State</th>
+                                    <td>{{ i.state }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Country</th>
+                                    <td>{{ i.country }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Street</th>
+                                    <td>{{ i.street }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Landmark</th>
+                                    <td>{{ i.landmark }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Building</th>
+                                    <td>{{ i.building }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Aadhar Number</th>
+                                    <td>{{ i.aadhar_no }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Salary Information</th>
+                                    <td>{{ i.salary_information }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}
