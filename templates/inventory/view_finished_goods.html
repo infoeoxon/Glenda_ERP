@@ -20,24 +20,43 @@
                 </div>
             </div>
         </div>
+
+        <!-- Export Button Section (outside the card) -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="btn-group float-right">
+                    <div class="btn-group mo-mb-2">
+                        <button type="button" class="btn btn-success btn-lg">Export as</button>
+                        <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'finishedgoods_search_and_export' %}?export=csv&name={{ search_name }}&category={{ search_category }}">Excel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- end page title end breadcrumb -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <!-- Search Section inside the card -->
                     <div class="card-body">
-
                         <!-- Search Form at the top of the card -->
-                        <form method="POST" action="{% url 'finishedgoods_search' %}">
+                        <form method="GET" action="{% url 'finishedgoods_search_and_export' %}">
                             {% csrf_token %}
                             <div class="row mb-4">
                                 <div class="col-md-4">
                                     <!-- Category Dropdown Search -->
                                     <div class="input-group">
                                         <select class="form-control" name="category">
-                                            <option value="" disabled selected>Search by Category</option>
+                                            <option value="" disabled {% if not search_category %}selected{% endif %}>Search by Category</option>
                                             {% for category in categories %}
-                                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                                            <option value="{{ category.id }}" {% if search_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                                {{ category.category_name }}
+                                            </option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -46,7 +65,7 @@
                                 <div class="col-md-4">
                                     <!-- Name Search Bar -->
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="name" placeholder="Search by Name">
+                                        <input type="text" class="form-control" name="name" value="{{ search_name }}" placeholder="Search by Name">
                                     </div>
                                 </div>
 
@@ -59,9 +78,9 @@
 
                                 <div class="col-md-2">
                                     <!-- Send Request Button -->
-                                    <a href="{% url 'finishedgoods_message_request'  %}">
-                                    <button class="btn btn-primary" type="submit" id="send-requests">
-                                        Send Request
+                                    <a href="{% url 'finishedgoods_request_messages_list' %}">
+                                    <button class="btn btn-primary" type="button" id="send-requests">
+                                        Request Section
                                     </button>
                                     </a>
                                 </div>
@@ -74,49 +93,51 @@
 
                         <div class="mb-3"></div>
 
-                        <table class="table mb-0" id="my-table">
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Category</th>
-                                    <th>Name</th>
-                                    <th>Size</th>
-                                    <th>Total Stock</th>
-                                    <th>Stock History</th>
-                                    <th>Add Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for i in view %}
-                                <tr>
-                                    <td><img src="{{ i.image.url }}" alt="Image description" width="120" height="70" /></td>
-                                    <td>{{ i.category.category_name }}</td>
-                                    <td>{{ i.name }}</td>
-                                    <td>{{ i.size }}</td>
-                                    <td>{{ i.total_stock }}</td>
-                                    <td>
-                                        <a href="{% url 'finishedgoods_stock_history' i.id %}">
-                                            <button type="button" class="btn btn-purple waves-effect waves-light">
-                                                <i class="mdi mdi-send mr-2"></i>History
-                                            </button>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="{% url 'update_finished_goods_stocks' i.id %}" class="btn btn-sm btn-success">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        {% if view %}
+                            <table class="table mb-0" id="my-table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Category</th>
+                                        <th>Name</th>
+                                        <th>Size</th>
+                                        <th>Total Stock</th>
+                                        <th>Stock History</th>
+                                        <th>Add Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in view %}
+                                    <tr>
+                                        <td><img src="{{ i.image.url }}" alt="Image description" width="120" height="70" /></td>
+                                        <td>{{ i.category.category_name }}</td>
+                                        <td>{{ i.name }}</td>
+                                        <td>{{ i.size }}</td>
+                                        <td>{{ i.total_stock }}</td>
+                                        <td>
+                                            <a href="{% url 'finishedgoods_stock_history' i.id %}">
+                                                <button type="button" class="btn btn-purple waves-effect waves-light">
+                                                    <i class="mdi mdi-send mr-2"></i>History
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'update_finished_goods_stocks' i.id %}" class="btn btn-sm btn-success">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>No results found for your search criteria.</p>
+                        {% endif %}
 
                     </div>
                 </div>
             </div> <!-- end col -->
         </div> <!-- end row -->
-
-
 
     </div><!-- container -->
 
@@ -125,7 +146,7 @@
 <script>
     document.getElementById('send-requests').addEventListener('click', function(event) {
         event.preventDefault(); // Prevent form submission
-        window.location.href = "{% url 'finishedgoods_message_request' %}"; // Redirect to the request URL
+        window.location.href = "{% url 'finishedgoods_request_messages_list' %}"; // Redirect to the request URL
     });
 </script>
 

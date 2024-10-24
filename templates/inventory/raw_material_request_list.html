@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper ">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Message Requests</h4>
+                    <a href="{% url 'raw_material_message_request' %}">
+                        <button class="btn btn-primary" id="send-request">
+                            New Request
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th style="width: 50%;">Request</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in message %}
+                                <tr>
+                                    <td>Request for {{i.category.category_name}}</td>
+                                    <td>
+                                        {{i.status}}
+                                        {% if i.status == "Declined" %}
+                                            <button class="btn btn-sm btn-outline-danger" type="button" data-toggle="collapse" data-target="#reason-{{ forloop.counter }}" aria-expanded="false" aria-controls="reason-{{ forloop.counter }}" title="View Reason">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{i.date}}</td>
+                                </tr>
+                                {% if i.status == "Declined" %}
+                                <tr class="collapse" id="reason-{{ forloop.counter }}">
+                                    <td colspan="3">
+                                        <div class="card card-body" style="background-color: #e2e3e5;">
+                                            <strong>Reason for Decline:</strong> {{ i.response }}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+{%endblock%}
