@@ -22,6 +22,9 @@ def view_vendor_list(request):
     menus = Menu.objects.prefetch_related('submenus').all()
 
     view=CustomUser.objects.filter(is_staff=False)
+    for user in view:
+        user.details_added = vendor_register.objects.filter(user=user).exists()
+
 
     return render(request,'vendor/view_vendor_list.html',{'view':view,'menus':menus})
 
@@ -102,26 +105,39 @@ def vendor_list_csv(request):
 
 
 
-def vendor_search(request):
+def vendor_search_and_export(request):
     menus = Menu.objects.prefetch_related('submenus').all()
-    vendor_list = CustomUser.objects.all()  # Default to all vendors
+    vendor_list = CustomUser.objects.filter(is_staff=False)  # Default to all vendors
+
+    filters = Q()  # Initialize filters as an empty Q object
 
     if request.method == 'GET':
         search_query = request.GET.get('search_query', '').strip()
+        export_format = request.GET.get('export', '')
 
         if search_query:
-            # Build filters
-            filters = Q()
-
-        if search_query.isdigit():
-            filters &= Q(phone_number__icontains=search_query)  # Filter by user name
-
-        else:
-            filters &= Q(name__icontains=search_query)  # Filter by vendor phone number
+            # Build filters based on the search query
+            if search_query.isdigit():
+                filters &= Q(phone_number__icontains=search_query, is_staff=False)  # Filter by phone number
+            else:
+                filters &= Q(name__icontains=search_query, is_staff=False)  # Filter by name
 
         # Apply filters if any were provided
         if filters:
             vendor_list = CustomUser.objects.filter(filters)
+
+        if export_format == 'csv':
+            # CSV export
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="vendor_list.csv"'
+
+            writer = csv.writer(response)
+            writer.writerow(['Name', 'Email', 'Phone Number'])
+
+            for vendor in vendor_list:
+                writer.writerow([vendor.name, vendor.email, vendor.phone_number])
+
+            return response
 
     context = {
         'view': vendor_list,  # This will be used in the template

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Validation</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Update Employee Details</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="mt-0 header-title"></h4>
+                       <form method="POST">
+                        {% csrf_token %}
+                        <div>
+                            <label for="emergency_contact_number">Emergency Contact Number:</label>
+                            <input type="text" id="emergency_contact_number" class="form-control"  name="emergency_contact_number" value="{{ view.emergency_contact_number }}">
+                        </div>
+                        <div>
+                            <label for="aadhar_no">Aadhar Number:</label>
+                            <input type="text" id="aadhar_no" class="form-control" name="aadhar_no" value="{{ view.aadhar_no }}">
+                        </div>
+                        <div>
+                            <label for="street">Street:</label>
+                            <input type="text" id="street" class="form-control" name="street" value="{{ view.street }}">
+                        </div>
+                        <div>
+                            <label for="pincode">Pincode:</label>
+                            <input type="text" id="pincode" class="form-control" name="pincode" value="{{ view.pincode }}">
+                        </div>
+                        <div>
+                            <label for="state">State:</label>
+                            <input type="text" id="state" class="form-control" name="state" value="{{ view.state }}">
+                        </div>
+                        <div>
+                            <label for="country">Country:</label>
+                            <input type="text" id="country" class="form-control" name="country" value="{{ view.country }}">
+                        </div>
+                        <div>
+                            <label for="landmark">Landmark:</label>
+                            <input type="text" id="landmark" class="form-control" name="landmark" value="{{ view.landmark }}">
+                        </div>
+                        <div>
+                            <label for="district">District:</label>
+                            <input type="text" id="district" class="form-control" name="district" value="{{ view.district }}">
+                        </div>
+                        <div>
+                            <label for="salary_information">Salary Information:</label>
+                            <input type="number" id="salary_information" class="form-control" name="salary_information" step="0.01" value="{{ view.salary_information }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Details</button>
+                    </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+<script>
+    function showAlert() {
+        alert('Form submitted successfully!');
+        return true; // allow the form to be submitted
+    }
+</script>
+
+{% endblock %}
