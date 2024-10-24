@@ -1,204 +1,112 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 9a913e1cb15a3bc11ff9238e022be96a8748665e
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-<div class="page-content-wrapper" xmlns="http://www.w3.org/1999/html">
+<div class="page-content-wrapper">
+
     <div class="container-fluid">
-        <!-- Page Title and Breadcrumb -->
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
                     <div class="btn-group float-right">
                         <ol class="breadcrumb hide-phone p-0 m-0">
-                            <li class="breadcrumb-item"><a href="#"></a></li>
-                            <li class="breadcrumb-item"><a href="#"></a></li>
-                            <li class="breadcrumb-item active"></li>
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Validation</li>
                         </ol>
                     </div>
                     <h4 class="page-title">Employee Details</h4>
                 </div>
             </div>
         </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
 
-        <!-- Form Section -->
-       <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="mt-0 header-title">Employee Details</h4>
-                    <p class="text-muted mb-4 font-13">Please fill in the Employee details below.</p>
-                    <form action="{% url 'AddDetails' %}" method="post">
-                        {% csrf_token %}
-                        {{ form.non_field_errors }}
-                        <!-- Phone Number -->
-                        <div class="form-group row">
-                            <label for="id_emergency_contact_number" class="col-sm-4 col-form-label">Phone Number</label>
-                            <div class="col-sm-8">
+                        {% if messages %}
+                            <ul class="messages text-warning">
+                                {% for message in messages %}
+                                    <li class="{{ message.tags }}">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <form class="" action="" method="post" onsubmit="return showAlert();" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                                <label>Phone Number</label>
                                 {{ form.emergency_contact_number }}
-                                {% for error in form.emergency_contact_number.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
                             </div>
-                        </div>
 
-                        <!-- Pincode -->
-                        <div class="form-group row">
-                            <label for="id_pincode" class="col-sm-4 col-form-label">Pin Code</label>
-                            <div class="col-sm-8">
+                            <div class="form-group">
+                                <label>Pin Code</label>
                                 {{ form.pincode }}
-                                {% for error in form.pincode.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
                             </div>
-                        </div>
 
-                        <!-- District -->
-                        <div class="form-group row">
-                            <label for="id_district" class="col-sm-4 col-form-label">District</label>
-                            <div class="col-sm-8">
-                                {{ form.district }}  <!-- Make sure this field exists in your form -->
-                                {% for error in form.district.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
+
+                            <div class="form-group">
+                                <label>District</label>
+                                {{ form.district }}
                             </div>
-                        </div>
-
-                        <!-- State -->
-                        <div class="form-group row">
-                            <label for="id_state" class="col-sm-4 col-form-label">State</label>
-                            <div class="col-sm-8">
+                            <div class="form-group">
+                                <label>State</label>
                                 {{ form.state }}
-                                {% for error in form.state.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
                             </div>
-                        </div>
 
-                        <!-- Country -->
-                        <div class="form-group row">
-                            <label for="id_country" class="col-sm-4 col-form-label">Country</label>
-                            <div class="col-sm-8">
+                            <div class="form-group">
+                                <label>Country</label>
                                 {{ form.country }}
-                                {% for error in form.country.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
                             </div>
-                        </div>
 
+                            <div class="form-group">
+                                <label>Street</label>
+                                {{ form.street }}
+                            </div>
 
-                        <div class="col-xl-6">
-                            <!-- Street -->
-                            <div class="form-group row">
-                                <label for="id_vendor_Street" class="col-sm-4 col-form-label">Street</label>
-                                <div class="col-sm-8">
-                                    {{ form.street }}
-                                    {% for error in form.street.errors %}
-                                        <span class="text-danger">{{ error }}</span>
-                                    {% endfor %}
+                            <div class="form-group">
+                                <label>Landmark</label>
+                                {{ form.landmark }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Aadhar Number</label>
+                                {{ form.aadhar_no }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Salary Information</label>
+                                {{ form.salary_information }}
+                            </div>
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                        Submit
+                                    </button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        Cancel
+                                    </button>
                                 </div>
                             </div>
+                        </form>
 
-                            <!-- Landmark -->
-                            <div class="form-group row">
-                                <label for="id_vendor_Landmark" class="col-sm-4 col-form-label">Landmark</label>
-                                <div class="col-sm-8">
-                                    {{ form.landmark }}
-                                    {% for error in form.landmark.errors %}
-                                        <span class="text-danger">{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-
-                            <!-- PAN Number -->
-                            <div class="form-group row">
-                                <label for="id_vendor_PANNBR" class="col-sm-4 col-form-label">Aadhar Number</label>
-                                <div class="col-sm-8">
-                                    {{ form.aadhar_no }}
-                                    {% for error in form.aadhar_no.errors %}
-                                        <span class="text-danger">{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                    <!-- Submit Button -->
-                    <div class="form-group mb-0">
-                        <div>
-                            <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
-                            <button type="reset" class="btn btn-secondary waves-effect m-l-5">Cancel</button>
-                        </div>
                     </div>
                 </div>
-                         </form>
-                    </div> <!-- end col -->
-                </div> <!-- end row -->
-                    </div>
-                    </div>
-                         </div>
-                    </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
 
-<!-- jQuery code to fetch location based on pincode -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
 <script>
-    $(document).ready(function() {
-        // Input field for pincode
-        $('#id_vendor_pincode').on('input', function() {
-            var pincode = $(this).val();
-
-            // Ensure the pincode is 6 digits long
-            if (pincode.length === 6) {
-                // Use India's Post Office API to fetch location details
-                $.ajax({
-                    url: 'https://api.postalpincode.in/pincode/' + pincode,
-                    method: 'GET',
-                    success: function(response) {
-                        if (response[0].Status === 'Success') {
-                            var postOffice = response[0].PostOffice[0];
-                            var district = postOffice.District;
-                            var state = postOffice.State;
-                            var street = postOffice.Name;
-                            var country = 'India'; // Set the Country field to a default value
-
-                            // Fill the form fields with the fetched data
-                            $('#id_vendor_district').val(district);
-                            $('#id_vendor_state').val(state);
-                            $('#id_vendor_Street').val(street);
-                            $('#id_vendor_country').val(country); // Update the Country field
-                        } else {
-                            alert('Invalid Pincode');
-                        }
-                    },
-                    error: function() {
-                        alert('Error fetching details. Please try again later.');
-                    }
-                });
-            }
-        });
-    });
+    function showAlert() {
+        alert('Form submitted successfully!');
+        return true; // allow the form to be submitted
+    }
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const panYesNoField = document.getElementById('id_pan_yes_or_no');
-        const vendorPANNBRField = document.getElementById('id_vendor_PANNBR');
 
-        // Function to toggle the disabled state of the PAN Number field
-        function togglePANField() {
-            if (panYesNoField.value === 'yes') {  // Adjust the value check as needed
-                vendorPANNBRField.disabled = false; // Enable if "no" is selected
-            } else {
-                vendorPANNBRField.disabled = true;  // Disable if anything else is selected
-                vendorPANNBRField.value = ''; // Clear the value if disabled
-            }
-        }
-
-        // Initial check on page load
-        togglePANField();
-
-        // Add event listener for changes to the PAN Yes/No field
-        panYesNoField.addEventListener('change', togglePANField);
-    });
-</script>
 {% endblock %}
