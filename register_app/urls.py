@@ -23,4 +23,9 @@ urlpatterns = [
     path('update_designation/<int:id>',views.update_designation,name='update_designation'),
     path('delete_designation/<int:id>', views.delete_designation, name='delete_designation'),
     path('get-submenus/<int:menu_id>/', views.get_submenus, name='get_submenus'),
+    path('delete_multiple_designations', views.delete_multiple_designations, name='delete_multiple_designations'),
+    path('delete_selected_users', views.delete_selected_users, name='delete_selected_users'),
+    path('delete_selected_department', views.delete_selected_department, name='delete_selected_department'),
+
 ]
+

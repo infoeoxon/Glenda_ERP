@@ -74,14 +74,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)  # Admin status
     is_superuser = models.BooleanField(default=False)  # Superuser status
     image = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
+    unique_id = models.CharField(max_length=100, null=True, unique=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
+
+
     def __str__(self):
-        return f"{self.name} ({self.email})" if self.name else self.email
+        if self.name:
+            return f"{self.name} ({self.email}) - ID: {self.unique_id}"
+        return f"{self.email} - ID: {self.unique_id}"
+
+
 class MenuPermissions(models.Model):
     user = models.ForeignKey('register_app.CustomUser', on_delete=models.CASCADE, null=True)  # Use the correct app name
     menu = models.ForeignKey('Glenda_App.Menu', on_delete=models.CASCADE, null=True, blank=True)  # Optional association with Menu

@@ -7,18 +7,24 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <div class="btn-group float-right">
-
-
-                    </div>
-                    <h4 class="page-title">Department and Permissions</h4>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px;">Permissions</span>
+                    </h4>
                 </div>
             </div>
         </div>
-        <!-- end page title end breadcrumb -->
 
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
                         <form action="" method="post">
@@ -29,16 +35,23 @@
                                     <input type="checkbox" id="select-all-menus">
                                     Select All Menus
                                 </label><br>
-                                {% for menu in form.menu.field.queryset %}
-                                    <label for="menu-{{ menu.id }}">
-                                        <input type="checkbox" name="menu" value="{{ menu.id }}" id="menu-{{ menu.id }}">
-                                        {{ menu.title }}
-                                    </label><br>
-                                {% endfor %}
+
+                                <div class="row">
+                                    {% for menu in form.menu.field.queryset %}
+                                        <div class="col-md-4">
+                                            <label for="menu-{{ menu.id }}">
+                                                <input type="checkbox" name="menu" value="{{ menu.id }}" id="menu-{{ menu.id }}">
+                                                {{ menu.title }}
+                                            </label><br>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
+
                             <div id="submenu-container">
                                 <!-- Submenus will be dynamically populated here -->
                             </div>
+
                             <div class="form-group mb-0">
                                 <div>
                                     <button type="submit" class="btn btn-primary waves-effect waves-light">
@@ -65,8 +78,7 @@
 
         // Function to toggle select/deselect all submenus for a given menu
         function toggleSubmenus(menuId, isChecked) {
-            const submenuGroup = document.getElementById(
-            `submenu-group-${menuId}`);
+            const submenuGroup = document.getElementById(`submenu-group-${menuId}`);
             const submenus = submenuGroup ? submenuGroup.querySelectorAll('input[type="checkbox"]') : [];
             submenus.forEach(submenu => {
                 submenu.checked = isChecked;
@@ -87,6 +99,29 @@
                         submenuWrapper.classList.add('submenu-group');
                         submenuWrapper.id = `submenu-group-${menuId}`;
 
+                        const selectAllSubmenusCheckbox = document.createElement('input');
+                        selectAllSubmenusCheckbox.type = 'checkbox';
+                        selectAllSubmenusCheckbox.id = `select-all-submenus-${menuId}`;
+
+                        selectAllSubmenusCheckbox.addEventListener('change', function() {
+                            const isChecked = selectAllSubmenusCheckbox.checked;
+                            data.forEach(submenu => {
+                                document.getElementById(`submenu-${submenu.id}`).checked = isChecked;
+                            });
+                        });
+
+                        const selectAllLabel = document.createElement('label');
+                        selectAllLabel.appendChild(selectAllSubmenusCheckbox);
+                        selectAllLabel.appendChild(document.createTextNode(' Select All SubMenus'));
+                        submenuWrapper.appendChild(selectAllLabel);
+
+                        // Create a container for the submenu items
+                        const submenuRow = document.createElement('div');
+                        submenuRow.classList.add('submenu-row'); // Flexbox style
+                        submenuRow.style.display = 'flex';
+                        submenuRow.style.flexWrap = 'wrap';
+                        submenuWrapper.appendChild(submenuRow);
+
                         data.forEach(submenu => {
                             const checkbox = document.createElement('input');
                             checkbox.type = 'checkbox';
@@ -98,9 +133,13 @@
                             label.htmlFor = `submenu-${submenu.id}`;
                             label.textContent = submenu.title;
 
-                            submenuWrapper.appendChild(checkbox);
-                            submenuWrapper.appendChild(label);
-                            submenuWrapper.appendChild(document.createElement('br'));
+                            // Wrap each submenu in a div to display them in a row
+                            const submenuItem = document.createElement('div');
+                            submenuItem.classList.add('submenu-item');
+                            submenuItem.style.marginRight = '15px'; // Adds space between submenu items
+                            submenuItem.appendChild(checkbox);
+                            submenuItem.appendChild(label);
+                            submenuRow.appendChild(submenuItem);
                         });
 
                         submenuContainer.appendChild(submenuWrapper);
@@ -116,38 +155,6 @@
                 menuCheckbox.checked = isChecked;
                 // Trigger submenu toggle based on the menu checkbox
                 toggleSubmenus(menuCheckbox.value, isChecked);
-            });
-        });
-
-        // Dynamically add "Select All" for each submenu group
-        function addSelectAllForSubmenus(menuId) {
-            const submenuGroup = document.getElementById(`submenu-group-${menuId}`);
-            const submenus = submenuGroup ? submenuGroup.querySelectorAll('input[type="checkbox"]') : [];
-
-            if (submenus.length > 0) {
-                const selectAllSubmenusLabel = document.createElement('label');
-                const selectAllSubmenusCheckbox = document.createElement('input');
-                selectAllSubmenusCheckbox.type = 'checkbox';
-                selectAllSubmenusCheckbox.id = `select-all-submenus-${menuId}`;
-
-                selectAllSubmenusCheckbox.addEventListener('change', function() {
-                    const isChecked = selectAllSubmenusCheckbox.checked;
-                    submenus.forEach(submenu => {
-                        submenu.checked = isChecked;
-                    });
-                });
-
-                selectAllSubmenusLabel.appendChild(selectAllSubmenusCheckbox);
-                selectAllSubmenusLabel.appendChild(document.createTextNode(' Select All SubMenus'));
-                submenuGroup.insertBefore(selectAllSubmenusLabel, submenuGroup.firstChild);
-            }
-        }
-
-        // Watch for changes in the menu checkboxes
-        menuContainer.addEventListener('change', function() {
-            const selectedMenuIds = Array.from(menuContainer.querySelectorAll('input[name="menu"]:checked')).map(input => input.value);
-            selectedMenuIds.forEach(menuId => {
-                addSelectAllForSubmenus(menuId);
             });
         });
     });
