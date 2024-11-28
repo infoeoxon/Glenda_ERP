@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Request from Inventory for Stock Approval</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mt-4" style="margin-top: 20px;">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        {% if error_message %}
+                            <div class="error text-danger">{{ error_message }}</div>
+                        {% endif %}
+
+                        <table class="table mb-2" id="my-table">
+                            <tbody>
+                                <tr>
+                                    <th>Category</th>
+                                    <td>{{ data.raw_materials.category.category_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <td>{{ data.raw_materials.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Required Stock Quantity</th>
+                                    <td>{{ data.stock }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Requested Date</th>
+                                    <td>{{ data.date }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Remarks</th>
+                                    <td>{{ data.remarks }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Form Section -->
+                        <form method="POST" action="{% url 'raw_material_stock_approve_review' data.id %}?page={{ page }}">
+                            {% csrf_token %}
+
+                            <!-- Approve Button triggers modal -->
+                            <div class="text-center mt-4">
+                                <button type="button" id="approve-btn" class="btn btn-success mr-2">
+                                    Approve
+                                </button>
+                            </div>
+
+                            <!-- Approval Modal -->
+                            <div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="approvalModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="approvalModalLabel">Approve Stocks</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="approved_stock">Enter number of stocks to approve:</label>
+                                                <input type="number" name="approved_stock" id="approved_stock" class="form-control input-box" required>
+                                            </div>
+                                            <div class="form-group" id="reason-container" style="display: none;">
+                                                <!-- Dynamic label for remarks -->
+                                                <label id="remarks-title" for="approval_reason">Remarks:</label>
+                                                <textarea name="response" id="approval_reason" class="form-control input-box" placeholder="Enter remarks here"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" name="approve" class="btn btn-success">Approve</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<!-- JavaScript to show the Approval Modal -->
+<script>
+    document.getElementById('approve-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        $('#approvalModal').modal('show');
+    });
+
+    // JavaScript for showing the reason container if not all stocks are approved
+    document.getElementById('approved_stock').addEventListener('input', function() {
+        const approvedStock = parseInt(this.value || 0);
+        const arrivedStock = {{ data.stock }};
+        const reasonContainer = document.getElementById('reason-container');
+        const remarksTitle = document.getElementById('remarks-title');
+
+        // Show or hide reason based on approved stock amount
+        if (approvedStock < arrivedStock) {
+            reasonContainer.style.display = 'block';
+            remarksTitle.textContent = "Remarks (Reasons for Partial Approval and General Comments on Approved Stock) :";
+        } else if (approvedStock === arrivedStock) {
+            reasonContainer.style.display = 'block';
+            remarksTitle.textContent = "Remarks: General Comments on Approved Stock";
+        } else {
+            reasonContainer.style.display = 'none';
+        }
+    });
+</script>
+
+<!-- Custom CSS for Uniform Box Length -->
+<style>
+    /* Set both input and textarea to the same width */
+    .input-box {
+        width: 100%; /* Full width within the modal */
+        max-width: 400px; /* Same max-width for both input and textarea */
+        margin: 0 auto; /* Center align inside modal */
+    }
+</style>
+
+{% endblock %}

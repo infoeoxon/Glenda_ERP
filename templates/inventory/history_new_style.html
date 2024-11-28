@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Inventory History</h4>
+                    <div>
+                        <!-- Export Options -->
+                        <a href="#" class="btn btn-primary btn-sm mr-2" title="Print">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm" title="Export as Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs for History Types -->
+        <div class="row">
+            <div class="col-12">
+                <ul class="nav nav-tabs" id="historyTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="stock-history-tab" data-toggle="tab" href="#stock-history" role="tab" aria-controls="stock-history" aria-selected="true">Stock History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="request-history-tab" data-toggle="tab" href="#request-history" role="tab" aria-controls="request-history" aria-selected="false">Request History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="stock-verification-history-tab" data-toggle="tab" href="#stock-verification-history" role="tab" aria-controls="stock-verification-history" aria-selected="false">Stock Verification History</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="historyTabsContent">
+                    <!-- Stock History -->
+                    <div class="tab-pane fade show active" id="stock-history" role="tabpanel" aria-labelledby="stock-history-tab">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Stock History</h5>
+                                <!-- Filters -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="btn-group mr-3">
+                                        <button class="btn btn-primary" onclick="filterMaterialType('all')">All</button>
+                                        <button class="btn btn-primary" onclick="filterMaterialType('raw')">Raw Materials</button>
+                                        <button class="btn btn-primary" onclick="filterMaterialType('finished')">Finished Goods</button>
+                                        <button class="btn btn-primary" onclick="filterMaterialType('semi')">Semi-Finished Goods</button>
+                                    </div>
+                                    <div class="input-group mr-3" style="width: 250px;">
+                                        <select class="form-control" id="categoryFilter" onchange="filterByCategory()">
+                                            <option value="" selected>All Categories</option>
+                                            <option value="Preform">Preform</option>
+                                            <option value="Cap">Cap</option>
+                                            <option value="Shrink">Shrink</option>
+                                            <option value="Water 500ml">Water 500ml</option>
+                                            <option value="Water 1L">Water 1L</option>
+                                            <option value="Pet Bottle">Pet Bottle</option>
+                                        </select>
+                                    </div>
+                                    <div class="position-relative">
+                                        <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="width: 200px;">
+                                            <i class="mdi mdi-filter mr-2"></i>Date
+                                        </button>
+                                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                                            <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                            <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Table -->
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Serial No</th>
+                                            <th>Material Type</th>
+                                            <th>Material Category</th>
+                                            <th>Quantity Added</th>
+                                            <th>Date Added</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Sample Data -->
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Raw Material</td>
+                                            <td>Preform</td>
+                                            <td>500</td>
+                                            <td>2024-11-20</td>
+                                            <td>Stock replenishment</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Request History -->
+                    <div class="tab-pane fade" id="request-history" role="tabpanel" aria-labelledby="request-history-tab">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Request History</h5>
+                                <!-- Filters -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="input-group mr-3" style="width: 250px;">
+                                        <select class="form-control" id="requestDepartmentFilter" onchange="filterByRequestDepartment()">
+                                            <option value="" selected>All Departments</option>
+                                            <option value="Inventory">Inventory</option>
+                                            <option value="Production">Production</option>
+                                        </select>
+                                    </div>
+                                    <div class="position-relative">
+                                        <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="width: 200px;">
+                                            <i class="mdi mdi-filter mr-2"></i>Date
+                                        </button>
+                                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                                            <label for="from_date" class="form-label">From Date</label>
+                                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" />
+                                            <label for="to_date" class="form-label">To Date</label>
+                                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" />
+                                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Table -->
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Serial No</th>
+                                            <th>RFQ Number</th>
+                                            <th>Request Date</th>
+                                            <th>Department Requesting</th>
+                                            <th>Material Type</th>
+                                            <th>Quantity Needed</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>RFQ-001</td>
+                                            <td>2024-11-01</td>
+                                            <td>Inventory</td>
+                                            <td>Preform</td>
+                                            <td>1000</td>
+                                            <td>Pending</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stock Verification History -->
+                    <div class="tab-pane fade" id="stock-verification-history" role="tabpanel" aria-labelledby="stock-verification-history-tab">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Stock Verification History</h5>
+                                <!-- Filters -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="position-relative">
+                                        <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="width: 200px;">
+                                            <i class="mdi mdi-filter mr-2"></i>Date
+                                        </button>
+                                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                                            <label for="from_date" class="form-label">From Date</label>
+                                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" />
+                                            <label for="to_date" class="form-label">To Date</label>
+                                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" />
+                                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Table -->
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Serial No</th>
+                                            <th>Material Type</th>
+                                            <th>Material Category</th>
+                                            <th>Quantity Verified</th>
+                                            <th>Verification Date</th>
+                                            <th>Verified By</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Raw Material</td>
+                                            <td>Preform</td>
+                                            <td>500</td>
+                                            <td>2024-11-10</td>
+                                            <td>John Doe</td>
+                                            <td>Batch quality approved</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Filter Functions
+    function filterMaterialType(type) {
+        alert(`Filtering by material type: ${type}`);
+    }
+
+    function filterByCategory() {
+        const category = document.getElementById('categoryFilter').value;
+        alert(`Filtering by category: ${category}`);
+    }
+
+    function filterByRequestDepartment() {
+        const department = document.getElementById('requestDepartmentFilter').value;
+        alert(`Filtering by department: ${department}`);
+    }
+
+    function showDateFilter() {
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

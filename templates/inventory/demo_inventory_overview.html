@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Inventory Overview</h4>
+                    <div>
+                        <!-- Add Category and Add Product Buttons -->
+                        <a href="{% url 'add_category' %}" class="btn btn-primary btn-sm mr-2">
+                            <i class="fas fa-plus"></i> Add Category
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Add Product
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Options -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-end">
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Print">
+                    <i class="fas fa-print"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                    <i class="far fa-file-pdf"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm" title="Export as Excel">
+                    <i class="fas fa-file-excel"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters and Actions -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex align-items-center flex-wrap">
+                <!-- Material Type Filters -->
+                <div class="btn-group" style="margin-right: 10px;">
+                    <button class="btn btn-primary" onclick="filterMaterialType('all')">All</button>
+                    <button class="btn btn-primary" onclick="filterMaterialType('raw_materials')">Raw Materials</button>
+                    <button class="btn btn-primary" onclick="filterMaterialType('finished_goods')">Finished Goods</button>
+                    <button class="btn btn-primary" onclick="filterMaterialType('semi_finished_goods')">Semi-Finished Goods</button>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="input-group" style="width: 250px; margin-right: 10px;">
+                    <select class="form-control" id="categoryFilter" onchange="filterByCategory()">
+                        <option value="" selected>All Categories</option>
+                        <option value="Preform">Preform</option>
+                        <option value="Cap">Cap</option>
+                        <option value="Shrink">Shrink</option>
+                        <option value="Water 500ml">Water 500ml</option>
+                        <option value="Water 1L">Water 1L</option>
+                        <option value="Pet Bottle">Pet Bottle</option>
+                    </select>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="input-group" style="width: 300px; margin-right: 20px;">
+                    <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Include Damaged Goods Checkbox -->
+                <div class="form-check d-flex align-items-center" style="margin-right: 10px;">
+                    <input type="checkbox" id="includeDamagedStocks" class="form-check-input" onclick="toggleDamagedStocks()" style="margin-top: 4px;">
+                    <label for="includeDamagedStocks" class="form-check-label ml-2">Include Damaged Goods</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr style="background-color: #f1f1f1;">
+                                    <th>Serial No</th>
+                                    <th>Image</th>
+                                    <th>Category</th>
+                                    <th>Name</th>
+                                    <th>Size</th>
+                                    <th>Color</th>
+                                    <th>Total Stock</th>
+                                    <th id="damagedStockHeader" style="display: none;">Damaged Goods</th>
+                                    <th>Date Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                <!-- Sample Data (To Be Dynamically Rendered) -->
+                                <tr>
+                                    <td>1</td>
+                                    <td><img src="{% static 'images/sample.png' %}" alt="Product Image" style="width: 50px; height: 50px;"></td>
+                                    <td>Preform</td>
+                                    <td>Steel Rod</td>
+                                    <td>12 mm</td>
+                                    <td>Silver</td>
+                                    <td>500</td>
+                                    <td class="damagedStockColumn" style="display: none;">20</td>
+                                    <td>2024-11-20</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" title="View History">
+                                            <i class="fas fa-history"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><img src="{% static 'images/sample2.png' %}" alt="Product Image" style="width: 50px; height: 50px;"></td>
+                                    <td>Water 500ml</td>
+                                    <td>Wooden Chair</td>
+                                    <td>Large</td>
+                                    <td>Brown</td>
+                                    <td>50</td>
+                                    <td class="damagedStockColumn" style="display: none;">5</td>
+                                    <td>2024-11-18</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" title="View History">
+                                            <i class="fas fa-history"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Dynamic rows go here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Filter by material type
+    function filterMaterialType(type) {
+        alert(`Filtering by material type: ${type}`);
+    }
+
+    // Filter by category
+    function filterByCategory() {
+        const category = document.getElementById('categoryFilter').value;
+        alert(`Filtering by category: ${category}`);
+    }
+
+    // Toggle display of damaged stocks column
+    function toggleDamagedStocks() {
+        const isChecked = document.getElementById('includeDamagedStocks').checked;
+        const damagedHeader = document.getElementById('damagedStockHeader');
+        const damagedColumns = document.querySelectorAll('.damagedStockColumn');
+
+        if (isChecked) {
+            damagedHeader.style.display = '';
+            damagedColumns.forEach((col) => (col.style.display = ''));
+        } else {
+            damagedHeader.style.display = 'none';
+            damagedColumns.forEach((col) => (col.style.display = 'none'));
+        }
+    }
+</script>
+{% endblock %}

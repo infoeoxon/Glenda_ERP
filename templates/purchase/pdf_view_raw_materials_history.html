@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{view.raw_materials.name}}</title>
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h4 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        /* Adjust other columns as needed */
+        th, td {
+            width: auto; /* Allow remaining columns to auto-adjust */
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Responsive table for smaller screens */
+        @media (max-width: 600px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            table th, table td {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Purchase History</h1>
+    <table class="table table-bordered table-hover" id="my-table">
+        <thead>
+            <tr>
+               <th>Category & Name</th>
+                <th>Size</th>
+                <th>Requested Stock</th>
+                <th>Approved Stock</th>
+                <th>Requested Date</th>
+                <th>Approved Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in view %}
+                <tr>
+                    <th>{{ i.raw_materials.raw_materials.category.category_name }} - {{ i.raw_materials.raw_materials.name }}</th>
+                    <td>{{ i.raw_materials.raw_materials.size }}</td>
+                    <td>{{ i.raw_materials.stock }}</td>
+                    <td>{{ i.approved_stock }}</td>
+                    <td>{{ i.raw_materials.raw_materials.date }}</td>
+                    <td>{{ i.date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

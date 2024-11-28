@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <div class="btn-group mo-mb-2">
+                            <button type="button" class="btn btn-success btn-lg" fdprocessedid="gg5obj">Export as</button>
+                            <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" fdprocessedid="jdvfec">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(79px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <a class="dropdown-item" href="{% url 'export_vendor_profile_pdf' id %}">PDF </a>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="page-title">Vendor Details</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mt-4" style="margin-top: 20px;">
+                    <div class="card-body" >
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+
+                        <table class="table mb-2 " id="my-table">
+                            <tbody>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>{{ view.user.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ view.user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Phone Number</th>
+                                    <td>{{ view.user.phone_number }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Pincode</th>
+                                    <td>{{ view.vendor_pincode }}</td>
+                                </tr>
+                                <tr>
+                                    <th>District</th>
+                                    <td>{{ view.vendor_district }}</td>
+                                </tr>
+                                <tr>
+                                    <th>State</th>
+                                    <td>{{ view.vendor_state }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Country</th>
+                                    <td>{{ view.vendor_country }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Street</th>
+                                    <td>{{ view.vendor_Street }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Landmark</th>
+                                    <td>{{ view.vendor_Landmark }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Building</th>
+                                    <td>{{ view.vendor_Building }}</td>
+                                </tr>
+                                <tr>
+                                    <th>PAN Number</th>
+                                    <td>{{ view.vendor_PANNBR }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}

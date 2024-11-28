@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Employee Details</h4>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mt-4" style="margin-top: 20px;">
+                    <div class="card-body">
+                        <table class="table mb-2" id="my-table">
+                            <tbody>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>{% if view %}{{ view.user.name }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{% if view %}{{ view.user.email }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Phone Number</th>
+                                    <td>{% if view %}{{ view.user.phone_number }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Pincode</th>
+                                    <td>{% if view %}{{ view.pincode }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>District</th>
+                                    <td>{% if view %}{{ view.district }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>State</th>
+                                    <td>{% if view %}{{ view.state }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Country</th>
+                                    <td>{% if view %}{{ view.country }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Street</th>
+                                    <td>{% if view %}{{ view.street }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Landmark</th>
+                                    <td>{% if view %}{{ view.landmark }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Id</th>
+                                    <td>{% if view %}{{ view.id_proof_type }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Id Number</th>
+                                    <td>{% if view %}{{ view.id_proof_type_number }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Salary Information</th>
+                                    <td>{% if view %}{{ view.basic }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date of Birth</th>
+                                    <td>{% if view %}{{ view.date_of_birth }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>ESI Number</th>
+                                    <td>{% if view %}{{ view.pcc }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>PF Number</th>
+                                    <td>{% if view %}{{ view.nsr }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Employee Blood Groups</th>
+                                    <td>{% if view %}{{ view.employee_blood_groups }}{% else %}Not available{% endif %}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" name="action" value="verify" class="btn btn-primary">Verify and Submit</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-primary">Reject</button>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}

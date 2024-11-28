@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Validation</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Request Form</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form section -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        <form action="{% url 'finishedgoods_message_request' %}" method="POST">
+                            {% csrf_token %}
+
+                            <!-- Department Dropdown -->
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                {{ form.department }}
+                            </div>
+
+                            <!-- Category Dropdown -->
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                {{form.category}}
+                            </div>
+
+                            <!-- Product Name Dropdown -->
+                            <div class="form-group">
+                                <label for="name">Product Name</label>
+                                {{form.name}}
+                            </div>
+
+                            <!-- Stock Quantity -->
+                            <div class="form-group">
+                                <label for="stock">Number of Stock</label>
+                                {{ form.stock }}
+                            </div>
+
+                            <!-- Date Picker for Request Date -->
+                            <div class="form-group">
+                                <label for="date">Request Date</label>
+                                {{ form.input_date }}
+                            </div>
+
+
+                            <!-- Remarks Text Area -->
+                            <div class="form-group">
+                                <label for="remarks">Remarks</label>
+                                {{ form.remarks }}
+                            </div>
+
+                            <!-- Submit and Cancel Buttons -->
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                        Submit
+                                    </button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+{% endblock %}

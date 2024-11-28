@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vendor Profile</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h4 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            color: black;
+            text-transform: uppercase;
+        }
+
+        table#my-table {
+            border: 1px solid black;
+        }
+
+    </style>
+</head>
+<body>
+    <h4>Vendor Details</h4>
+    <table class="table mb-2 " id="my-table">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ view.user.name }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ view.user.email }}</td>
+            </tr>
+            <tr>
+                <th>Phone Number</th>
+                <td>{{ view.user.phone_number }}</td>
+            </tr>
+            <tr>
+                <th>Pincode</th>
+                <td>{{ view.vendor_pincode }}</td>
+            </tr>
+            <tr>
+                <th>District</th>
+                <td>{{ view.vendor_district }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ view.vendor_state }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ view.vendor_country }}</td>
+            </tr>
+            <tr>
+                <th>Street</th>
+                <td>{{ view.vendor_Street }}</td>
+            </tr>
+            <tr>
+                <th>Landmark</th>
+                <td>{{ view.vendor_Landmark }}</td>
+            </tr>
+            <tr>
+                <th>Building</th>
+                <td>{{ view.vendor_Building }}</td>
+            </tr>
+            <tr>
+                <th>PAN Number</th>
+                <td>{{ view.vendor_PANNBR }}</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

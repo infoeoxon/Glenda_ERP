@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Quotations</h4>
+                    <!-- Export Buttons -->
+                    <div>
+                        <a href="" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm" title="Print">
+                            <i class="fas fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search Bar -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <form method="GET" action="" class="d-flex align-items-center">
+                    <!-- Vendor Filter -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Vendor
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?vendor=Vendor A">Vendor A</a>
+                            <a class="dropdown-item" href="?vendor=Vendor B">Vendor B</a>
+                            <a class="dropdown-item" href="?vendor=Vendor C">Vendor C</a>
+                        </div>
+                    </div>
+
+                    <!-- Financial Year Filter -->
+                    <div class="dropdown mr-2" style="width: 200px;">
+                        <button class="btn btn-primary w-100 d-flex justify-content-between align-items-center dropdown-toggle" type="button" id="finYearDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span>Fin Year</span>
+                            <span>2023-2024</span>
+                        </button>
+                        <div class="dropdown-menu w-100" aria-labelledby="finYearDropdown">
+                            <a class="dropdown-item text-center" href="?financial_year=2023-2024">2023-2024</a>
+                            <a class="dropdown-item text-center" href="?financial_year=2022-2023">2022-2023</a>
+                            <a class="dropdown-item text-center" href="?financial_year=2021-2022">2021-2022</a>
+                        </div>
+                    </div>
+
+                    <!-- Date Filter -->
+                    <div class="position-relative mr-2">
+                        <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="width: 200px;">
+                            <i class="mdi mdi-filter mr-2"></i>Date
+                        </button>
+                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                            <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Status
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?status=Pending">Pending</a>
+                            <a class="dropdown-item" href="?status=Approved">Approved</a>
+                            <a class="dropdown-item" href="?status=Rejected">Rejected</a>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Quotation No.</th>
+                                    <th>Vendor</th>
+                                    <th>Quoted Price</th>
+                                    <th>Delivery Date</th>
+                                    <th>Status</th>
+                                    <th>Validity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Q001</td>
+                                    <td>Vendor A</td>
+                                    <td>₹ 5,00,000</td>
+                                    <td>20-Dec-2024</td>
+                                    <td>Pending</td>
+                                    <td>29-Dec-2024</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="openVerificationPopup('Q001')">
+                                            <i class="fas fa-check-circle"></i> Verify
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Q002</td>
+                                    <td>Vendor B</td>
+                                    <td>₹ 2,00,000</td>
+                                    <td>18-Dec-2024</td>
+                                    <td>Approved</td>
+                                    <td>28-Dec-2024</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="openVerificationPopup('Q002')">
+                                            <i class="fas fa-check-circle"></i> Verify
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Additional rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showDateFilter() {
+        // Toggle visibility of the date filter section
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

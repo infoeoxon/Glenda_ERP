@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Stock Verification</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center" style="gap: 10px; flex-wrap: nowrap; margin-top: 20px;">
+                    <!-- Button Group -->
+                    <div class="btn-group mr-3">
+                        <button type="button" class="btn btn-primary" style="width: 100px;">All</button>
+                        <button type="button" class="btn btn-primary" style="width: 150px;">Raw Materials</button>
+                        <button type="button" class="btn btn-primary" style="width: 150px;">Finished Goods</button>
+                        <button type="button" class="btn btn-primary" style="width: 160px;">Semi Finished Goods</button>
+                    </div>
+                    <!-- Date Filter -->
+                    <div class="position-relative mr-3">
+                        <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="max-width: 200px;">
+                            <i class="mdi mdi-filter mr-1"></i>Date
+                        </button>
+                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                            <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="flex-shrink: 0; width: 250px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons (Aligned to the Right) -->
+                    <div class="ml-auto d-flex align-items-center">
+                        <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Home">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                <!-- Table Section -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>SL No</th>
+                            <th>Dispatch ID</th>
+                            <th>PO ID</th>
+                            <th>Material Type</th>
+                            <th>Date</th>
+                            <th>Verify</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>DISPATCH123</td>
+                            <td>PO123456</td>
+                            <td>Raw Material</td>
+                            <td>15 Nov</td>
+                            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#verifyModal1">Verify</button></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>DISPATCH124</td>
+                            <td>PO123457</td>
+                            <td>Raw Material</td>
+                             <td>15 Nov</td>
+                            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#verifyModal2">Verify</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Modal for Stock Verification (Form Popup) -->
+                <div class="modal fade" id="verifyModal1" tabindex="-1" role="dialog" aria-labelledby="verifyModalLabel1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-light">
+                                <h5 class="modal-title" id="verifyModalLabel1">Verify Stock</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form>
+                                <div class="modal-body" style="padding: 20px;">
+                                    <!-- Verification Form Fields -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="purchaseOrderReference" class="form-label">Purchase Order Reference</label>
+                                            <input type="text" class="form-control" id="purchaseOrderReference" name="purchase_order_reference" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="receivedDate" class="form-label">Received Date</label>
+                                            <input type="date" class="form-control" id="receivedDate" name="received_date" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="quantityOrdered" class="form-label">Quantity Ordered</label>
+                                            <input type="number" class="form-control" id="quantityOrdered" name="quantity_ordered" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="quantityReceived" class="form-label">Quantity Received</label>
+                                            <input type="number" class="form-control" id="quantityReceived" name="quantity_received" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="discrepancyNoted" class="form-label">Discrepancy Noted</label>
+                                            <input type="text" class="form-control" id="discrepancyNoted" name="discrepancy_noted">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="remarks" class="form-label">Remarks</label>
+                                            <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer bg-light">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock Verification Modal -->
+                <div class="modal fade" id="stockVerificationModal" tabindex="-1" role="dialog" aria-labelledby="stockVerificationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-light">
+                                <h5 class="modal-title" id="stockVerificationModalLabel">Stock Verification</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form>
+                                <div class="modal-body" style="padding: 20px;">
+                                    <!-- RFQ Number -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="rfqNumber" class="form-label">RFQ Number</label>
+                                            <input type="text" class="form-control" id="rfqNumber" name="rfq_number" value="{{ rfq.rfq_number }}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <!-- Purchase Order Reference -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="poReference" class="form-label">Purchase Order Reference</label>
+                                            <input type="text" class="form-control" id="poReference" name="po_reference" value="{{ purchase_order.po_number }}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <!-- Material Category -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="materialCategory" class="form-label">Material Category</label>
+                                            <input type="text" class="form-control" id="materialCategory" name="material_category" value="{{ rfq.material_category.name }}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <!-- Quantity Ordered -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="quantityOrdered" class="form-label">Quantity Ordered</label>
+                                            <input type="number" class="form-control" id="quantityOrdered" name="quantity_ordered" value="{{ rfq.quantity_needed }}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <!-- Quantity Received -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="quantityReceived" class="form-label">Quantity Received</label>
+                                            <input type="number" class="form-control" id="quantityReceived" name="quantity_received" required>
+                                        </div>
+                                    </div>
+
+                                    <!-- Discrepancy Noted -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="discrepancyNoted" class="form-label">Discrepancy Noted</label>
+                                            <textarea class="form-control" id="discrepancyNoted" name="discrepancy_noted" rows="3" placeholder="If any discrepancy, please mention here."></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- Delivery Date -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="deliveryDate" class="form-label">Actual Delivery Date</label>
+                                            <input type="date" class="form-control" id="deliveryDate" name="delivery_date" required>
+                                        </div>
+                                    </div>
+
+                                    <!-- Quality Check -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="qualityCheck" class="form-label">Quality Check Document</label>
+                                            <input type="file" class="form-control" id="qualityCheck" name="quality_check">
+                                            <small class="text-muted">Upload any quality inspection documents (if applicable).</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Special Notes -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="specialNotes" class="form-label">Special Notes</label>
+                                            <textarea class="form-control" id="specialNotes" name="special_notes" rows="3" placeholder="Any special notes or instructions."></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer bg-light">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    <!-- Page content Wrapper -->
+
+<script>
+    function showDateFilter() {
+        // Toggle visibility of the date filter section
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    $(document).ready(function () {
+        $('#shiftModal').on('shown.bs.modal', function () {
+            $('#shiftDate').trigger('focus');
+        });
+    });
+</script>
+{% endblock %}

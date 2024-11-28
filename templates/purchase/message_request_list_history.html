@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper ">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Review History</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+        <div class="row mb-3">
+            <!-- Filter Dropdown with Date Picker -->
+            <div class="col text-left">
+                <form method="GET" action="{% url 'message_request_list_history' %}" id="filter-form" style="display: flex; align-items: center;">
+                    <!-- Main Filter Dropdown -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary waves-effect waves-light" onclick="toggleDateFilter()">
+                            <i class="mdi mdi-filter mr-2"></i>Filter by
+                        </button>
+                    </div>
+
+                    <!-- Date Input (Date Picker) and Filter/Cancel Button -->
+                    <div id="date-filter-section" style="display: none; margin-left: 10px;">
+                        <input type="date" name="query" class="form-control input-styled" value="{{ query_date|default:'' }}" />
+                        <input type="date" name="query_end" class="form-control input-styled" value="{{ query_date_end|default:'' }}" />
+                        <button class="btn btn-primary" type="submit" style="margin-left: 10px;">Filter</button>
+
+                        {% if is_filtered %}
+                            <!-- Cancel Filter Button -->
+                            <a href="{% url 'message_request_list_history' %}" class="btn btn-secondary" style="margin-left: 10px;">Cancel Filter</a>
+                        {% endif %}
+                    </div>
+
+                    <input type="hidden" name="filter" value="date">
+                </form>
+            </div>
+
+            <!-- Export to PDF, Excel and Print button -->
+            <div class="col text-right">
+                <div class="btn-group float-right">
+                    <a href="{% if is_filtered %}{% url 'raw_message_request_list_history_pdf' %}?query={{ query_date|urlencode }}&query_end={{ query_date_end|urlencode }}{% else %}{% url 'raw_message_request_list_history_pdf' %}{% endif %}"
+                       class="btn btn-primary btn-sm mr-2" style="width: 36px;">
+                        <i class="far fa-file-pdf"></i>
+                    </a>
+                    <a href="{% if is_filtered %}{% url 'raw_message_request_list_history_excel' %}?query={{ query_date|urlencode }}&query_end={{ query_date_end|urlencode }}{% else %}{% url 'raw_message_request_list_history_excel' %}{% endif %}"
+                       class="btn btn-primary btn-sm mr-2" style="width: 36px;">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" style="width: 36px;">
+                        <i class="fas fa-print"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">Request</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                    <th>Date & Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in message %}
+                                    <tr>
+                                        <td>Request for {{ i.category.category_name }}</td>
+                                        <td>{{ i.status }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-danger" type="button"
+                                                data-toggle="collapse" data-target="#reason-{{ forloop.counter }}"
+                                                aria-expanded="false" aria-controls="reason-{{ forloop.counter }}"
+                                                title="View Reason" style="background: none; border: none; padding: 0; margin: 0; color: #dc3545;"
+                                                {% if not i.response %}disabled{% endif %}>
+                                                <i class="fas fa-eye" style="font-size: 1.2em; color: #6e54ab;"></i>
+                                            </button>
+                                        </td>
+                                        <td>{{ i.date }}</td>
+                                    </tr>
+                                    {% if i.status == "Declined" or i.status == "Accepted" %}
+                                    <tr class="collapse reason-box" id="reason-{{ forloop.counter }}">
+                                        <td colspan="4">
+                                            <div class="card card-body reason-content">
+                                                {% if i.status == "Declined" %}
+                                                    <strong style="color: #d9534f;">Reason for Decline:</strong> {{ i.response }}
+                                                {% else %}
+                                                    <strong style="color: #333333">Remarks:</strong> {{ i.response }}
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Pagination Controls -->
+                {% if message.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-3">
+                        {% if message.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span> <!-- First Page -->
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ message.previous_page_number }}{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}" aria-label="Previous">
+                                    &laquo; <!-- Previous Page -->
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in message.paginator.page_range %}
+                            {% if num == message.number %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li> <!-- Current Page -->
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}">{{ num }}</a>
+                                </li> <!-- Other Pages -->
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if message.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ message.next_page_number }}{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}" aria-label="Next">
+                                    &raquo; <!-- Next Page -->
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ message.paginator.num_pages }}{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span> <!-- Last Page -->
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+<!-- Additional Styles for Reason Box and Input Styling -->
+<style>
+    /* Styled input box for a more pleasant look */
+    .input-styled {
+        background-color: #f7f9fc;
+        border: 1px solid #d1e0ff;
+        border-radius: 4px;
+        padding: 6px 10px;
+        width: 160px;
+        font-size: 14px;
+        margin-right: 10px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Reason box styling */
+    .reason-box.collapse:not(.show) {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .reason-box.collapse.show {
+        display: table-row;
+        opacity: 1;
+    }
+
+    .reason-content {
+        background-color: #f1f5ff;
+        border-radius: 8px;
+        border: 1px solid #d1e0ff;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        color: #333;
+    }
+
+    .reason-content strong {
+        font-size: 1.1em;
+        color: #555;
+    }
+</style>
+
+<script>
+    function toggleDateFilter() {
+        const dateFilterSection = document.getElementById('date-filter-section');
+        const isVisible = dateFilterSection.style.display === 'inline-flex';
+        dateFilterSection.style.display = isVisible ? 'none' : 'inline-flex';
+    }
+</script>
+{% endblock %}

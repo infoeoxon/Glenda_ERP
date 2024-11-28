@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Driver</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Add Dispatch</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        {% if messages %}
+                            <ul class="messages text-warning">
+                                {% for message in messages %}
+                                    <li class="{{ message.tags }}">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <h4 class="mt-0 header-title"></h4>
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <!-- Display form errors here -->
+                            {% if form.errors %}
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        {% for field in form %}
+                                            {% if field.errors %}
+                                                <li>{{ field.label }}: {{ field.errors }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            <!-- Render form fields with labels -->
+                            <div class="form-group">
+                                <label for="{{ form.name.id_for_label }}">Product Name</label>
+                                {{ form.name }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.quantity.id_for_label }}">{{ form.quantity.label }}</label>
+                                {{ form.quantity }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.route_plan.id_for_label }}">{{ form.route_plan.label }}</label>
+                                {{ form.route_plan }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.destination.id_for_label }}">{{ form.destination.label }}</label>
+                                {{ form.destination }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.dealer.id_for_label }}">{{ form.dealer.label }}</label>
+                                {{ form.dealer }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+                                {{ form.date }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.user.id_for_label }}">Driver Name</label>
+                                {{ form.user }}
+                            </div>
+
+                            <!-- Star Rating Input -->
+                            {% comment %} <div class="form-group">
+                                <label for="ratings">Ratings</label>
+                                <div class="star-rating">
+                                    <span class="star" data-value="1">&#9733;</span>
+                                    <span class="star" data-value="2">&#9733;</span>
+                                    <span class="star" data-value="3">&#9733;</span>
+                                    <span class="star" data-value="4">&#9733;</span>
+                                    <span class="star" data-value="5">&#9733;</span>
+                                    <input type="hidden" name="ratings" id="ratings" value="{{ form.ratings.value|default:None }}">
+                                </div>
+                            </div> {% endcomment %}
+
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                        Submit
+                                    </button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}

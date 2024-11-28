@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Leave Requests</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <form method="GET" action="{% url 'search_approved_leave_requests' %}">
+                    <div class="row mb-4 align-items-end">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <label for="search" class="sr-only">Search by Name or Number</label>
+                                <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <!-- Single Search Button -->
+                            <button class="btn btn-primary" type="submit" id="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <a href="{% url 'employee_detail' %}" class="btn btn-primary">
+                            <i class="fas fa-eye fas-sm"></i> Show Employee
+                        </a>
+                    </div>
+                </form>
+                <div class="col-md-12 text-right" style="margin-top:-60px;">
+                    <a href="" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                        <i class="far fa-file-pdf"></i>
+                    </a>
+                    <a href="" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" title="Print">
+                        <i class="fas fa-print"></i>
+                    </a>
+                </div>
+                <div class="card" style="margin-top:12px;">
+                    <div class="card-body">
+
+
+                        <h4 class="mt-0 header-title">Employee Leave Requests</h4>
+                        <p class="text-muted mb-4 font-13">Below is the list of leave requests from employees.</p>
+
+                        <table class="table mb-0" id="leave-requests-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in page_obj %}
+                                {% for request in entry.requests %}
+                                <tr id="request-{{ request.id }}">
+                                    <td>{{ entry.employee.user.name }}</td>
+                                    <td>{{ entry.employee.user.email }}</td>
+                                    <td>{{ entry.employee.user.department }}</td>
+                                    <td>{{ entry.employee.user.designation }}</td>
+                                    <td>{{ request.approval_status }}</td>
+                                    <td>
+                                        {% if request.approval_status == 'Pending' %}
+                                            <button class="btn btn-primary approve-btn" data-id="{{ request.id }}">Approve</button>
+                                            <button class="btn btn-primary reject-btn" data-id="{{ request.id }}" data-toggle="modal" data-target="#rejectModal">Reject</button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <!-- Employee List Modal -->
+                        <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="rejectModalLabel">Rejection Reason</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea id="rejectionReason" class="form-control" rows="3" placeholder="Enter reason for rejection"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                        <button type="button" id="confirmRejectBtn" class="btn btn-primary">Reject Leave Request</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination controls with nav buttons -->
+                        <!-- (Pagination code remains the same) -->
+
+                    </div> <!-- end card body -->
+                </div> <!-- end card -->
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+                        <script>
+                            $(document).on('click', '.reject-btn', function() {
+                                const requestId = $(this).data('id');
+                                $('#confirmRejectBtn').data('id', requestId);
+                            });
+
+                            $('#confirmRejectBtn').click(function() {
+                                const requestId = $(this).data('id');
+                                const reason = $('#rejectionReason').val();
+
+                                $.ajax({
+                                    url: '{% url "reject_leave_request" %}',
+                                    type: 'POST',
+                                    data: {
+                                        employee_user_id: requestId,
+                                        rejection_reason: reason,
+                                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                                    },
+                                    success: function(response) {
+                                        if (response.success) {
+                                            $('#request-' + requestId + ' td:nth-child(6)').text('Rejected');
+                                            $('#request-' + requestId + ' td:nth-child(5)').text(reason);
+                                            $('#rejectModal').modal('hide');
+                                        }
+                                    },
+                                    error: function() {
+                                        alert('Error rejecting request.');
+                                    }
+                                });
+                            });
+
+                            $(document).on('click', '.approve-btn', function() {
+                                const requestId = $(this).data('id');
+
+                                $.ajax({
+                                    url: '{% url "approve_leave_request"  %}',
+                                    type: 'POST',
+                                    data: {
+                                        employee_user_id: requestId,
+                                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                                    },
+                                    success: function(response) {
+                                        if (response.success) {
+                                            $('#request-' + requestId + ' td:nth-child(6)').text('Approved');
+                                        }
+                                    },
+                                    error: function() {
+                                        alert('Error approving request.');
+                                    }
+                                });
+                            });
+                        </script>
+
+
+{% endblock %}

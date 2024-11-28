@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Private Vehicle</h4>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Icons (Top Right) -->
+        <div class="row mb-4">
+            <div class="col-12 text-right">
+                <div class="btn-group float-right">
+                    <a href="#" class="fas fa-print" title="Print" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="far fa-file-pdf" title="PDF" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="fas fa-file-excel" title="Excel" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="fas fa-home" title="Home" style="font-size: 1.5em; color:#605daf;"></a>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <!-- Left side: Driver Filter Dropdown, License Number Filter, and Search Bar -->
+                <div class="d-flex">
+                    <!-- Driver Filter Dropdown -->
+                    <div class="input-group" style="width: 200px; margin-right: 15px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Vehicle
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?vendor=Vehicle 1">Vehicle 1</a>
+                            <a class="dropdown-item" href="?vendor=Vehicle 2">Vehicle 2</a>
+                            <a class="dropdown-item" href="?vendor=Vehicle 3">Vehicle 3</a>
+                        </div>
+                    </div>
+
+                    <!-- License Number Filter Dropdown -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                           Capacity
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?status= Capacity 1">Capacity 1</a>
+                            <a class="dropdown-item" href="?status= Capacity 2">Capacity 2</a>
+                            <a class="dropdown-item" href="?status= Capacity 3">Capacity 3</a>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <form method="GET" action="" class="d-flex align-items-center" style="max-width: 400px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                        </div>
+                        <button class="btn btn-primary ml-2" type="submit" id="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right side: Add Private Vehicle Button (Triggers Modal) -->
+                <button class="btn btn-primary btn-lg ml-3" data-toggle="modal" data-target="#addPrivateVehicleModal">
+                    <i class="fas fa-plus"></i> Add Private Vehicle
+                </button>
+                
+            </div>
+        </div>
+
+        <!-- Table for Private Vehicles -->
+        <table class="table mb-0" id="my-table">
+            <thead>
+                <tr>
+                    <th>Vehicle Name</th>
+                    <th>Driver Name</th>
+                    <th>Number</th>
+                    <th>Date</th>
+                    <th>Capacity</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in dr %}
+                <tr>
+                    <td>{{ i.vehiclename }}</td>
+                    <td>{{ i.driver }}</td>
+                    <td>{{ i.nbr }}</td>
+                    <td>{{ i.date }}</td>
+                    <td>{{ i.capacity }}</td>
+                    <td>{{ i.remarks }}</td>
+                    <td>
+                        <!-- Action buttons (e.g., edit, delete) -->
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<!-- Modal for Adding Private Vehicle -->
+<div class="modal fade" id="addPrivateVehicleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Private Vehicle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form to Add Private Vehicle -->
+                <form action="{% url 'Add_privatevehicle' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="vehiclename">Vehicle Name</label>
+                        <input type="text" class="form-control" id="vehiclename" name="vehiclename" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="driver">Driver Name</label>
+                        <input type="text" class="form-control" id="driver" name="driver" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nbr">Number</label>
+                        <input type="text" class="form-control" id="nbr" name="nbr" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="capacity">Capacity</label>
+                        <input type="number" class="form-control" id="capacity" name="capacity" required>
+                    </div>
+                    <!-- New Date Field -->
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea class="form-control" id="remarks" name="remarks"></textarea>
+                    </div>
+                    <div class="form-group text-right">
+                        <button type="submit" class="btn btn-primary">Save Vehicle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

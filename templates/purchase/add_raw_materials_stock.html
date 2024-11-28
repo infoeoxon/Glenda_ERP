@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Validation</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Add Stock</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title"></h4>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Stock</label>
+                                {{ form.stock }}
+                            </div>
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                {{ form.remarks }}
+                            </div>
+
+                            <!-- Date Picker for Request Date -->
+                            <div class="form-group">
+                                <label for="date">Required Date</label>
+                                {{ form.input_date }}
+                            </div>
+
+
+                            <!-- Remarks Text Area -->
+                            <div class="form-group">
+                                <label for="remarks">Remarks</label>
+                                {{ form.remarks }}
+                            </div>
+
+
+<<<<<<< HEAD
+                            <!-- Date Picker for Request Date -->
+                            <div class="form-group">
+                                <label for="date">Required Date</label>
+                                {{ form.input_date }}
+                            </div>
+
+
+                            <!-- Remarks Text Area -->
+                            <div class="form-group">
+                                <label for="remarks">Remarks</label>
+                                {{ form.remarks }}
+                            </div>
+
+=======
+>>>>>>> 26694326ee1b1ea571206209305c77a1f53c37a1
+                            <!-- Submit and Cancel Buttons -->
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                        Submit
+                                    </button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- Page content Wrapper -->
+{% endblock %}

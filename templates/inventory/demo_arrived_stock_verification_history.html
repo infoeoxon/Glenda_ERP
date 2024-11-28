@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Arrived Stocks Verification History</h4>
+                    <div>
+                        <!-- Export Options -->
+                        <a href="#" class="btn btn-primary btn-sm mr-2" title="Print">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm" title="Export as Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search Section -->
+        <div class="row mb-4">
+            <div class="col-12 d-flex align-items-center flex-wrap">
+                <!-- Material Type Filter -->
+                <div class="btn-group mr-3">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="filterMaterialType('all')">All</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="filterMaterialType('raw_materials')">Raw Materials</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="filterMaterialType('finished_goods')">Finished Goods</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="filterMaterialType('semi_finished_goods')">Semi-Finished Goods</button>
+                </div>
+
+                <!-- Date Filter -->
+                <div class="position-relative mr-3" style="width: 200px;">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="showDateFilter()" style="width: 100%;">
+                        <i class="mdi mdi-filter mr-2"></i>Date
+                    </button>
+                    <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                        <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                        <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                        <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="input-group" style="width: 300px;">
+                    <input type="text" class="form-control" placeholder="Search by Dispatch ID or PO ID" id="searchBox">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary btn-sm" onclick="searchVerificationHistory()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Arrived Stocks Verification History Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Dispatch ID</th>
+                                    <th>PO ID</th>
+                                    <th>Material Type</th>
+                                    <th>Date Verified</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sample Rows -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>DISPATCH123</td>
+                                    <td>PO123456</td>
+                                    <td>Raw Material</td>
+                                    <td>2024-11-15</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="viewFullDetails('DISPATCH123')">View Full Details</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>DISPATCH124</td>
+                                    <td>PO123457</td>
+                                    <td>Finished Goods</td>
+                                    <td>2024-11-18</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="viewFullDetails('DISPATCH124')">View Full Details</button>
+                                    </td>
+                                </tr>
+                                <!-- More dynamic rows can be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Full Details Modal -->
+<div id="fullDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Arrived Stock Details</h5>
+                <button type="button" class="close" onclick="closeFullDetailsModal()" style="border: none; background: transparent;">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Dispatch ID</th>
+                        <td id="dispatchId"></td>
+                    </tr>
+                    <tr>
+                        <th>PO ID</th>
+                        <td id="poId"></td>
+                    </tr>
+                    <tr>
+                        <th>Material Type</th>
+                        <td id="materialType"></td>
+                    </tr>
+                    <tr>
+                        <th>Quantity Ordered</th>
+                        <td id="quantityOrdered"></td>
+                    </tr>
+                    <tr>
+                        <th>Quantity Received</th>
+                        <td id="quantityReceived"></td>
+                    </tr>
+                    <tr>
+                        <th>Discrepancies</th>
+                        <td id="discrepancies"></td>
+                    </tr>
+                    <tr>
+                        <th>Remarks</th>
+                        <td id="remarks"></td>
+                    </tr>
+                    <tr>
+                        <th>Date Verified</th>
+                        <td id="dateVerified"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" onclick="closeFullDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterMaterialType(type) {
+        alert(`Filtering by material type: ${type}`);
+    }
+
+    function showDateFilter() {
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function searchVerificationHistory() {
+        const query = document.getElementById('searchBox').value;
+        alert(`Searching verification history for: ${query}`);
+    }
+
+    function viewFullDetails(dispatchId) {
+        // Populate the modal with dynamic data
+        document.getElementById('dispatchId').innerText = dispatchId;
+        document.getElementById('poId').innerText = 'PO123456'; // Replace with dynamic data
+        document.getElementById('materialType').innerText = 'Raw Material'; // Replace with dynamic data
+        document.getElementById('quantityOrdered').innerText = '1000'; // Replace with dynamic data
+        document.getElementById('quantityReceived').innerText = '950'; // Replace with dynamic data
+        document.getElementById('discrepancies').innerText = '50 missing'; // Replace with dynamic data
+        document.getElementById('remarks').innerText = 'Verified with discrepancies'; // Replace with dynamic data
+        document.getElementById('dateVerified').innerText = '2024-11-15'; // Replace with dynamic data
+
+        document.getElementById('fullDetailsModal').style.display = 'block';
+    }
+
+    function closeFullDetailsModal() {
+        document.getElementById('fullDetailsModal').style.display = 'none';
+    }
+</script>
+{% endblock %}

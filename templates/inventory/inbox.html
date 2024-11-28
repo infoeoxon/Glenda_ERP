@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+               <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Inbox</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center flex-wrap">
+                    <!-- Button Group -->
+                    <div class="btn-group mr-3">
+                        <button type="button" class="btn btn-primary" style="width: 100px;">All</button>
+                        <button type="button" class="btn btn-primary" style="width: 100px;">Production</button>
+                        <button type="button" class="btn btn-primary" style="width: 100px;">Sales</button>
+                        <button type="button" class="btn btn-primary" style="width: 100px;">Purchase</button>
+                        <button type="button" class="btn btn-primary" style="width: 100px;">R & D</button>
+                        <button type="button" class="btn btn-primary" style="width: 125px;">Low Stock Alert</button>
+                    </div>
+                    <!-- Date Filter -->
+                    <div class="position-relative mr-3">
+                        <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="max-width: 200px;">
+                            <i class="mdi mdi-filter mr-1"></i>Date
+                        </button>
+                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                            <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="flex-shrink: 0; width: 250px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons (Aligned to the Right) -->
+                    <div class="ml-auto d-flex align-items-center">
+                        <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Home">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <!-- Notifications Display -->
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Notification from Production</h5>
+                                    <small>15 Nov 2024</small>
+                                </div>
+                                <p class="mb-1">1000 nos of Preform needed.</p>
+                                <small>Notification received on: 15 Nov 2024</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Notification from Sales</h5>
+                                    <small>14 Nov 2024</small>
+                                </div>
+                                <p class="mb-1">500 units of Preform sold.</p>
+                                <small>Notification received on: 14 Nov 2024</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Notification from Purchase</h5>
+                                    <small>13 Nov 2024</small>
+                                </div>
+                                <p class="mb-1">New order placed for 1000 Preforms.</p>
+                                <small>Notification received on: 13 Nov 2024</small>
+                            </a>
+                            <!-- Add more notifications here -->
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<script>
+function showDateFilter() {
+    // Toggle visibility of the date filter section
+    const dateFilter = document.getElementById('date-filter-section');
+    dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+
+{% endblock %}

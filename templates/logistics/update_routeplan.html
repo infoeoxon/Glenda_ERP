@@ -1,0 +1,272 @@
+
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Validation</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Update Routeplan List</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        {% if messages %}
+                            <ul class="messages text-warning">
+                                {% for message in messages %}
+                                    <li class="{{ message.tags }}">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <h4 class="mt-0 header-title"></h4>
+                        <form class="" action="" method="post" onsubmit="return showAlert();" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>State</label>
+                                <select id="country-state" name="state" class="form-control">
+                                    <option value="">Select state</option>
+                                    <option value="AN">Andaman and Nicobar Islands</option>
+                                    <option value="AP">Andhra Pradesh</option>
+                                    <option value="AR">Arunachal Pradesh</option>
+                                    <option value="AS">Assam</option>
+                                    <option value="BR">Bihar</option>
+                                    <option value="CH">Chandigarh</option>
+                                    <option value="CT">Chhattisgarh</option>
+                                    <option value="DN">Dadra and Nagar Haveli</option>
+                                    <option value="DD">Daman and Diu</option>
+                                    <option value="DL">Delhi</option>
+                                    <option value="GA">Goa</option>
+                                    <option value="GJ">Gujarat</option>
+                                    <option value="HR">Haryana</option>
+                                    <option value="HP">Himachal Pradesh</option>
+                                    <option value="JK">Jammu and Kashmir</option>
+                                    <option value="JH">Jharkhand</option>
+                                    <option value="KA">Karnataka</option>
+                                    <option value="KL">Kerala</option>
+                                    <option value="LA">Ladakh</option>
+                                    <option value="LD">Lakshadweep</option>
+                                    <option value="MP">Madhya Pradesh</option>
+                                    <option value="MH">Maharashtra</option>
+                                    <option value="MN">Manipur</option>
+                                    <option value="ML">Meghalaya</option>
+                                    <option value="MZ">Mizoram</option>
+                                    <option value="NL">Nagaland</option>
+                                    <option value="OR">Odisha</option>
+                                    <option value="PY">Puducherry</option>
+                                    <option value="PB">Punjab</option>
+                                    <option value="RJ">Rajasthan</option>
+                                    <option value="SK">Sikkim</option>
+                                    <option value="TN">Tamil Nadu</option>
+                                    <option value="TG">Telangana</option>
+                                    <option value="TR">Tripura</option>
+                                    <option value="UP">Uttar Pradesh</option>
+                                    <option value="UT">Uttarakhand</option>
+                                    <option value="WB">West Bengal</option>
+                                </select>
+                            </div> 
+
+                            <div class="form-group">
+                                {% comment %} <label>City</label>
+                                <select id="city" name="city" class="form-select"> {% endcomment %}
+                                    <select id="city" name="city" class="form-control">
+                                        <option value="">Select city</option>
+                                    
+                                        <!-- Andhra Pradesh -->
+                                        <option value="Visakhapatnam">Visakhapatnam</option>
+                                        <option value="Vijayawada">Vijayawada</option>
+                                        <option value="Guntur">Guntur</option>
+                                        <option value="Nellore">Nellore</option>
+                                        <option value="Kadapa">Kadapa</option>
+                                    
+                                        <!-- Arunachal Pradesh -->
+                                        <option value="Itanagar">Itanagar</option>
+                                        <option value="Naharlagun">Naharlagun</option>
+                                        <option value="Pasighat">Pasighat</option>
+                                    
+                                        <!-- Assam -->
+                                        <option value="Guwahati">Guwahati</option>
+                                        <option value="Silchar">Silchar</option>
+                                        <option value="Dibrugarh">Dibrugarh</option>
+                                        <option value="Jorhat">Jorhat</option>
+                                    
+                                        <!-- Bihar -->
+                                        <option value="Patna">Patna</option>
+                                        <option value="Gaya">Gaya</option>
+                                        <option value="Bhagalpur">Bhagalpur</option>
+                                    
+                                        <!-- Chhattisgarh -->
+                                        <option value="Raipur">Raipur</option>
+                                        <option value="Bilaspur">Bilaspur</option>
+                                        <option value="Durg">Durg</option>
+                                    
+                                        <!-- Goa -->
+                                        <option value="Panaji">Panaji</option>
+                                        <option value="Margao">Margao</option>
+                                    
+                                        <!-- Gujarat -->
+                                        <option value="Ahmedabad">Ahmedabad</option>
+                                        <option value="Surat">Surat</option>
+                                        <option value="Vadodara">Vadodara</option>
+                                        <option value="Rajkot">Rajkot</option>
+                                    
+                                        <!-- Haryana -->
+                                        <option value="Gurugram">Gurugram</option>
+                                        <option value="Faridabad">Faridabad</option>
+                                        <option value="Ambala">Ambala</option>
+                                    
+                                        <!-- Himachal Pradesh -->
+                                        <option value="Shimla">Shimla</option>
+                                        <option value="Dharamshala">Dharamshala</option>
+                                    
+                                        <!-- Jharkhand -->
+                                        <option value="Ranchi">Ranchi</option>
+                                        <option value="Jamshedpur">Jamshedpur</option>
+                                        
+                                        <!-- Karnataka -->
+                                        <option value="Bangalore">Bangalore</option>
+                                        <option value="Mysore">Mysore</option>
+                                        <option value="Hubli">Hubli</option>
+                                    
+                                        <!-- Kerala -->
+                                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                        <option value="Kochi">Kochi</option>
+                                        <option value="Kozhikode">Kozhikode</option>
+                                    
+                                        <!-- Madhya Pradesh -->
+                                        <option value="Bhopal">Bhopal</option>
+                                        <option value="Indore">Indore</option>
+                                        <option value="Gwalior">Gwalior</option>
+                                    
+                                        <!-- Maharashtra -->
+                                        <option value="Mumbai">Mumbai</option>
+                                        <option value="Pune">Pune</option>
+                                        <option value="Nagpur">Nagpur</option>
+                                    
+                                        <!-- Manipur -->
+                                        <option value="Imphal">Imphal</option>
+                                    
+                                        <!-- Meghalaya -->
+                                        <option value="Shillong">Shillong</option>
+                                    
+                                        <!-- Mizoram -->
+                                        <option value="Aizawl">Aizawl</option>
+                                    
+                                        <!-- Nagaland -->
+                                        <option value="Kohima">Kohima</option>
+                                        
+                                        <!-- Odisha -->
+                                        <option value="Bhubaneswar">Bhubaneswar</option>
+                                        <option value="Cuttack">Cuttack</option>
+                                    
+                                        <!-- Punjab -->
+                                        <option value="Chandigarh">Chandigarh</option>
+                                        <option value="Ludhiana">Ludhiana</option>
+                                    
+                                        <!-- Rajasthan -->
+                                        <option value="Jaipur">Jaipur</option>
+                                        <option value="Jodhpur">Jodhpur</option>
+                                        <option value="Udaipur">Udaipur</option>
+                                    
+                                        <!-- Sikkim -->
+                                        <option value="Gangtok">Gangtok</option>
+                                    
+                                        <!-- Tamil Nadu -->
+                                        <option value="Chennai">Chennai</option>
+                                        <option value="Coimbatore">Coimbatore</option>
+                                        <option value="Madurai">Madurai</option>
+                                    
+                                        <!-- Telangana -->
+                                        <option value="Hyderabad">Hyderabad</option>
+                                        <option value="Warangal">Warangal</option>
+                                    
+                                        <!-- Tripura -->
+                                        <option value="Agartala">Agartala</option>
+                                    
+                                        <!-- Uttar Pradesh -->
+                                        <option value="Lucknow">Lucknow</option>
+                                        <option value="Kanpur">Kanpur</option>
+                                        <option value="Varanasi">Varanasi</option>
+                                    
+                                        <!-- Uttarakhand -->
+                                        <option value="Dehradun">Dehradun</option>
+                                        <option value="Haridwar">Haridwar</option>
+                                    
+                                        <!-- West Bengal -->
+                                        <option value="Kolkata">Kolkata</option>
+                                        <option value="Siliguri">Siliguri</option>
+                                    
+                                    </select>
+                                    
+                               
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Vehicle</label>
+                                {{ form.vehicle }}
+                            </div>
+                            <div class="form-group">
+                                <label>Driver</label>
+                                {{ form.driver }}
+                            </div>
+                             <div class="form-group">
+                                <label>Route</label>
+                                {{ form.route }}
+                            </div>
+                            <div class="form-group">
+                                <label>Estimated Date</label>
+                                {{ form.date }}
+                            </div>
+                            <div class="form-group">
+                                <label>Estimated Time</label>
+                                {{ form.time }}
+                            </div>
+
+
+
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                        Submit
+                                    </button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        Cancel
+                                    </button>
+                                    <a href="{% url 'view_routeplan' %}"></a>
+                                </div>
+                            </div>
+                        </form><i class="fas fa-edit"></i></a>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+<script>
+    function showAlert() {
+        alert('Form submitted successfully!');
+        return true; // allow the form to be submitted
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Dispatch Notification History</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-end">
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                    <i class="far fa-file-pdf"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+                    <i class="fas fa-file-excel"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm" title="Print">
+                    <i class="fas fa-print"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters and Search Bar -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <form method="GET" action="" class="d-flex align-items-center">
+                    <!-- Vendor Filter -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Vendor
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?vendor=Vendor A">Vendor A</a>
+                            <a class="dropdown-item" href="?vendor=Vendor B">Vendor B</a>
+                            <a class="dropdown-item" href="?vendor=Vendor C">Vendor C</a>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Status Filter -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Delivery Status
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?status=Dispatched">Dispatched</a>
+                            <a class="dropdown-item" href="?status=Arrived">Arrived</a>
+                        </div>
+                    </div>
+
+                    <!-- Date Filter -->
+                    <div class="position-relative mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary waves-effect waves-light w-100" onclick="toggleDateFilter()">
+                            <i class="mdi mdi-filter mr-2"></i>Date
+                        </button>
+                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                            <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search by Dispatch ID or Vendor" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dispatch Notification Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>SR. No.</th>
+                                    <th>Dispatch ID</th>
+                                    <th>Vendor</th>
+                                    <th>Dispatch Date</th>
+                                    <th>Delivery ETA</th>
+                                    <th>Delivery Status</th>
+                                    <th>Action Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>DISP001</td>
+                                    <td>Vendor A</td>
+                                    <td>15-Dec-2024</td>
+                                    <td>20-Dec-2024</td>
+                                    <td>Dispatched</td>
+                                    <td>No Action</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="openDispatchDetailsPopup('DISP001')">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>DISP002</td>
+                                    <td>Vendor B</td>
+                                    <td>10-Dec-2024</td>
+                                    <td>15-Dec-2024</td>
+                                    <td>Arrived</td>
+                                    <td>Forwarded to Inventory</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="openDispatchDetailsPopup('DISP002')">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Additional rows can be dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dispatch Details Popup -->
+        <div id="dispatch-details-popup" class="modal" style="display: none; position: fixed; top: 10%; left: 50%; transform: translate(-50%, 0); z-index: 1050; width: 50%; max-width: 600px; background: #ffffff; box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.25); border-radius: 12px; overflow: hidden;">
+            <div class="modal-header" style="background: #f8f9fa; padding: 20px; color: #333; border-bottom: 2px solid #e4e4e4;">
+                <h5 class="modal-title" style="font-size: 18px; font-weight: 600;">Dispatch Details</h5>
+                <button type="button" class="close" onclick="closeDispatchDetailsPopup()" style="border: none; background: transparent; color: #333; font-size: 20px; line-height: 1;">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-weight-bold">Dispatch ID:</label>
+                        <p id="dispatch-id" class="form-control border-0 p-0" style="background: none;">DISP001</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-weight-bold">Vendor:</label>
+                        <p id="dispatch-vendor" class="form-control border-0 p-0" style="background: none;">Vendor A</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-weight-bold">Dispatch Date:</label>
+                        <p id="dispatch-date" class="form-control border-0 p-0" style="background: none;">15-Dec-2024</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-weight-bold">Delivery ETA:</label>
+                        <p id="delivery-eta" class="form-control border-0 p-0" style="background: none;">20-Dec-2024</p>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label font-weight-bold">Shipment Details:</label>
+                        <p id="shipment-details" class="form-control border-0 p-0" style="background: none;">Vehicle ABC123, Driver XYZ</p>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label font-weight-bold">Delivery Location:</label>
+                        <p id="delivery-location" class="form-control border-0 p-0" style="background: none;">Warehouse 1</p>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <button class="btn btn-outline-primary mr-2" onclick="markAsRead()" style="min-width: 120px;">Mark as Read</button>
+                    <button class="btn btn-primary" onclick="forwardToInventory()" style="min-width: 120px;">Forward to Inventory</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDateFilter() {
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function openDispatchDetailsPopup(dispatchId) {
+        document.getElementById('dispatch-id').innerText = dispatchId;
+        document.getElementById('dispatch-details-popup').style.display = 'block';
+    }
+
+    function closeDispatchDetailsPopup() {
+        document.getElementById('dispatch-details-popup').style.display = 'none';
+    }
+
+    function markAsRead() {
+        alert("Marked as Read");
+        closeDispatchDetailsPopup();
+    }
+
+    function forwardToInventory() {
+        alert("Forwarded to Inventory");
+        closeDispatchDetailsPopup();
+    }
+</script>
+{% endblock %}

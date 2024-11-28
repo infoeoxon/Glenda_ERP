@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block head %}
+<!-- Include Bootstrap CSS and JS -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Vehicle List</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Icons (Top Right) -->
+        <div class="btn-group float-right">
+            <a href="#" class="fas fa-print" title="Print" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+            <a href="#" class="far fa-file-pdf" title="PDF" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+            <a href="#" class="fas fa-file-excel" title="Excel" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+            <a href="#" class="fas fa-home" title="Home" style="font-size: 1.5em; color:#605daf;"></a>
+        </div>
+    </div>
+</div>
+</div>
+<!-- end page title end breadcrumb -->
+<div class="row mb-3">
+<div class="col-12 d-flex justify-content-between align-items-center">
+    <!-- Left side: Driver Filter Dropdown, License Number Filter, and Search Bar -->
+    <div class="d-flex">
+        <!-- Driver Filter Dropdown -->
+        <div class="input-group" style="width: 200px; margin-right: 15px;">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                Vehicle
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="?vendor=Vehicle 1">Vehicle 1</a>
+                <a class="dropdown-item" href="?vendor=Vehicle 2">Vehicle 2</a>
+                <a class="dropdown-item" href="?vendor=Vehicle 3">Vehicle 3</a>
+            </div>
+        </div>
+
+        <!-- License Number Filter Dropdown -->
+        <div class="input-group mr-2" style="width: 200px;">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+               Capacity
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="?status= Capacity 1">Capacity 1</a>
+                <a class="dropdown-item" href="?status= Capacity 2">Capacity 2</a>
+                <a class="dropdown-item" href="?status= Capacity 3">Capacity 3</a>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <form method="GET" action="" class="d-flex align-items-center" style="max-width: 400px;">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+            </div>
+            <button class="btn btn-primary ml-2" type="submit" id="search-btn">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
+    </div>
+
+                <!-- Add Vehicle Button -->
+                <button class="btn btn-primary btn-lg ml-3" data-toggle="modal" data-target="#addVehicleModal">
+                    <i class="fas fa-plus"></i> Add Vehicle
+                </button>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>SI.No</th>
+                                    <th>Vehicle Name</th>
+                                    <th>Vehicle Number</th>
+                                    <th>Image</th>
+                                    <th>Fasttag</th>
+                                    <th>Insurance</th>
+                                    <th>Pollution</th>
+                                    <th>Taxes</th>
+                                    <th>Capacity</th>
+                                    <th>Rate</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in dr %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ i.vehicle_name }}</td>
+                                    <td>{{ i.vehicle_nbr }}</td>
+                                    <td><img src="{{ i.vehicle_img.url }}" alt="Image description" width="120" height="70" /></td>
+                                    <td>{{ i.vehicle_fasttag }}</td>
+                                    <td>{{ i.vehicle_insurance_date|date:"Y-m-d" }}</td>
+                                    <td>{{ i.vehicle_pollution_date|date:"Y-m-d" }}</td>
+                                    <td>{{ i.vehicle_taxes_date|date:"Y-m-d" }}</td>
+                                    <td>{{ i.vehicle_capacity }}</td>
+                                    <td>{{ i.vehicle_rate }}</td>
+                                    <td>
+                                        <a href="{% url 'update_vehicle' i.id %}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Add Vehicle Modal -->
+<div class="modal fade" id="addVehicleModal" tabindex="-1" role="dialog" aria-labelledby="addVehicleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addVehicleModalLabel">Add Vehicle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'Add_vehicle' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="vehicle_name">Vehicle Name</label>
+                        <input type="text" class="form-control" id="vehicle_name" name="vehicle_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_nbr">Vehicle Number</label>
+                        <input type="text" class="form-control" id="vehicle_nbr" name="vehicle_nbr" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_img">Upload Image</label>
+                        <input type="file" class="form-control-file" id="vehicle_img" name="vehicle_img" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_fasttag">Fasttag</label>
+                        <input type="number" class="form-control" id="vehicle_fasttag" name="vehicle_fasttag" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_insurance_date">Insurance</label>
+                        <input type="number" class="form-control" id="vehicle_insurance_date" name="vehicle_insurance_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_pollution_date">Pollution</label>
+                        <input type="number" class="form-control" id="vehicle_pollution_date" name="vehicle_pollution_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_taxes_date">Taxes</label>
+                        <input type="number" class="form-control" id="vehicle_taxes_date" name="vehicle_taxes_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_capacity">Capacity</label>
+                        <input type="number" class="form-control" id="vehicle_capacity" name="vehicle_capacity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_rate">Rate</label>
+                        <input type="number" class="form-control" id="vehicle_rate" name="vehicle_rate" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Vehicle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

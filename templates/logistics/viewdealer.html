@@ -1,0 +1,130 @@
+
+
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                            <li class="breadcrumb-item active">Editable</li>
+                        </ol>
+                    </div>
+<h1 class="page-title" style="
+                font-family: 'Arial', sans-serif;
+                font-size: 22px;
+                font-weight: bold;
+                color: #607D8B;
+                text-align: center;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            ">
+                Dealers
+            </h1>                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        {% comment %} <!-- Add User Button -->
+                        <div class="mb-3">
+                            {% comment %} <form method="GET" action="{% url 'route_search_and_export' %}"> {% endcomment %}
+                                {% comment %} <div class="row mb-4 align-items-end">
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                             <label for="search" class="sr-only">Search by Name or Number</label>
+                                             <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <!-- Single Search Button -->
+                                        <button class="btn btn-primary" type="submit" id="search-btn">
+                                            <i class="fas fa-search"></i> Search
+                                        </button>
+                                    </div>
+
+                                    <!-- Export Buttons -->
+                                    <div class="btn-group float-right">
+                                        <div class="btn-group mo-mb-2">
+                                            <button type="button" class="btn btn-success btn-lg">Export as</button>
+                                            <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <!-- Export Excel link (includes the current search query) -->
+                                                <a class="dropdown-item" href="{% url 'route_search_and_export' %}?search_query={{ request.GET.search_query }}&export=true">Excel</a>
+                                            </div>
+                                        </div>
+                                        <div class="text col-right" style="margin-left:12px;">  {% endcomment %}
+                                            {% comment %} <a href="{% url 'add_category' %}" class="btn btn-primary">Add Category</a> {% endcomment %}
+                                            <a href="{% url 'Add_dealer' %}" class="btn btn-primary ml-2">Add Dealer</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>Dealer Name</th>
+                                    <th>Dealer Number</th>
+                                    <th>dealer Address </th>
+                                   
+
+                                    {% comment %} <th>Action</th> {% endcomment %}
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in dr %}
+                                <tr>
+                                    {% comment %} <td><img src="{{ i.image.url }}" alt="Image description" width="120" height="70" /></td>
+                                    <td>{{ i.category.category_name }}</td> {% endcomment %}
+                                    <td>{{ i.dealer_name }}</td>
+                                    <td>{{ i.dealer_nbr}}</td>
+                                    <td>{{ i.dealer_address}}</td>
+                                   
+
+                                    <td>
+
+
+                                        {% comment %} <a href="{% url 'view_driver' i.id %}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a> {% endcomment %}
+                                        {% comment %} <a href="{% url 'update_route' i.id %}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
+                                        <a href="{% url 'delete_route' i.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?');"><i class="fas fa-trash-alt"></i></a>  {% endcomment %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Purchase Order</h4>
+                    <!-- Export Buttons -->
+                    <div>
+                        <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm" title="Print">
+                            <i class="fas fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Purchase Order Form -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">New Purchase Order</h5>
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="quotationID">Quotation ID</label>
+                                    <input type="text" class="form-control" id="quotationID" name="quotation_id" placeholder="Enter Quotation ID">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="vendorID">Vendor ID</label>
+                                    <input type="text" class="form-control" id="vendorID" name="vendor_id" placeholder="Enter Vendor ID">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="materialType">Material Type</label>
+                                    <input type="text" class="form-control" id="materialType" name="material_type" placeholder="Enter Material Type">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="totalQuantity">Total Quantity</label>
+                                    <input type="number" class="form-control" id="totalQuantity" name="total_quantity" placeholder="Enter Total Quantity">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="batchRequirements">Batch Requirements</label>
+                                    <input type="text" class="form-control" id="batchRequirements" name="batch_requirements" placeholder="Enter Batch Requirements">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="priceAgreement">Price Agreement</label>
+                                    <input type="text" class="form-control" id="priceAgreement" name="price_agreement" placeholder="Enter Price Agreement">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="paymentTerms">Payment Terms</label>
+                                    <input type="text" class="form-control" id="paymentTerms" name="payment_terms" placeholder="Enter Payment Terms">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="deliveryDate">Delivery Date</label>
+                                    <input type="date" class="form-control" id="deliveryDate" name="delivery_date">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="deliveryLocation">Delivery Location</label>
+                                    <input type="text" class="form-control" id="deliveryLocation" name="delivery_location" placeholder="Enter Delivery Location">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="specialInstructions">Special Instructions</label>
+                                    <textarea class="form-control" id="specialInstructions" name="special_instructions" rows="2" placeholder="Enter any special instructions"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="button" class="btn btn-secondary">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

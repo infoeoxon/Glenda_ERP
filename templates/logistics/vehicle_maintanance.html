@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Validation</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title"></h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title"></h4>
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Vehicle Name</label>
+                                {{ form.vehicle }}
+
+                            </div>
+                        
+                            <div class="form-group">
+                                <label>Types of Maintenance</label>
+                                {{ form.TypeofMaintenance }}
+                            </div>
+                            <div class="form-group">
+                                <label>Amount</label>
+                                {{ form.amount }}
+                            </div>
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                {{ form.Remarks}}
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<script>
+ document.getElementById('id_route').addEventListener('change', function() {
+        var routeId = this.value;
+
+        // AJAX request to fetch route details
+        fetch(/get-route-details/?route_id=${routeId})
+            .then(response => response.json())
+            .then(data => {
+                if (!data.error) {
+                    // Populate fields with route details
+                    document.getElementById('id_route_distance').value = data.total_distance; // Matches model field
+                    document.getElementById('id_route_starting_point').value = data.starting_point; // Matches model field
+                    document.getElementById('id_route_ending_point').value = data.ending_point; // Matches model field
+                } else {
+                    console.error(data.error);
+                }
+            })
+            .catch(error => console.error('Error fetching route details:', error));
+    });
+</script> 
+
+{% endblock %}

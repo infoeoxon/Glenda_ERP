@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h4>HR, please review and approve the resignation</h4>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Approve Resignation</button>
+        <a href="{% url 'employee_list' %}" class="btn btn-secondary">Reject</a>
+    </form>
+</div>
+{% endblock %}

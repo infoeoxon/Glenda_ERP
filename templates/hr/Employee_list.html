@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Employee List</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="col-md-12" style="margin-top:23px;">
+                    <form method="GET" action="{% url 'employee_search_and_export' %}">
+                        <div class="row mb-4 align-items-end">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <label for="search" class="sr-only">Search by Name or Number</label>
+                                    <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <!-- Single Search Button -->
+                                <button class="btn btn-primary" type="submit" id="search-btn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-12 text-right" style="margin-top:-60px;">
+                    <a href="{% url 'employee_search_and_export' %}?search_query={{ request.GET.search_query }}&export=pdf" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                        <i class="far fa-file-pdf"></i>
+                    </a>
+                    <a href="{% url 'employee_search_and_export' %}?search_query={{ request.GET.search_query }}&export=excel" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" title="Print">
+                        <i class="fas fa-print"></i>
+                    </a>
+                </div>
+                <div class="card" style="margin-top:12px;">
+                    <div class="card-body">
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <!-- Add User Button -->
+
+
+                        <!-- Users Table -->
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone Number</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in page_obj %}
+                                <tr>
+                                    <td><img src="{{i.image.url}}" alt="Image description" width="70" height="70" />{{ i.name }}</td>
+                                    <td>{{ i.email }}</td>
+                                    <td>{{ i.phone_number }}</td>
+                                    <td>{{ i.department.dept_Name }}</td>
+                                    <td>{{ i.designation.user_type }}</td>
+                                    <td>
+                                        <button class="btn btn-primary verify-button"
+                                            data-id="{{ i.id }}"
+                                            data-name="{{ i.name }}"
+                                            data-email="{{ i.email }}"
+                                            data-phone="{{ i.phone_number }}"
+                                            data-pincode="{{ this.pincode }}"
+                                            data-district="{{ this.district }}"
+                                            data-state="{{ this.state }}"
+                                            data-country="{{ this.country }}"
+                                            data-street="{{ this.street }}"
+                                            data-landmark="{{ this.landmark }}"
+                                            data-idproof="{{ this.id_proof_type }}"
+                                            data-idnumber="{{ this.id_proof_type_number }}"
+                                            data-dob="{{ this.date_of_birth }}"
+                                            data-bloodgroup="{{ this.employee_blood_groups }}">
+                                            Verify
+                                        </button>
+                                        <button class="btn btn-primary" onclick="openAddModal({{ i.id }})"><i class="fa fa-plus fa-sm"></i> Add Details</button>
+                                    </td>
+                                    <td>
+                                        {% if not i.details_added %}
+                                            <button type="button" class="btn btn-secondary" style="width: 120px;" disabled>
+                                               Not added
+                                            </button>
+                                        {% else %}
+                                            <a href="{% url 'view_employee_profile' i.id %}">
+                                                <button type="button" class="btn btn-primary waves-effect waves-light">
+                                                    <i class="fa fa-user"></i>  View Profile
+                                                </button>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                {% if page_obj.has_other_pages %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mt-3">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1" aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span> <!-- First Page -->
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                        &laquo; <!-- Previous Page -->
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if num == page_obj.number %}
+                                    <li class="page-item active"><span class="page-link">{{ num }}</span></li> <!-- Current Page -->
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li> <!-- Other Pages -->
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                        &raquo; <!-- Next Page -->
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span> <!-- Last Page -->
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div>
+    <!-- Verify Employee Modal -->
+    <div id="verifymodal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Employee Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Name: <span id="modalName"></span></p>
+                    <p>Email: <span id="modalEmail"></span></p>
+                    <p>Phone: <span id="modalPhone"></span></p>
+                    <p>Joining Date: <span id="modalJoiningDate"></span></p>
+                    <p>Address: <span id="modalAddress"></span></p>
+                    <p>Blood Group: <span id="modalBloodGroup"></span></p>
+                    <p>Date of Birth: <span id="modalDateofBirth"></span></p>
+                    <p>Id Proof Type: <span id="modalIDProofTypes"></span></p>
+                    <p>Id Proof Type Number:<span id="modalIDProofTypesNumber"></span></p>
+                    <p>Id Proof Type Validity:<span id="modalValidity"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="verifyButton">Verify</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="addForm" method="POST" action="">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Add Employee Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="employee_id" id="addEmployeeId" value="{{ employee.id }}">
+
+                        <!-- Basic Salary -->
+                        <div class="form-group">
+                            <label for="basic">Basic Salary</label>
+                            <input type="text" class="form-control" name="basic" id="basic" value="{{ form.basic.value }}" required>
+                            {% if form.basic.errors %}
+                                <small class="text-danger">{{ form.basic.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+
+                        <!-- PF No -->
+                        <div class="form-group">
+                            <label for="pf_no">PF No</label>
+                            <input type="text" class="form-control" name="pf_no" id="pf_no" value="{{ form.pf_no.value }}" required>
+                            {% if form.pf_no.errors %}
+                                <small class="text-danger">{{ form.pf_no.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+
+                        <!-- ESI No -->
+                        <div class="form-group">
+                            <label for="employee_esi_no">ESI No</label>
+                            <input type="text" class="form-control" name="employee_esi_no" id="employee_esi_no" value="{{ form.employee_esi_no.value }}" required>
+                            {% if form.employee_esi_no.errors %}
+                                <small class="text-danger">{{ form.employee_esi_no.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+    let currentEmployeeId;
+    $(document).on('click', '.verify-button', function (e) {
+        e.preventDefault(); // Prevent the default action
+
+        currentEmployeeId = $(this).data('id'); // Store the employee ID for later use
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'employee_details_modal' %}",
+            data: {
+                'employee_id': currentEmployeeId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(data) {
+                $('#modalName').text(data.name);
+                $('#modalEmail').text(data.email);
+                $('#modalPhone').text(data.phone_number);
+                $('#modalJoiningDate').text(data.joining_date);
+                $('#modalAddress').text(data.address);
+                $('#modalBloodGroup').text(data.blood_group);
+                $('#modalDateofBirth').text(data.date_of_birth);
+                $('#modalIDProofTypes').text(data.id_proof_type);
+                $('#modalIDProofTypesNumber').text(data.id_proof_type_number);
+                $('#modalValidity').text(data.id_proof_type_validity);
+
+                // Check if the employee is already verified
+                if (data.verified) { // Assuming 'data.verified' indicates the verification status
+                    $('#verifyButton').prop('disabled', true).addClass('disabled').text('Verified');
+                } else {
+                    $('#verifyButton').prop('disabled', false).removeClass('disabled').text('Verify');
+                }
+
+                $('#verifymodal').modal('show');
+            }
+        });
+    });
+
+    // Handle verification button click
+    $('#verifyButton').on('click', function(e) {
+        e.preventDefault(); // Prevent the default action
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'verify_employee' %}", // URL for your verification view
+            data: {
+                'employee_id': currentEmployeeId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert("Employee verified successfully!");
+
+                    // Disable the verification button
+                    $('.verify-button[data-id="' + currentEmployeeId + '"]')
+                        .prop('disabled', true)
+                        .addClass('disabled')
+                        .text('Verified');
+
+                    // Optionally, you can also update the modal or UI to reflect the change
+                    $('#verifymodal').modal('hide');
+                } else {
+                    alert("Failed to verify employee.");
+                }
+            },
+            error: function() {
+                alert("An error occurred while verifying the employee.");
+            }
+        });
+    });
+
+   function openAddModal(employeeId) {
+    if (employeeId) {
+        // Set the hidden input field value
+        $('#addEmployeeId').val(employeeId);
+        // Dynamically set the form action
+        $('#addForm').attr('action', '/add_employee_details/' + employeeId);
+        // Show the modal
+        $('#addModal').modal('show');
+    } else {
+        console.error("Invalid employeeId:", employeeId);
+    }
+}
+
+</script>
+
+{% endblock %}

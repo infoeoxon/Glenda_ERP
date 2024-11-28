@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-fluid">
+    <h4 class="page-title">Employee Salary by Month</h4>
+    <div class="col-md-12 text-right">
+        <a href="" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+            <i class="far fa-file-pdf"></i>
+        </a>
+        <a href="" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+            <i class="fas fa-file-excel"></i>
+        </a>
+        <a href="#" class="btn btn-primary btn-sm" title="Print">
+            <i class="fas fa-print"></i>
+        </a>
+    </div>
+    <div class="card" style="margin-top:13px;">
+        <div class="card-body">
+            <form method="GET" action="{% url 'payroll_by_month' %}">
+                <div class="row mb-4 align-items-end">
+                    <div class="col-md-3">
+                        <label for="month">Month</label>
+                        <select class="form-control" id="month" name="month">
+                            <option value="">Select Month</option>
+                            {% for i in months %}
+                                <option value="{{ i.0 }}" {% if selected_month == i.0 %}selected{% endif %}>{{ i.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="year">Year</label>
+                        <input type="text" class="form-control" id="year" name="year" placeholder="Enter Year" value="{{ selected_year }}">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" type="submit"><i class="mdi mdi-filter mr-2">Filter</i></button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Display Payroll Records for the Selected Month and Year -->
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if payrolls %}
+                        {% for payroll in payrolls %}
+                        <tr>
+                            <td>{{ payroll.employee.user.name }}</td>
+                            <td>{{ payroll.pay_date|date:"F" }}</td> <!-- Display month name -->
+                            <td>{{ payroll.pay_date|date:"Y" }}</td> <!-- Display year -->
+                            <td>{{ payroll.net_pay }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4">No records found for the selected month and year.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <h6>Total salary :{{ total_net_pay }}</h6>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

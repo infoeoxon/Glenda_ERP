@@ -1,0 +1,20 @@
+
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class='container mt-5'>
+    <div class="col-sm-6 text-center badge-warning" style="margin-left: 250px; border: 1px; border-radius: 10px ; padding: 10px;">
+        <h1 class="bg-primary">Do you want to delete..?</h1>
+        <form method="post" style="align-items:center;">
+            {%csrf_token%}
+            <button type="submit" class="btn btn-danger"> Confirm </button>
+            <a href="{% url 'view_driver' %}" class="btn btn-success"> Back </a>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

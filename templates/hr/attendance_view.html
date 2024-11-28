@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Attendance History</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+
+                        </div>
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee Name</th>
+                                    <th>History</th>
+                                </tr>
+                            </thead>
+                                {% for employee in data %}
+                                <tbody>
+                                    <tr>
+                                        <td>{{ employee.user.name }}</td>
+                                        <td><a type="button" class="btn btn-primary" href="{% url 'attendance_report' employee.id month year %}"><i class="fas fa-history"></i>History</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<script>
+    function showDateFilter() {
+        // Show the date input and filter button
+        document.getElementById('date-filter-section').style.display = 'inline-flex';
+    }
+</script>
+
+{% endblock %}

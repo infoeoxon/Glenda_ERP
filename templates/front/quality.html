@@ -1,0 +1,60 @@
+
+{% extends 'front/base.html' %}
+{% load static %}
+{% block content %}
+
+
+        <!-- Page Title -->
+        <section class="page-title centred" style="background-image: url({% static 'front/assets/images/background/page-title1.jpg' %});">
+            <div class="shape" style="background-image: url({% static 'front/assets/assets/images/shape/banner-shap.png' %});"></div>
+            <div class="auto-container">
+                <div class="content-box">
+                    <h1>Quality</h1>
+                    <ul class="bread-crumb clearfix">
+                        <li><a href="/">Home</a></li>
+                        <li>Quality</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!-- End Page Title -->
+
+
+        <!-- about-section -->
+        <section class="about-section">
+            <div class="auto-container">
+                <div class="row align-items-center clearfix">
+                    <div class="col-lg-6 col-md-12 col-sm-12 image-column">
+                        <div class="image_block_2">
+                            <div class="image-box">
+                                <figure class="image"><img src="{% static 'front/assets/images/resource/bt.png' %}" alt=""></figure>
+<!--                                <figure class="image image-2"><img src="assets/images/resource/about-3.png" alt=""></figure>-->
+<!--                                <div class="text">-->
+<!--                                    <h2>7</h2>-->
+<!--                                    <h6>Years Of Exps</h6>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 content-column">
+                        <div class="content_block_1">
+                            <div class="content-box wow fadeInRight animated" data-wow-delay="00ms" data-wow-duration="1500ms">
+                                <div class="sec-title">
+                                    <h2>Quality and Production</h2>
+                                </div>
+                                <div class="text">
+                                    <p>Purity is not a choice, but a necessity. We ensure that every single bit of our work undergoes Q3, i.e., Quality Assurance, Quality Testing, and Quality Certification. Keeping in view the highest standards in hygiene, we undergo an intensive purification process to ensure that each drop of water is clear, pure, and safe before it reaches the consumer's hands..</p>
+                                </div>
+                                <div class="btn-box">
+<!--                                    <a href="about.html" class="theme-btn btn-one">Read More</a>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- about-section end -->
+
+
+   {% endblock %}

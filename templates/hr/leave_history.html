@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Employee History</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Filter Dropdown with Date Picker -->
+                            <div class="col text-left">
+                                <form method="GET" action="{% url 'employee_detail'  %}" id="filter-form" style="display: flex; align-items: center;">
+                                    <!-- Main Filter Dropdown -->
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary waves-effect waves-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="mdi mdi-filter mr-2"></i>Filter by
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#" onclick="showDateFilter()">Date</a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Date Input (Date Picker) and Filter/Cancel Button -->
+                                    <div id="date-filter-section" style="display: {% if is_filtered %}inline-flex{% else %}none{% endif %}; margin-left: 10px;">
+                                        <input type="date" name="query" class="form-control" value="{{ query_date }}" style="font-size: 14px; padding: 6px 10px; width: 160px; display: inline-block; vertical-align: middle;" />
+                                        <button class="btn btn-primary" type="submit" style="margin-left: 10px; vertical-align: middle;">Filter</button>
+                                    </div>
+
+                                    <input type="hidden" name="filter" value="date">
+                                </form>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>Date of Request</th>
+                                    <th>Leave Type</th>
+                                    <th>Status</th>
+                                    <th>Days Taken</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for leave in leave_data %}
+                                    {% for day in leave.weekdays_with_dates %}
+                                        <tr>
+                                            <td>{{ day.date }}</td>
+                                            <td>{{ leave.leave.leave_type }}</td>
+                                            <td>{{ leave.leave.approval_status }}</td>
+                                            <td>{{ day.weekday }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<script>
+    function showDateFilter() {
+        // Show the date input and filter button
+        document.getElementById('date-filter-section').style.display = 'inline-flex';
+    }
+</script>
+
+{% endblock %}

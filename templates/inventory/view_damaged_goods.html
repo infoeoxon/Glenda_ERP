@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                            <li class="breadcrumb-item active">Editable</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Damaged Goods</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-10">
+                                <form method="GET" action="{% url 'damaged_goods_export_and_search' %}" class="d-flex align-items-center">
+                                    {% csrf_token %}
+                                    <div class="input-group mr-2" style="width: 30%;">
+                                        <!-- Category Dropdown Search -->
+                                        <label for="category-search" class="sr-only">Search by Category</label>
+                                        <select class="form-control" id="category-search" name="category">
+                                            <option value="" selected>Search by Category</option>
+                                            {% for category in categories %}
+                                            <option value="{{ category.id }}" {% if search_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                                {{ category.category_name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="input-group mr-2" style="width: 30%;">
+                                        <!-- Name Search Bar -->
+                                        <label for="name-search" class="sr-only">Search by Name</label>
+                                        <input type="text" class="form-control" id="name-search" name="name" value="{{ search_name }}" placeholder="Search by Name">
+                                    </div>
+                                    <!-- Search Button -->
+                                    <button class="btn btn-primary" type="submit" id="search-btn">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+
+                            <!-- Export Button on the same line and aligned to the right -->
+                            <div class="col-2 d-flex align-items-center justify-content-end">
+                                <div class="btn-group" style="margin-right: 110px;">
+                                    <button type="button" class="btn btn-success btn-lg">Export as</button>
+                                    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'damaged_goods_export_and_search' %}?export=csv&name={{ search_name }}&category={{ search_category }}">Excel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Category</th>
+                                    <th>Name</th>
+                                    <th>Total Stock</th>
+                                    <th>Stock History</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in view %}
+                                <tr>
+                                    <td><img src="{{ item.image.url }}" alt="Image description" width="120" height="70" /></td>
+                                    <td>{{ item.category.category_name }}</td>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.total_stock }}</td>
+                                    <td>
+                                        <a href="{% url 'damagedgoods_stock_history' item.id %}">
+                                            <button class="btn btn-purple waves-effect waves-light" type="button" aria-expanded="false">
+                                                <i class="mdi mdi-send mr-2"></i>History
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No damaged goods found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Pagination Controls -->
+                {% if damaged_goods.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-3">
+                        {% if damaged_goods.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span> <!-- First Page -->
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ damaged_goods.previous_page_number }}" aria-label="Previous">
+                                    &laquo; <!-- Previous Page -->
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in damaged_goods.paginator.page_range %}
+                            {% if num == damaged_goods.number %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li> <!-- Current Page -->
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li> <!-- Other Pages -->
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if damaged_goods.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ damaged_goods.next_page_number }}" aria-label="Next">
+                                    &raquo; <!-- Next Page -->
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ damaged_goods.paginator.num_pages }}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span> <!-- Last Page -->
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    </nav>
+                    {% endif %}
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{view.raw_materials.name}}</title>
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h4 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Responsive table for smaller screens */
+        @media (max-width: 600px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            table th, table td {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Requests Review History</h1>
+    <table class="table table-bordered table-hover" id="my-table">
+        <thead>
+            <tr>
+                <th data-priority="1">Category</th>
+                <th data-priority="2">Status</th>
+                <th data-priority="3">Date and Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in view %}
+                <tr>
+                    <th>Request for {{ i.category.category_name }}</th>
+                    <td>{{ i.status }}</td>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+>>>>>>> 26694326ee1b1ea571206209305c77a1f53c37a1
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
+>>>>>>> master
+>>>>>>> master
+                    <td>{{ i.date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

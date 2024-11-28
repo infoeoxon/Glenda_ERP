@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Request List</h4>
+                    <div>
+                        <!-- New Request Buttons -->
+                        <a href="javascript:void(0);" onclick="openRequestModal('purchase')" class="btn btn-primary btn-sm mr-2">
+                            <i class="fas fa-plus"></i> New Purchase Request
+                        </a>
+                        <a href="javascript:void(0);" onclick="openRequestModal('production')" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> New Production Request
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Options -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-end">
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Print">
+                    <i class="fas fa-print"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                    <i class="far fa-file-pdf"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm" title="Export as Excel">
+                    <i class="fas fa-file-excel"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex align-items-center flex-wrap">
+                <!-- Request Type Filters -->
+                <div class="btn-group" style="margin-right: 10px;">
+                    <button class="btn btn-primary" onclick="filterRequestType('all')">All</button>
+                    <button class="btn btn-primary" onclick="filterRequestType('purchase')">Purchase</button>
+                    <button class="btn btn-primary" onclick="filterRequestType('production')">Production</button>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="input-group" style="width: 250px; margin-right: 10px;">
+                    <select class="form-control" id="categoryFilter" onchange="filterByCategory()">
+                        <option value="" selected>All Categories</option>
+                        <option value="Raw Material">Raw Material</option>
+                        <option value="Finished Goods">Finished Goods</option>
+                        <option value="Semi-Finished Goods">Semi-Finished Goods</option>
+                    </select>
+                </div>
+
+                <!-- Date Filter -->
+                <div class="position-relative">
+                    <button type="button" class="btn btn-primary waves-effect waves-light mr-2" onclick="showDateFilter()" style="width: 200px;">
+                        <i class="mdi mdi-filter mr-2"></i>Date
+                    </button>
+                    <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                        <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                        <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                        <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="input-group" style="width: 300px;">
+                    <input type="text" class="form-control" placeholder="Search Requests" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Request List Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr style="background-color: #f1f1f1;">
+                                    <th>Serial No</th>
+                                    <th>Request Type</th>
+                                    <th>Category</th>
+                                    <th>Material</th>
+                                    <th>Quantity</th>
+                                    <th>Request Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requestTableBody">
+                                <!-- Sample Data (To Be Dynamically Rendered) -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>Purchase</td>
+                                    <td>Raw Material</td>
+                                    <td>Preform</td>
+                                    <td>1000</td>
+                                    <td>2024-11-01</td>
+                                    <td>Pending</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Production</td>
+                                    <td>Finished Goods</td>
+                                    <td>500ml Bottles</td>
+                                    <td>500</td>
+                                    <td>2024-11-02</td>
+                                    <td>Completed</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for New Request -->
+<div id="newRequestModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 10px; box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.25);">
+            <div class="modal-header" style="background-color: #ffffff; border-bottom: 1px solid #ddd;">
+                <h5 class="modal-title" id="modalTitle" style="font-weight: bold; color: #333;">New Request</h5>
+                <button type="button" class="btn-close" onclick="closeRequestModal()" style="border: none; background: transparent; font-size: 20px; color: #333;">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <!-- Purchase Request Form -->
+                <form id="purchaseRequestForm" style="display: block;">
+                    <h6>Send Request to Purchase Department</h6>
+                    <div class="form-group mb-3">
+                        <label for="purchaseRequestDate">Required Date</label>
+                        <input type="date" id="purchaseRequestDate" class="form-control">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="materialType">Material Type</label>
+                        <input type="text" id="materialType" class="form-control" placeholder="Enter material type">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="quantityRequired">Quantity</label>
+                        <input type="number" id="quantityRequired" class="form-control" placeholder="Enter quantity">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="purchaseRemarks">Remarks</label>
+                        <textarea id="purchaseRemarks" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+
+                <!-- Production Request Form -->
+                <form id="productionRequestForm" style="display: none;">
+                    <h6>Send Request to Production Department</h6>
+                    <div class="form-group mb-3">
+                        <label for="productionRequestDate">Required Date</label>
+                        <input type="date" id="productionRequestDate" class="form-control">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="productType">Product Type</label>
+                        <input type="text" id="productType" class="form-control" placeholder="Enter product type">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="productionQuantityRequired">Quantity</label>
+                        <input type="number" id="productionQuantityRequired" class="form-control" placeholder="Enter quantity">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="productionRemarks">Remarks</label>
+                        <textarea id="productionRemarks" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="background-color: #f8f9fa; border-top: 1px solid #ddd;">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" onclick="closeRequestModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Open Modal and toggle forms
+    function openRequestModal(requestType) {
+        document.getElementById('newRequestModal').style.display = 'block';
+        if (requestType === 'purchase') {
+            document.getElementById('purchaseRequestForm').style.display = 'block';
+            document.getElementById('productionRequestForm').style.display = 'none';
+            document.getElementById('modalTitle').innerText = 'New Purchase Request';
+        } else if (requestType === 'production') {
+            document.getElementById('purchaseRequestForm').style.display = 'none';
+            document.getElementById('productionRequestForm').style.display = 'block';
+            document.getElementById('modalTitle').innerText = 'New Production Request';
+        }
+    }
+
+    // Close Modal
+    function closeRequestModal() {
+        document.getElementById('newRequestModal').style.display = 'none';
+    }
+</script>
+
+{% endblock %}

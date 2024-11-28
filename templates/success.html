@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Submission Successful</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="mt-0 header-title">Thank You!</h4>
+                    <p>Your category has been submitted successfully.</p>
+                    <p><a href="{% url 'category' %}" class="btn btn-primary">Go Back to Category Form</a></p>
+                </div>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div> <!-- container -->
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+       <div class="page-content-wrapper ">
+
+                        <div class="container-fluid">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="page-title-box">
+                                        <div class="btn-group float-right">
+                                            <ol class="breadcrumb hide-phone p-0 m-0">
+                                                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+
+                                            </ol>
+                                        </div>
+                                        <h4 class="page-title"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card timeline-card">
+                                    <div class="card-body p-0">
+                                        <div class="bg-gradient2 text-white text-center py-3 mb-4">
+                                            <p class="mb-0 font-18"><i class="mdi mdi-clock-outline font-20"></i> Chat with {{ user.name }}</p>
+                                        </div>
+                                    </div>
+                                <div class="card-body boxscroll">
+            <!-- Chatbox inside the card -->
+                                <div class="chatbox">
+                                <div id="chat-box" style="border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-top: 20px;">
+                            <div id="messages">
+                        <!-- Display previous messages -->
+                        {% for message in messages %}
+                            <div class="message {% if message.sender == request.user %}sent{% else %}received{% endif %}">
+                                <div class="message-content">
+                                     {{ message.content }}
+                                    <br><small>{{ message.timestamp|date:"Y-m-d H:i:s" }}</small>
+                                </div>
+                            </div>
+                                {% empty %}
+                                    <p>No messages yet</p>
+                                {% endfor %}
+                            </div>
+                </div>
+                <input type="text" id="message-input" class="form-control mt-3" placeholder="Type a message..." autocomplete="off">
+                <button onclick="sendMessage()" class="btn btn-primary mt-2">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+       </div>
+<!-- CSS for message alignment and styling -->
+<style>
+    .message {
+        margin-bottom: 10px;
+        display: flex;
+    }
+
+    .sent {
+        justify-content: flex-end; /* Align sender's messages to the right */
+    }
+
+    .received {
+        justify-content: flex-start; /* Align receiver's messages to the left */
+    }
+
+    .message-content {
+        background-color: #f1f1f1;
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 70%;
+    }
+
+    .sent .message-content {
+        background-color: #d1e7ff; /* Blue-ish background for sent messages */
+        text-align: right;
+    }
+
+    .received .message-content {
+        background-color: #f9f9f9; /* Grayish background for received messages */
+        text-align: left;
+    }
+
+    #chat-box {
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+
+<script>
+    function sendMessage() {
+        const input = document.getElementById('message-input');
+        const message = input.value;
+        if (message) {
+            // Display the outgoing message
+            appendMessage('You', message, 'sent', new Date().toLocaleString());
+
+            // Logic to send the message to the backend
+            fetch('/chat/send_message/', { // Update the URL as necessary
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') // Include CSRF token if necessary
+                },
+                body: JSON.stringify({ message: message, user_id: '{{ user.id }}' })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Message sent:', data);
+                updateMessageTimestamp(data.message_id, data.timestamp);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+            input.value = ''; // Clear the input
+        }
+    }
+
+    function appendMessage(sender, message, type, timestamp) {
+        const messagesDiv = document.getElementById('messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', type);
+        messageDiv.innerHTML = `
+            <div class="message-content">
+                <strong>${sender}:</strong> ${message}
+                <br><small>${timestamp}</small>
+            </div>`;
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+    }
+
+    function updateMessageTimestamp(messageId, timestamp) {
+        // You can implement logic to update the timestamp on specific messages based on messageId
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">History of Group A</h4>
+                </div>
+
+                <div class="d-flex align-items-center flex-wrap" style="gap: 10px; margin-top: 20px;">
+
+                    <!-- Date Filter -->
+                    <div class="position-relative" style="margin-bottom: 20px;">
+                        <button type="button" style="width: 250px" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()">
+                            <i class="mdi mdi-filter mr-2"></i>Date
+                        </button>
+                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                            <label for="from_date" class="form-label">From Date</label>
+                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" />
+                            <label for="to_date" class="form-label">To Date</label>
+                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" />
+                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="width: 300px; margin-bottom: 20px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                </div>
+                <!-- Group Dates -->
+                <div style="max-width: 100%; background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <div class="row">
+                        <!-- Box 1: 15 November 2024 -->
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded shadow-sm">
+                                <div style="font-size: 14px; color: gray; margin-bottom: 5px;">15 November 2024</div>
+                                <div style="font-size: 14px; margin-bottom: 5px;">People in Group: 5</div>
+                                <button class="btn btn-primary" onclick="viewPeopleList('Group A', '15 November 2024')"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-primary"><i class="fas fa-print fa-1x"></i></button>
+                                <button class="btn btn-primary"><i class="fas fa-file-pdf fa-1x"></i></button>
+                                <button class="btn btn-primary"><i class="fas fa-file-excel"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Box 2: 17 November 2024 -->
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded shadow-sm">
+                                <div style="font-size: 14px; color: gray; margin-bottom: 5px;">17 November 2024</div>
+                                <div style="font-size: 14px; margin-bottom: 5px;">People in Group: 10</div>
+                                <button class="btn btn-primary" onclick="viewPeopleList('Group A', '17 November 2024')"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-primary"><i class="fas fa-print fa-1x"></i></button>
+                                <button class="btn btn-primary"><i class="fas fa-file-pdf fa-1x"></i></button>
+                                <button class="btn btn-primary"><i class="fas fa-file-excel"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Box 3: 18 November 2024 -->
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded shadow-sm">
+                                <div style="font-size: 14px; color: gray; margin-bottom: 5px;">18 November 2024</div>
+                                <div style="font-size: 14px; margin-bottom: 5px;">People in Group: 7</div>
+                                <button class="btn btn-primary" onclick="viewPeopleList('Group B', '18 November 2024')"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-primary" ><i class="fas fa-print fa-1x"></i></button>
+                                <button class="btn btn-primary"><i class="fas fa-file-pdf fa-1x"></i></button>
+                                <button class="btn btn-primary"><i class="fas fa-file-excel"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Viewing People in Group on a Specific Date -->
+<div id="peopleModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title"><span id="modal-group-date"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- People List Table -->
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>SL No</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="people-list">
+                        <!-- Rows will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sample data for groups and people
+    const groupChanges = {
+        'Group A': [
+            { date: '15 November 2024', limit: 5, people: ['John Doe', 'Jane Smith', 'Jim Brown', 'Mary Johnson', 'Robert Lee'] },
+            { date: '17 November 2024', limit: 10, people: ['John Doe', 'Jane Smith', 'Jim Brown', 'Mary Johnson', 'Robert Lee', 'Alice Davis', 'Charlie Miller', 'Sophie Taylor', 'James Wilson', 'Rachel Adams'] }
+        ],
+        'Group B': [
+            { date: '18 November 2024', limit: 7, people: ['Alice Cooper', 'Liam Harris', 'Emma Wright', 'Noah Scott', 'Olivia Young', 'Lucas King', 'Sophia Turner'] }
+        ]
+    };
+
+    // Function to show people list in the group on a specific date
+    function viewPeopleList(groupName, date) {
+        const peopleList = document.getElementById('people-list');
+        const modalGroupDate = document.getElementById('modal-group-date');
+
+        // Find the data for the selected group and date
+        const groupData = groupChanges[groupName];
+        const selectedChange = groupData.find(change => change.date === date);
+
+        // Update modal header
+        modalGroupDate.innerText = `${groupName} - ${date}`;
+        peopleList.innerHTML = ''; // Clear previous table rows
+
+        // Populate table rows
+        selectedChange.people.forEach((person, index) => {
+            const row = document.createElement('tr');
+            const slNoCell = document.createElement('td');
+            const nameCell = document.createElement('td');
+
+            slNoCell.textContent = index + 1; // Serial number
+            nameCell.textContent = person; // Person's name
+
+            row.appendChild(slNoCell);
+            row.appendChild(nameCell);
+            peopleList.appendChild(row); // Append the row to the table body
+        });
+
+        // Show the modal
+        $('#peopleModal').modal('show');
+    }
+
+function showDateFilter() {
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

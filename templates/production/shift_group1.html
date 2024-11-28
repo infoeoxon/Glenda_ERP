@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Shift Group</h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
+                        <!-- Date Filter -->
+                        <div class="position-relative" style="flex-shrink: 0;">
+                            <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="width: 250px;">
+                                <i class="mdi mdi-filter mr-2"></i>Date
+                            </button>
+                            <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                                <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                                <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                                <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="input-group" style="flex-shrink: 0; width: 300px;">
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Create Plan Button -->
+                        <button type="button" class="btn btn-primary" onclick="showModal()" style="margin: 20px;">
+                            <i class="fa fa-plus mr-2"></i>Create Group
+                        </button>
+
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div style="max-width: 100%; background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; gap: 20px; align-items: flex-start;">
+                    <div style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 10px; font-family: Arial, sans-serif; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #dedcdc; margin-bottom: 20px; flex: 1;">
+                        <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px;">Group 1</div>
+                        <div style="font-size: 14px; color: gray; margin-bottom: 10px;">Created: 01-Nov </div>
+                        <div style="font-size: 14px; color: gray; margin-bottom: 10px;">Last Edited: 02-Nov </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                                <i class="fa fa-users"></i> 30 Employees
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-eye fa-1x" title="View Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-pen fa-1x" title="Edit Details" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 10px; font-family: Arial, sans-serif; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #dedcdc; margin-bottom: 20px; flex: 1;">
+                        <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px;">Group 2</div>
+                        <div style="font-size: 14px; color: gray; margin-bottom: 10px;">Created: 05-Nov </div>
+                        <div style="font-size: 14px; color: gray; margin-bottom: 10px;">Last Edited: 05-Nov </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                                <i class="fa fa-users"></i> 50 Employees
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-eye fa-1x" title="View Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-pen fa-1x" title="Edit Details" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                        </div>
+                    </div>
+
+
+                    <div style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 10px; font-family: Arial, sans-serif; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #dedcdc; margin-bottom: 20px; flex: 1;">
+                        <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px;">Group 3</div>
+                        <div style="font-size: 14px; color: gray; margin-bottom: 10px;">Created: 07-Nov </div>
+                        <div style="font-size: 14px; color: gray; margin-bottom: 10px;">Last Edited: 07-Nov </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                                <i class="fa fa-users"></i> 100 Employees
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-eye fa-1x" title="View Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-pen fa-1x" title="Edit Details" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+ <!-- Page content Wrapper -->
+
+   <!-- Create Group Modal -->
+<div id="createGroupModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 900px; background: white; border: 1px solid #ccc; border-radius: 5px; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <div style="padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h5>Create Shift Group</h5>
+            <button type="button" onclick="closeModal()" style="border: none; background: none; font-size: 20px;">&times;</button>
+        </div>
+        <hr>
+        <!-- Group Limit Input -->
+        <div style="margin-bottom: 20px;">
+            <label for="groupLimit" style="font-weight: bold;">Group Limit:</label>
+            <input type="number" id="groupLimit" min="1" placeholder="Enter group limit" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+        <div style="display: flex; gap: 20px; height: 400px;">
+            <!-- Left Box: Employee List -->
+            <div id="employeeBox" style="flex: 1; height: 100%; display: flex; flex-direction: column;">
+                <h6>Employees</h6>
+                <!-- Search Bar -->
+                <input type="text" id="employeeSearch" placeholder="Search employees..." style="width: 100%; padding: 5px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                <div id="employeeList" style="flex: 1; overflow-y: auto; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
+                    <!-- Employee Items -->
+                    <div class="employee-item" data-id="1" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 1</div>
+                    <div class="employee-item" data-id="2" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 2</div>
+                    <div class="employee-item" data-id="3" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 3</div>
+                    <div class="employee-item" data-id="4" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 4</div>
+                    <div class="employee-item" data-id="5" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 5</div>
+                    <div class="employee-item" data-id="6" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 6</div>
+                    <div class="employee-item" data-id="7" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 7</div>
+                    <div class="employee-item" data-id="8" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 8</div>
+                    <div class="employee-item" data-id="9" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 9</div>
+                    <div class="employee-item" data-id="10" style="padding: 5px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 3px; background-color: #f9f9f9;">Person 10</div>
+                </div>
+            </div>
+
+            <!-- Right Box: Group List -->
+            <div id="groupBox" style="flex: 1; height: 100%; display: flex; flex-direction: column;">
+                <h6>Group</h6>
+                <div id="groupList" style="flex: 1; overflow-y: auto; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
+                    <!-- Group Items -->
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: right; margin-top: 20px;">
+            <button type="button" onclick="closeModal()" style="padding: 10px 20px; background: #ccc; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            <button type="button" style="padding: 10px 20px; background: #605daf; color: white; border: none; border-radius: 5px; cursor: pointer;">Save Group</button>
+        </div>
+    </div>
+</div>
+<div id="modalBackdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+<script>
+    function showDateFilter() {
+        // Toggle visibility of the date filter section
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+ let groupLimit = 0;
+
+    function showModal() {
+        document.getElementById('createGroupModal').style.display = 'block';
+        document.getElementById('modalBackdrop').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('createGroupModal').style.display = 'none';
+        document.getElementById('modalBackdrop').style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('employeeSearch').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const employeeItems = document.querySelectorAll('.employee-item');
+            employeeItems.forEach(item => {
+                if (item.textContent.toLowerCase().includes(searchValue)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        document.getElementById('groupLimit').addEventListener('input', function () {
+            groupLimit = parseInt(this.value, 10) || 0;
+        });
+
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('employee-item') && !event.target.classList.contains('disabled')) {
+                const groupList = document.getElementById('groupList');
+                if (groupLimit > 0 && groupList.children.length >= groupLimit) {
+                    alert(`Group limit of ${groupLimit} reached.`);
+                    return;
+                }
+
+                const employeeId = event.target.getAttribute('data-id');
+                const employeeName = event.target.textContent;
+
+                const groupItem = document.createElement('div');
+                groupItem.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 5px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 3px; margin-bottom: 5px;";
+                groupItem.setAttribute('data-id', employeeId);
+                groupItem.innerHTML = `
+                    ${employeeName}
+                    <button class="remove-item" style="padding: 2px 5px; border: none; background: #dc3545; color: white; border-radius: 3px; cursor: pointer;">
+                        <i class="fa fa-times"></i>
+                    </button>
+                `;
+                groupList.appendChild(groupItem);
+
+                event.target.style.pointerEvents = "none";
+                event.target.style.color = "#aaa";
+            }
+
+            if (event.target.classList.contains('remove-item') || event.target.parentElement.classList.contains('remove-item')) {
+                const removeButton = event.target.closest('.remove-item');
+                const employeeId = removeButton.parentElement.getAttribute('data-id');
+                removeButton.parentElement.remove();
+
+                const employeeItem = document.querySelector(`.employee-item[data-id="${employeeId}"]`);
+                employeeItem.style.pointerEvents = "auto";
+                employeeItem.style.color = "inherit";
+            }
+        });
+    });
+</script>
+{% endblock %}

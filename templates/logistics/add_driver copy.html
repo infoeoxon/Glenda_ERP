@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Driver</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Driver</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        {% if messages %}
+                            <ul class="messages text-warning">
+                                {% for message in messages %}
+                                    <li class="{{ message.tags }}">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <h4 class="mt-0 header-title"></h4>
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <!-- Display form errors here -->
+                            {% if form.errors %}
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        {% for field in form %}
+                                            {% if field.errors %}
+                                                <li>{{ field.label }}: {{ field.errors }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            <!-- Render form fields with labels -->
+                            <div class="form-group">
+                                <label for="{{ form.user.id_for_label }}">Driver Name</label>
+                                {{ form.user }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.license_number.id_for_label }}">{{ form.license_number.label }}</label>
+                                {{ form.license_number }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.aadhaar_number.id_for_label }}">{{ form.aadhaar_number.label }}</label>
+                                {{ form.aadhaar_number }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label }}</label>
+                                {{ form.phone_number }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.license_exp_date.id_for_label }}">{{ form.license_exp_date.label }}</label>
+                                {{ form.license_exp_date }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.upload_license.id_for_label }}">{{ form.upload_license.label }}</label>
+                                {{ form.upload_license }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.remarks.id_for_label }}">Remarks</label>
+                                {{ form.remarks }}
+                            </div>
+
+                            <!-- Star Rating Input -->
+                            <div class="form-group">
+                                <label for="ratings">Ratings</label>
+                                <div class="star-rating">
+                                    <span class="star" data-value="1">&#9733;</span>
+                                    <span class="star" data-value="2">&#9733;</span>
+                                    <span class="star" data-value="3">&#9733;</span>
+                                    <span class="star" data-value="4">&#9733;</span>
+                                    <span class="star" data-value="5">&#9733;</span>
+                                    <input type="hidden" name="ratings" id="ratings" value="{{ form.ratings.value|default:None }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                        Submit
+                                    </button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const stars = document.querySelectorAll('.star-rating .star');
+        const ratingInput = document.getElementById('ratings');
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', function() {
+                resetStars();
+                const value = this.getAttribute('data-value');
+                highlightStars(value);
+            });
+
+            star.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                ratingInput.value = value;
+            });
+
+            star.addEventListener('mouseleave', function() {
+                const currentRating = ratingInput.value;
+                resetStars();
+                if (currentRating) {
+                    highlightStars(currentRating);
+                }
+            });
+        });
+
+        function highlightStars(value) {
+            stars.forEach(star => {
+                if (star.getAttribute('data-value') <= value) {
+                    star.classList.add('selected');
+                }
+            });
+        }
+
+        function resetStars() {
+            stars.forEach(star => {
+                star.classList.remove('selected');
+            });
+        }
+    });
+</script>
+
+<style>
+    .star-rating {
+        font-size: 2em;
+        color: #ccc;
+        cursor: pointer;
+    }
+
+    .star-rating .star {
+        padding: 0 5px;
+    }
+
+    .star-rating .star:hover,
+    .star-rating .star.selected {
+        color: #f39c12; /* Gold color for selected stars */
+    }
+</style>
+
+{% endblock %}

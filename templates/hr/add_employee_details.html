@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+<div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Employee Details</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Add Your Details</h2>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="form-group">
+                                <label for="id_pincode">Pin Code</label>
+                                {{ form.pincode }}
+                                {{ form.pincode.errors }}
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="id_district">District</label>
+                                {{ form.district }}
+                                {{ form.district.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_state">State</label>
+                                {{ form.state }}
+                                {{ form.state.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_country">Country</label>
+                                {{ form.country }}
+                                {{ form.country.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_street">Street</label>
+                                {{ form.street }}
+                                {{ form.street.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_landmark">Landmark</label>
+                                {{ form.landmark }}
+                                {{ form.landmark.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Building</label>
+                                {{ form.building }}
+                                {{ form.building.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Id Proof Types</label>
+                                {{ form.id_proof_type }}
+                                {{ form.id_proof_type.errors }}
+                            </div>
+
+
+                            <div class="form-group" id="other-id-proof" style="display:none;">
+                                <label>Other Id Proof Type</label>
+                                {{ form.other_id_proof_type }}
+                                {{ form.other_id_proof_type.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Id Proof Types Number</label>
+                                {{ form.id_proof_type_number }}
+                                {{ form.id_proof_type_number.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Id Proof File</label>
+                                {{ form.id_proof_file }}
+                                {{ form.id_proof_file.errors }}
+                            </div>
+
+                            <div class="form-group" id="other-id-proof-validity" style="display:none;">
+                                <label>Validity of Other Id Proof</label>
+                                {{ form.validity }}
+                                {{ form.validity.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Blood Group</label>
+                                {{ form.employee_blood_groups }}
+                                {{ form.employee_blood_groups.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                {{ form.date_of_birth }}
+                                {{ form.date_of_birth.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Qualification</label>
+                                {{ form.qualification }}
+                                {{ form.qualification.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Qualification Proof</label>
+                                {{ form.qualification_file }}
+                                {{ form.qualification_file.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Experience</label>
+                                {{ form.experience }}
+                                {{ form.experience.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Experience Proof</label>
+                                {{ form.experience_file }}
+                                {{ form.experience_file.errors }}
+                            </div>
+
+                             <div class="form-group">
+                                <label>Joining Date</label>
+                                {{ form.joining_date }}
+                                {{ form.joining_date.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>NSR</label>
+                                {{ form.nsr }}
+                                {{ form.nsr.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>PCC</label>
+                                {{ form.pcc }}
+                                {{ form.pcc.errors }}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Input field for pincode
+        $('#id_pincode').on('input', function() {
+            var pincode = $(this).val();
+
+            // Ensure the pincode is 6 digits long
+            if (pincode.length === 6) {
+                // Use India's Post Office API to fetch location details
+                $.ajax({
+                    url: 'https://api.postalpincode.in/pincode/' + pincode,
+                    method: 'GET',
+                    success: function(response) {
+                        if (response[0].Status === 'Success') {
+                            var postOffice = response[0].PostOffice[0];
+                            var district = postOffice.District;
+                            var state = postOffice.State;
+                            var street = postOffice.Name;
+                            var country = 'India'; // Set the Country field to a default value
+
+                            // Fill the form fields with the fetched data
+                            $('#id_district').val(district);
+                            $('#id_state').val(state);
+                            $('#id_street').val(street);  // Corrected ID here
+                            $('#id_country').val(country); // Update the Country field
+                        } else {
+                            alert('Invalid Pincode');
+                        }
+                    },
+                    error: function() {
+                        alert('Error fetching details. Please try again later.');
+                    }
+                });
+            }
+        });
+        $('#id_id_proof_type').on('change', function() {
+            if ($(this).val() === 'OTHERS') {
+                $('#other-id-proof').show(); // Show other ID proof field
+                $('#other-id-proof-validity').show(); // Show validity field for other ID proof
+            } else {
+                $('#other-id-proof').hide(); // Hide other ID proof field
+                $('#other-id-proof-validity').hide(); // Hide validity field for other ID proof
+                $('#id_other_id_proof_type').val(''); // Clear other ID proof field
+                $('#id_other_id_proof_validity').val(''); // Clear validity field
+            }
+        });
+    });
+</script>
+
+{% endblock %}

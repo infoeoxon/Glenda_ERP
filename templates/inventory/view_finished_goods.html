@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                            <li class="breadcrumb-item active">Editable</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Finished Goods</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-10">
+                                <!-- Search Bars at the top of the card -->
+                                <form method="GET" action="{% url 'finishedgoods_search_and_export' %}" class="d-flex align-items-center">
+                                    {% csrf_token %}
+                                    <!-- Category Dropdown Search -->
+                                    <div class="input-group mr-2" style="width: 30%;">
+                                        <select class="form-control" name="category">
+                                            <option value="" disabled {% if not search_category %}selected{% endif %}>Search by Category</option>
+                                            {% for category in categories %}
+                                            <option value="{{ category.id }}" {% if search_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                                {{ category.category_name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <!-- Name Search Bar -->
+                                    <div class="input-group mr-2" style="width: 30%;">
+                                        <input type="text" class="form-control" name="name" placeholder="Search by Name" value="{{ search_name }}">
+                                    </div>
+
+                                    <!-- Single Search Button -->
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Buttons on the same line and aligned to the right -->
+                            <div class="col-2 d-flex align-items-center justify-content-end" >
+                                <!-- Request Section Button -->
+                                <a href="{% url 'finishedgoods_request_messages_list' %}" class="mr-2">
+                                    <button type="button" class="btn btn-primary btn-lg" style="margin-right: 30px;">
+                                        Request Section
+                                    </button>
+                                </a>
+
+                                <!-- Export Button -->
+                                <div class="btn-group" style="margin-right: 10px;">
+                                    <button type="button" class="btn btn-success btn-lg">Export as</button>
+                                    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'finishedgoods_search_and_export' %}?export=csv&name={{ search_name }}&category={{ search_category }}">Excel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        {% if view %}
+                            <table class="table mb-0" id="my-table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Category</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Name</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Size</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Total Stock</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in view %}
+                                    <tr>
+<<<<<<< HEAD
+                                        <td class="text-center"><img src="{{ item.image.url }}" alt="Image description" width="120" height="70" /></td>
+                                        <td>      </td>
+                                        <td>      </td>
+                                        <td class="text-center">{{ item.category.category_name }}</td>
+                                        <td>      </td>
+                                        <td>      </td>
+                                        <td class="text-center">{{ item.name }}</td>
+                                        <td>      </td>
+                                        <td>      </td>
+                                        <td class="text-center">{{ item.size }}</td>
+                                        <td>      </td>
+                                        <td>      </td>
+                                        <td class="text-center">
+                                            {% if item.total_stock <= 10000 %}
+                                                {{ item.total_stock }}
+                                                <a href="{% url 'finishedgoods_message_request' %}">
+                                                    <div style="font-size: 12px; color: red; margin-top: 4px;"><i class="fa fa-exclamation-triangle" style="color:red;" title="Low quantity"></i>  Low stock</div>
+                                                </a>
+                                            {% else %}
+                                                {{ item.total_stock }}
+                                            {% endif %}
+                                        </td>
+                                        <td>      </td>
+                                        <td>      </td>
+=======
+                                        <td><img src="{{ item.image.url }}" alt="Image description" width="60" height="120" /></td>
+                                        <td>{{ item.category.category_name }}</td>
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ item.size }}</td>
+                                        <td>{{ item.total_stock }}</td>
+>>>>>>> master
+
+                                        <td>
+                                            <a href="{% url 'finished_goods_allocate' item.id %}">
+                                                <button type="button" class="btn btn-purple waves-effect waves-light">
+                                                    <i class="fas fa-share-square"></i> Allocate
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td>      </td>
+                                        <td>      </td>
+
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-purple dropdown-toggle waves-effect waves-light" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="mdi mdi-send mr-2"></i>History
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="{% url 'finishedgoods_stock_history' item.id %}">Stock</a>
+                                                    <a class="dropdown-item" href="{% url 'finished_goods_allocate_history' item.id %}">Allocate</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>No results found for your search criteria.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Pagination Controls -->
+                {% if finished_goods.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-3">
+                        {% if finished_goods.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span> <!-- First Page -->
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ finished_goods.previous_page_number }}" aria-label="Previous">
+                                    &laquo; <!-- Previous Page -->
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in finished_goods.paginator.page_range %}
+                            {% if num == finished_goods.number %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li> <!-- Current Page -->
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li> <!-- Other Pages -->
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if finished_goods.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ finished_goods.next_page_number }}" aria-label="Next">
+                                    &raquo; <!-- Next Page -->
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ finished_goods.paginator.num_pages }}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span> <!-- Last Page -->
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    </nav>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

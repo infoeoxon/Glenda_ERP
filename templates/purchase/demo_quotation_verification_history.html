@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Verification of Quotation History</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-end">
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                    <i class="far fa-file-pdf"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+                    <i class="fas fa-file-excel"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm" title="Print">
+                    <i class="fas fa-print"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters and Search Bar -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <form method="GET" action="" class="d-flex align-items-center">
+                    <!-- Material Type Filter -->
+                    <div class="input-group mr-3" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Material Type
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?material_type=Preform">Preform</a>
+                            <a class="dropdown-item" href="?material_type=Cap">Cap</a>
+                            <a class="dropdown-item" href="?material_type=PET Bottle">PET Bottle</a>
+                        </div>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="dropdown mr-3" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Status
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?status=Approved">Approved</a>
+                            <a class="dropdown-item" href="?status=Rejected">Rejected</a>
+                            <a class="dropdown-item" href="?status=Pending">Pending</a>
+                        </div>
+                    </div>
+
+                    <!-- Date Filter -->
+                    <div class="position-relative mr-3" style="width: 200px;">
+                        <button type="button" class="btn btn-primary waves-effect waves-light w-100" onclick="toggleDateFilter()">
+                            <i class="mdi mdi-filter mr-2"></i>Date
+                        </button>
+                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                            <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search by Quotation ID or Material Type" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quotation Verification Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Quotation ID</th>
+                                    <th>Material Type</th>
+                                    <th>Date of Verification</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sample Rows -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>QT-001</td>
+                                    <td>Preform</td>
+                                    <td>2024-11-20</td>
+                                    <td>Approved</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showQuotationDetails('QT-001')">
+                                            View Full Report
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>QT-002</td>
+                                    <td>Cap</td>
+                                    <td>2024-11-18</td>
+                                    <td>Rejected</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showQuotationDetails('QT-002')">
+                                            View Full Report
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Additional rows can be dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="quotationDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document" style="width: 80%; max-height: 90vh;">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: white; padding: 20px; align-items: center; border-bottom: 1px solid #ddd;">
+                <h5 class="modal-title" style="font-weight: bold; flex-grow: 1; color: #333;">Quotation Details</h5>
+                <div class="d-flex" style="gap: 10px;">
+                    <a href="#" class="btn btn-primary btn-sm" title="Print" onclick="printQuotationDetails()">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" title="Export as PDF" onclick="exportQuotationAsPDF()">
+                        <i class="far fa-file-pdf"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" title="Export as Excel" onclick="exportQuotationAsExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <button type="button" class="btn-close" onclick="closeQuotationDetailsModal()" style="border: none; background: transparent; font-size: 20px; color: #333; margin-left: 15px;">
+                        &times;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" style="padding: 30px; max-height: 70vh; overflow-y: auto;">
+                <table class="table table-striped" style="table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f1f1f1;">
+                            <th style="width: 40%; text-align: left; white-space: nowrap;">Field</th>
+                            <th style="width: 60%; text-align: left; word-wrap: break-word;">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Quotation ID</strong></td>
+                            <td>QT-001</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vendor ID</strong></td>
+                            <td>VEND-123</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quotation Date</strong></td>
+                            <td>2024-11-15</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quotation Price</strong></td>
+                            <td>5,00,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Delivery Timeline</strong></td>
+                            <td>5 Days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quotation Validity</strong></td>
+                            <td>30 Days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Payment Method</strong></td>
+                            <td>Net Banking</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Criteria Assessment</strong></td>
+                            <td>Meets Quality Standards</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Remarks (Executive)</strong></td>
+                            <td>Looks good for approval</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Remarks (Manager)</strong></td>
+                            <td>Approved for purchase</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status</strong></td>
+                            <td>Approved</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Verified Date</strong></td>
+                            <td>2024-11-20</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeQuotationDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDateFilter() {
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showQuotationDetails(quotationId) {
+        document.getElementById('quotationDetailsModal').style.display = 'block';
+    }
+
+    function closeQuotationDetailsModal() {
+        document.getElementById('quotationDetailsModal').style.display = 'none';
+    }
+    function printQuotationDetails() {
+        const modalContent = document.querySelector('#quotationDetailsModal .modal-body').innerHTML;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Quotation Details</title></head><body>');
+        printWindow.document.write(modalContent);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    function exportQuotationAsPDF() {
+        alert("Export as PDF functionality goes here.");
+    }
+
+    function exportQuotationAsExcel() {
+        alert("Export as Excel functionality goes here.");
+    }
+
+</script>
+{% endblock %}

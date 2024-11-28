@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <form method="GET" action="{% url 'user_search_export' %}">
+                                <div class="row mb-4 align-items-end">
+                                    <div class="col-md-2">
+                                        <h3>Customers </h3>
+                                    </div>
+                                    <div class="col-md-12 text-right">
+                                        <a class="btn btn-primary waves-light" href="{% url 'vender_register_view' %}" style="margin-left:12px;">Add Customers</a>
+                                        <a href="" class="fas fa-print fa-1x" title="Print" style="color:#605daf; margin-right: 10px;"></a>
+                                        <a href="" class="far fa-file-pdf fa-1x" title="PDF" style="color:#605daf; margin-right: 10px;"></a>
+                                        <a href="" class="fas fa-file-excel fa-1x" title="Excel" style="color:#605daf; margin-right: 10px;"></a>
+                                        <a href="" class="fas fa-home fa-1x" title="Home" style="color:#605daf;"></a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <form method="GET" action="{% url 'user_search_export' %}">
+                                <div class="row mb-6 align-items-end">
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <label for="search" class="sr-only">Search by Name or Number</label>
+                                            <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                                            <button class="btn btn-primary" type="submit" id="search-btn">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 text-right">
+                                        <!-- Department Dropdown -->
+<!--                                        <div class="btn-group">-->
+<!--                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                                                Department-->
+<!--                                            </button>-->
+<!--                                            <div class="dropdown-menu">-->
+<!--                                                {% for desg in designations %}-->
+<!--                                                <a class="dropdown-item" href="?designation={{ desg.id }}">{{ desg.user_type }}</a>-->
+<!--                                                {% endfor %}-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+
+                                        <!-- Designation Dropdown -->
+<!--                                        <div class="btn-group">-->
+<!--                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                                                Designation-->
+<!--                                            </button>-->
+<!--                                            <div class="dropdown-menu">-->
+<!--                                                {% for j in desg %}-->
+<!--                                                <a class="dropdown-item" href="?vendor=Vendor A">{{ j.user_type }}</a>-->
+<!--                                                {% endfor %}-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+<!--                        </div>-->
+                        <table class="table mt-5" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone Number</th>
+                                  <th></th>
+
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in view %}
+                                <tr>
+                                    <td>{{ i.name }}</td>
+                                    <td>{{ i.email }}</td>
+                                    <td>{{ i.phone_number }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action
+                                                                    </button>
+                                                                    <div class="dropdown-menu">
+                                                                        <a class="dropdown-item" href="{% url 'approve_as_distributor' i.id %}">Dealer</a>
+                                                                        <a class="dropdown-item" href="{% url 'approve_as_vendor' i.id %}">Vendor</a>
+                                                                        <a class="dropdown-item" href="{% url 'approve_as_customer' i.id %}">Customer</a>
+<!--                                                                        <div role="separator" class="dropdown-divider"></div>-->
+<!--                                                                        <a class="dropdown-item" href="#">Separated link</a>-->
+                                                                    </div>
+
+                                    </td>
+
+
+                                    <td>
+                                            <a href="{% url 'delete_user' i.id %}" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete this user?');"><i class="fas fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}

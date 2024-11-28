@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="chat-box">
+    <h2>Chat</h2>
+    <div id="messages">
+        {% for message in messages %}
+            <div class="message">
+                <strong>{{ message.sender.email }}:</strong> {{ message.message }} <em>{{ message.timestamp }}</em>
+            </div>
+        {% endfor %}
+    </div>
+    <form id="chat-form">
+        <input type="text" id="message-input" placeholder="Type your message..." required>
+        <input type="hidden" id="receiver-id" value="{{ receiver.id }}">
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('chat-form').onsubmit = function(event) {
+    event.preventDefault();
+    const messageInput = document.getElementById('message-input');
+    const receiverId = document.getElementById('receiver-id').value;
+
+    fetch("{% url 'send_message' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: JSON.stringify({
+            message: messageInput.value,
+            receiver_id: receiverId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML += `<div class="message"><strong>You:</strong> ${data.message}</div>`;
+            messageInput.value = '';
+        }
+    });
+};
+</script>
+{% endblock %}

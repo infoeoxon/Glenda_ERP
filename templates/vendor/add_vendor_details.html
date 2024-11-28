@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title and Breadcrumb -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#"></a></li>
+                            <li class="breadcrumb-item"><a href="#"></a></li>
+                            <li class="breadcrumb-item active"></li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Vendor Details</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+       <div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mt-0 header-title">Vendor Details</h4>
+                <p class="text-muted mb-4 font-13">Please fill in the vendor details below.</p>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <!-- Vendor Phone Number -->
+                            <div class="form-group row">
+                                <label for="id_company_name" class="col-sm-4 col-form-label">Company Name</label>
+                                <div class="col-sm-8">
+                                    {{ form.company_name }}
+                                    {% for error in form.company_name.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Pincode -->
+                            <div class="form-group row">
+                                <label for="id_vendor_pincode" class="col-sm-4 col-form-label">Pin Code</label>
+                                <div class="col-sm-8">
+                                    {{ form.vendor_pincode }}
+                                    {% for error in form.vendor_pincode.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- District -->
+                            <div class="form-group row">
+                                <label for="id_vendor_district" class="col-sm-4 col-form-label">District</label>
+                                <div class="col-sm-8">
+                                    {{ form.vendor_district }}
+                                    {% for error in form.vendor_district.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- State -->
+                            <div class="form-group row">
+                                <label for="id_vendor_state" class="col-sm-4 col-form-label">State</label>
+                                <div class="col-sm-8">
+                                    {{ form.vendor_state }}
+                                    {% for error in form.vendor_state.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Country -->
+                            <div class="form-group row">
+                                <label for="id_vendor_country" class="col-sm-4 col-form-label">Country</label>
+                                <div class="col-sm-8">
+                                    {{ form.vendor_country }}
+                                    {% for error in form.vendor_country.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-6">
+                            <!-- Street -->
+                            <div class="form-group row">
+                                <label for="id_vendor_Street" class="col-sm-4 col-form-label">Street</label>
+                                <div class="col-sm-8">
+                                    {{ form.vendor_Street }}
+                                    {% for error in form.vendor_Street.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Landmark -->
+                            <div class="form-group row">
+                                <label for="id_vendor_Landmark" class="col-sm-4 col-form-label">Landmark</label>
+                                <div class="col-sm-8">
+                                    {{ form.vendor_Landmark }}
+                                    {% for error in form.vendor_Landmark.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Building -->
+                            <div class="form-group row">
+                                <label for="id_vendor_Building" class="col-sm-4 col-form-label">Building</label>
+                                <div class="col-sm-8">
+                                    {{ form.vendor_Building }}
+                                    {% for error in form.vendor_Building.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- PAN Selection -->
+                            <div class="form-group row">
+                                <label for="id_pan_yes_or_no" class="col-sm-4 col-form-label">Do you have a PAN?</label>
+                                <div class="col-sm-8">
+                                    {{ form.pan_yes_or_no }}
+                                    {% for error in form.pan_yes_or_no.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- PAN Number -->
+                            <div class="form-group row">
+                                <label for="id_vendor_PANNBR" class="col-sm-4 col-form-label">PAN Number</label>
+                                <div class="col-sm-8">
+                                    {{ form.vendor_PANNBR }}
+                                    {% for error in form.vendor_PANNBR.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Materials -->
+                    <div class="form-group">
+                        <label for="id_materials">Materials</label>
+                        {{ form.materials }}
+                        {% for error in form.materials.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-group mb-0">
+                        <div>
+                            <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
+                            <button type="reset" class="btn btn-secondary waves-effect m-l-5">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+<!-- jQuery code to fetch location based on pincode -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Input field for pincode
+        $('#id_vendor_pincode').on('input', function() {
+            var pincode = $(this).val();
+
+            // Ensure the pincode is 6 digits long
+            if (pincode.length === 6) {
+                // Use India's Post Office API to fetch location details
+                $.ajax({
+                    url: 'https://api.postalpincode.in/pincode/' + pincode,
+                    method: 'GET',
+                    success: function(response) {
+                        if (response[0].Status === 'Success') {
+                            var postOffice = response[0].PostOffice[0];
+                            var district = postOffice.District;
+                            var state = postOffice.State;
+                            var street = postOffice.Name;
+                            var country = 'India'; // Set the Country field to a default value
+
+                            // Fill the form fields with the fetched data
+                            $('#id_vendor_district').val(district);
+                            $('#id_vendor_state').val(state);
+                            $('#id_vendor_Street').val(street);
+                            $('#id_vendor_country').val(country); // Update the Country field
+                        } else {
+                            alert('Invalid Pincode');
+                        }
+                    },
+                    error: function() {
+                        alert('Error fetching details. Please try again later.');
+                    }
+                });
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const panYesNoField = document.getElementById('id_pan_yes_or_no');
+        const vendorPANNBRField = document.getElementById('id_vendor_PANNBR');
+
+        // Function to toggle the disabled state of the PAN Number field
+        function togglePANField() {
+            if (panYesNoField.value === 'yes') {  // Adjust the value check as needed
+                vendorPANNBRField.disabled = false; // Enable if "no" is selected
+            } else {
+                vendorPANNBRField.disabled = true;  // Disable if anything else is selected
+                vendorPANNBRField.value = ''; // Clear the value if disabled
+            }
+        }
+
+        // Initial check on page load
+        togglePANField();
+
+        // Add event listener for changes to the PAN Yes/No field
+        panYesNoField.addEventListener('change', togglePANField);
+    });
+</script>
+{% endblock %}

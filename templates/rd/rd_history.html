@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">R&D Histories</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Boxes -->
+        <div class="row">
+            <!-- Verification History -->
+            <div class="col-md-6 mb-4">
+                <a href="{% url 'verification_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Verification History</h5>
+                            <p class="text-muted">View the history of verifications conducted during R&D processes.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Quality Check History -->
+            <div class="col-md-6 mb-4">
+                <a href="{% url 'quality_check_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Quality Check History</h5>
+                            <p class="text-muted">Track the history of quality checks performed.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

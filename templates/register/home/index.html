@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- Top Bar End -->
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+<!--                            <li class="breadcrumb-item"><a href="#">Aqua Glanda</a></li>-->
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Dashboard</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+                                        <div class="col-2 align-self-center">
+                                            <i class="fas fa-tasks text-gradient-success"></i>
+                                        </div>
+                                        <div class="col-10 text-right">
+                                            <h5 class="mt-0 mb-1">{{ goods }}</h5>
+                                            <p class="mb-0 font-12 text-muted">Total Finished Goods</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body justify-content-center">
+                                <div class="icon-contain">
+                                    <div class="row">
+                                        <div class="col-2 align-self-center">
+                                            <i class="far fa-gem text-gradient-danger"></i>
+                                        </div>
+                                        <div class="col-10 text-right">
+                                            <h5 class="mt-0 mb-1">{{ da }}</h5>
+                                            <p class="mb-0 font-12 text-muted">Total Damaged Goods</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+                                        <div class="col-2 align-self-center">
+                                            <i class="fas fa-users text-gradient-warning"></i>
+                                        </div>
+                                        <div class="col-10 text-right">
+                                            <h5 class="mt-0 mb-1">{{ vendor }}</h5>
+                                            <p class="mb-0 font-12 text-muted">Total Vendors</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+                                        <div class="col-2 align-self-center">
+                                            <i class="fas fa-users text-gradient-warning"></i>
+                                        </div>
+                                        <div class="col-10 text-right">
+                                            <h5 class="mt-0 mb-1">8</h5>
+                                            <p class="mb-0 font-12 text-muted">Total Customers</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                            <!-- Uncomment if needed
+                            <label class="btn btn-primary btn-sm active">
+                                <input type="radio" name="options" id="option1" checked=""> This Week
+                            </label>
+                            <label class="btn btn-primary btn-sm">
+                                <input type="radio" name="options" id="option2"> Last Month
+                            </label>
+                            -->
+                        </div>
+                        <h5 class="header-title mb-4 mt-0">Daily Production</h5>
+                           <canvas id="stockChart"  height="60"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="header-title mb-4 mt-0">Raw Materials</h5>
+
+
+                        <div>
+    <canvas id="doughnutChart" width="500" height="1000"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+<!--    <div class="card-body">-->
+<!--        <div class="row mb-3">-->
+<!--            <div class="col-sm-6">-->
+<!--                <p class="mb-0 text-muted font-13">-->
+<!--                    <i class="mdi mdi-album mr-2 text-warning"></i>Opening Stock-->
+<!--                </p>-->
+<!--                <h5 class="mb-0" id="opening-stock">100</h5> &lt;!&ndash; Placeholder for opening stock &ndash;&gt;-->
+<!--            </div>-->
+<!--            <div class="col-sm-6">-->
+<!--                <p class="mb-0 text-muted font-13">-->
+<!--                    <i class="mdi mdi-album mr-2 text-danger"></i>Closing Stock-->
+<!--                </p>-->
+<!--                <h5 class="mb-0" id="closing-stock">120</h5> &lt;!&ndash; Placeholder for closing stock &ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="progress bg-gradient1 mb-3" style="height: 5px;">-->
+<!--            <div class="progress-bar bg-gradient3" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div> &lt;!&ndash; Example percentage &ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
+            </div>
+        </div>
+
+<!--        <div class="row">-->
+<!--            <div class="col-xl-4">-->
+<!--                <div class="card">-->
+<!--                    <div class="card-body">-->
+<!--                        <div class="dropdown d-inline-block float-right">-->
+<!--                            <a class="nav-link dropdown-toggle arrow-none" id="dLabel5" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">-->
+<!--                                <i class="fas fa-ellipsis-v font-20 text-muted"></i>-->
+<!--                            </a>-->
+<!--                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel5">-->
+<!--                                <a class="dropdown-item" href="#">New Messages</a>-->
+<!--                                <a class="dropdown-item" href="#">Open Messages</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <h5 class="header-title pb-3 mt-0">New Clients</h5>-->
+<!--                        <div class="table-responsive boxscroll" style="overflow: hidden; outline: none;">-->
+<!--&lt;!&ndash;                           <canvas id="stockChart" width="400" height="200"></canvas>&ndash;&gt;-->
+
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="col-xl-4 col-lg-6">-->
+<!--                <div class="card">-->
+<!--                    <div class="card-body">-->
+<!--                        <a href="#" class="btn btn-outline-success float-right">Withdraw Monthly</a>-->
+<!--                        <h5 class="header-title mb-4 mt-0">Monthly Revenue</h5>-->
+<!--                        <h4 class="mb-4">$15,421.50</h4>-->
+<!--                        <p class="font-14 text-muted mb-4">-->
+<!--                            <i class="mdi mdi-message-reply text-danger mr-2 font-18"></i>-->
+<!--                            $1500 when an unknown printer took a galley.-->
+<!--                        </p>-->
+<!--                        <canvas id="bar-data" height="132"></canvas>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="card">-->
+<!--                    <div class="card-body">-->
+<!--                        <div class="d-sm-flex align-self-center">-->
+<!--                            <img src="{% static 'assets/images/widgets/code.svg' %}" alt="" height="100">-->
+<!--                            <div class="media-body ml-3">-->
+<!--                                <h6>Code Confirmed</h6>-->
+<!--                                <p class="text-muted font-13">Contrary to popular belief, generators on Lorem Ipsum is not simply random text.</p>-->
+<!--                                <a href="#" class="btn btn-gradient-secondary">Confirm</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="col-xl-4 col-lg-6">-->
+<!--                <div class="card timeline-card">-->
+<!--                    <div class="card-body p-0">-->
+<!--                        <div class="bg-gradient2 text-white text-center py-3 mb-4">-->
+<!--                            <p class="mb-0 font-18"><i class="mdi mdi-clock-outline font-20"></i> This Week's Activity</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="card-body boxscroll">-->
+<!--                        <div class="timeline">-->
+<!--                            <div class="entry">-->
+<!--                                <div class="title">-->
+<!--                                    <h6>10/ Oct</h6>-->
+<!--                                </div>-->
+<!--                                <div class="body">-->
+<!--                                    <p>There are many variations of passages of Lorem Ipsum available...<a href="#" class="text-primary"> Read More</a></p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="header-title pb-3 mt-0">Vendors</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="align-self-center">
+                                        <th>Vendor Name</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Address</th>
+                                        <th>Products</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for i in ven %}
+                                <tr>
+                                    <td>{{ i.user.name }}</td>
+                                    <td>{{ i.user.email }}</td>
+                                    <td>{{ i.user.phone_number }}</td>
+                                    <td>Country:{{i.vendor_state}}<br/>
+                                        state:{{i.vendor_country}}<br/>
+                                        District:{{i.vendor_district}}<br/>
+                                        Street:{{i.vendor_Street}}<br/>
+                                        Building:{{i.vendor_Building}}<br/>
+                                        LandMark:{{i.vendor_Landmark}}<br/>
+                                        Pincode:{{i.vendor_pincode}}<br/>
+
+                                    </td>
+                                    <td>{{ i.materials.name }}</td>
+
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pt-3 border-top text-right">
+                            <a href="#" class="text-primary">View all <i class="mdi mdi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+        // Doughnut Chart
+        const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+        const doughnutChart = new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: {{ labels|safe }},  // Replace with your data
+                datasets: [{
+                    label: 'Total Stock',
+                    data: {{ data|safe }},  // Replace with your data
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 1)',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Total Stock of Raw Materials'
+                    }
+                }
+            }
+        });
+
+        // Line Chart
+        const labels = {{ chart_data.labels|safe }};  // Replace with your data
+        const data = {{ chart_data.data|safe }};      // Replace with your data
+
+        const ctxLine = document.getElementById('stockChart').getContext('2d');
+        const lineChart = new Chart(ctxLine, {
+            type: 'line',  // Change to 'bar' if you prefer a bar chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Finished Goods Stock',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

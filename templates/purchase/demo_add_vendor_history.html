@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Vendor History</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-end">
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                    <i class="far fa-file-pdf"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+                    <i class="fas fa-file-excel"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm" title="Print">
+                    <i class="fas fa-print"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters and Search Bar -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <form method="GET" action="" class="d-flex align-items-center">
+                    <!-- Material Type Filter -->
+                    <div class="input-group mr-3" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Material Type
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?material_type=Preform">Preform</a>
+                            <a class="dropdown-item" href="?material_type=Cap">Cap</a>
+                            <a class="dropdown-item" href="?material_type=PET Bottle">PET Bottle</a>
+                        </div>
+                    </div>
+
+                    <!-- Vendor Status Filter -->
+                    <div class="dropdown mr-3" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Status
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?status=Active">Active</a>
+                            <a class="dropdown-item" href="?status=Inactive">Inactive</a>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search by Vendor Name or Material Type" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Vendor History Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Vendor Name</th>
+                                    <th>Responsible Person</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sample Rows -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>Vendor A</td>
+                                    <td>John Doe</td>
+                                    <td>1234567890</td>
+                                    <td>vendorA@example.com</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showVendorDetails('1')">
+                                            View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Vendor B</td>
+                                    <td>Jane Smith</td>
+                                    <td>0987654321</td>
+                                    <td>vendorB@example.com</td>
+                                    <td>Inactive</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showVendorDetails('2')">
+                                            View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Additional rows can be dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Popup for Vendor Details -->
+<div id="vendorDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document" style="width: 80%; max-height: 90vh;">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: white; padding: 20px; align-items: center; border-bottom: 1px solid #ddd;">
+                <h5 class="modal-title" style="font-weight: bold; flex-grow: 1; color: #333;">Vendor Details</h5>
+                <div class="d-flex" style="gap: 10px;">
+                    <a href="#" class="btn btn-primary btn-sm" title="Print" onclick="printVendorDetails()">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" title="Export as PDF" onclick="exportVendorAsPDF()">
+                        <i class="far fa-file-pdf"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" title="Export as Excel" onclick="exportVendorAsExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <button type="button" class="btn-close" onclick="closeVendorDetailsModal()" style="border: none; background: transparent; font-size: 20px; color: #333; margin-left: 15px;">
+                        &times;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" style="padding: 30px; max-height: 70vh; overflow-y: auto;">
+                <table class="table table-striped" style="table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f1f1f1;">
+                            <th style="width: 40%; text-align: left; white-space: nowrap;">Field</th>
+                            <th style="width: 60%; text-align: left; word-wrap: break-word;">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Vendor Name</strong></td>
+                            <td>Vendor A</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Responsible Person</strong></td>
+                            <td>John Doe</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phone</strong></td>
+                            <td>1234567890</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td>vendorA@example.com</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status</strong></td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Material Type</strong></td>
+                            <td>Preform</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Remarks</strong></td>
+                            <td>Reliable vendor with timely delivery.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeVendorDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showVendorDetails(vendorId) {
+        document.getElementById('vendorDetailsModal').style.display = 'block';
+    }
+
+    function closeVendorDetailsModal() {
+        document.getElementById('vendorDetailsModal').style.display = 'none';
+    }
+
+    function printVendorDetails() {
+        const modalContent = document.querySelector('#vendorDetailsModal .modal-body').innerHTML;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Vendor Details</title></head><body>');
+        printWindow.document.write(modalContent);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    function exportVendorAsPDF() {
+        alert("Export as PDF functionality goes here.");
+    }
+
+    function exportVendorAsExcel() {
+        alert("Export as Excel functionality goes here.");
+    }
+</script>
+{% endblock %}

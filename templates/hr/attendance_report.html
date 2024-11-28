@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Attendance Report</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="col-md-12 text-right">
+                    <a href="" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                        <i class="far fa-file-pdf"></i>
+                    </a>
+                    <a href="" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" title="Print">
+                        <i class="fas fa-print"></i>
+                    </a>
+                </div>
+                <div class="card" style="margin-top:12px;">
+                    <div class="card-body">
+                        <!-- Month/Year Filter -->
+                        <form method="GET" action="">
+                            <div class="row mb-4 align-items-end">
+                                <div class="col-md-3">
+                                    <label for="month">Month</label>
+                                    <select class="form-control" id="month" name="month">
+                                        <option value="">Select Month</option>
+                                        {% for i in months %}
+                                            <option value="{{ i.0 }}" {% if i.0 == month %}selected{% endif %}>{{ i.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="year">Year</label>
+                                    <input type="text" class="form-control" id="year" name="year" placeholder="Enter Year" value="{{ year|default:'' }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary" type="submit"><i class="mdi mdi-filter mr-2"></i>Filter</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Attendance Table -->
+                        <h4 class="mt-0 header-title">Attendance Summary</h4>
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Present</th>
+                                    <th>Leave</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ report.Present }}</td>
+                                    <td>{{ report.Leave }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

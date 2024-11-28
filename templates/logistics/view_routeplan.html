@@ -1,0 +1,183 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block head %}
+<!-- Include Bootstrap CSS and JS -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0"></ol>
+                    </div>
+                    <h4 class="page-title">Route Plan List</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12 text-right">
+                <!-- Icons (Top Right) -->
+                <div class="btn-group float-right">
+                    <a href="#" class="fas fa-print" title="Print" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="far fa-file-pdf" title="PDF" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="fas fa-file-excel" title="Excel" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="fas fa-home" title="Home" style="font-size: 1.5em; color:#605daf;"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                    <!-- RoutePlan Dropdown -->
+                    <div class="input-group" style="width: 200px; margin-right: 15px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            RoutePlan
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?vendor=Routeplan 1">RoutePlan 1</a>
+                            <a class="dropdown-item" href="?vendor=Routeplan 2">RoutePlan 2</a>
+                            <a class="dropdown-item" href="?vendor=Routeplan 3">RoutePlan 3</a>
+                        </div>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Status
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?status=On Process">On Process</a>
+                            <a class="dropdown-item" href="?status=Returned">Returned</a>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <form method="GET" action="" class="d-flex align-items-center" style="max-width: 400px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                        </div>
+                        <button class="btn btn-primary ml-2" type="submit" id="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Add RoutePlan Button -->
+                <button class="btn btn-primary ml-3" data-toggle="modal" data-target="#addRoutePlanModal">
+                    <i class="fas fa-plus"></i> Add RoutePlan
+                </button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>SI.No</th>
+                                    <th>Vehicle Name and Number</th>
+                                    <th>Route</th>
+                                    <th>Driver</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Per case cost</th>
+                                    <th>Dealer Name</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in dr %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ i.vehicle }}</td>
+                                    <td>{{ i.route }}</td>
+                                    <td>{{ i.driver }}</td>
+                                    <td>{{ i.date }}</td>
+                                    <td>{{ i.time }}</td>
+                                    <td>{{ i.percasecost }}</td>
+                                    <td>{{ i.dealer }}</td>
+                                    <td>{{ i.status }}</td>
+                                    <td>
+                                        <a href="{% url 'update_routeplan' i.id %}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add RoutePlan Modal -->
+<div class="modal fade" id="addRoutePlanModal" tabindex="-1" role="dialog" aria-labelledby="addRoutePlanModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRoutePlanModalLabel">Add RoutePlan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'Add_routeplan' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="vehicle">Vehicle</label>
+                        <input type="text" class="form-control" id="vehicle" name="vehicle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="route">Route</label>
+                        <input type="text" class="form-control" id="route" name="route" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="driver">Driver</label>
+                        <input type="text" class="form-control" id="driver" name="driver" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time</label>
+                        <input type="time" class="form-control" id="time" name="time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="percasecost">Per Case Cost</label>
+                        <input type="number" class="form-control" id="percasecost" name="percasecost" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dealer">Dealer Name</label>
+                        <input type="text" class="form-control" id="dealer" name="dealer" required>
+                    </div>
+                    {% comment %} <div class="form-group">
+                        <label for="status">Status</label>
+                        <input type="text" class="form-control" id="status" name="status" required>
+                    </div> {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Save RoutePlan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

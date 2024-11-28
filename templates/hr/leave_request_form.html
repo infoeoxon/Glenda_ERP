@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Request Leave</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title">Request Leave</h4>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Leave Type</label>
+                                {{ form.leave_type }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                {{ form.start_date }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>End Date</label>
+                                {{ form.end_date }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Reason</label>
+                                {{ form.reason }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Leave Request</button>
+                            <a type="submit" class="btn btn-primary text-right" href="{% url 'my_profile' %}">Back to My Profile</a>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}

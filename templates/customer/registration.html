@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title and Breadcrumb -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#"></a></li>
+                            <li class="breadcrumb-item"><a href="#"></a></li>
+                            <li class="breadcrumb-item active"></li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Customer Details</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title">Vendor Details</h4>
+                        <p class="text-muted mb-4 font-13">Please fill in the vendor details below.</p>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <!-- Company Name -->
+                                    <div class="form-group row">
+                                        <label for="id_name" class="col-sm-4 col-form-label">Name</label>
+                                        <div class="col-sm-8">
+                                            {{ form.name }}
+                                            {% for error in form.name.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Address -->
+                                    <div class="form-group row">
+                                        <label for="id_address" class="col-sm-4 col-form-label">Address</label>
+                                        <div class="col-sm-8">
+                                            {{ form.address }}
+                                            {% for error in form.address.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Pincode -->
+                                    <div class="form-group row">
+                                        <label for="id_pincode" class="col-sm-4 col-form-label">Pin Code</label>
+                                        <div class="col-sm-8">
+                                            {{ form.pincode }}
+                                            {% for error in form.pincode.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- District -->
+                                    <div class="form-group row">
+                                        <label for="id_district" class="col-sm-4 col-form-label">District</label>
+                                        <div class="col-sm-8">
+                                            {{ form.district }}
+                                            {% for error in form.district.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- State -->
+                                    <div class="form-group row">
+                                        <label for="id_state" class="col-sm-4 col-form-label">State</label>
+                                        <div class="col-sm-8">
+                                            {{ form.state }}
+                                            {% for error in form.state.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="form-group row">
+                                        <label for="id_email" class="col-sm-4 col-form-label">Email</label>
+                                        <div class="col-sm-8">
+                                            {{ form.email }}
+                                            {% for error in form.email.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Phone Number -->
+                                    <div class="form-group row">
+                                        <label for="id_phone_number" class="col-sm-4 col-form-label">Phone Number</label>
+                                        <div class="col-sm-8">
+                                            {{ form.phone_number }}
+                                            {% for error in form.phone_number.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <!-- GST -->
+                                    <div class="form-group row">
+                                        <label for="id_GST_yes_or_no" class="col-sm-4 col-form-label">Do you have GST?</label>
+                                        <div class="col-sm-8">
+                                            {{ form.GST_yes_or_no }}
+                                            {% for error in form.GST_yes_or_no.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- GST Number -->
+                                    <div class="form-group row">
+                                        <label for="id_GST_number" class="col-sm-4 col-form-label">GST Number</label>
+                                        <div class="col-sm-8">
+                                            {{ form.GST_number }}
+                                            {% for error in form.GST_number.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- PAN -->
+                                    <div class="form-group row">
+                                        <label for="id_pan_yes_or_no" class="col-sm-4 col-form-label">Do you have a PAN?</label>
+                                        <div class="col-sm-8">
+                                            {{ form.pan_yes_or_no }}
+                                            {% for error in form.pan_yes_or_no.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- PAN Number -->
+                                    <div class="form-group row">
+                                        <label for="id_PAN_number" class="col-sm-4 col-form-label">PAN Number</label>
+                                        <div class="col-sm-8">
+                                            {{ form.PAN_number }}
+                                            {% for error in form.PAN_number.errors %}
+                                                <span class="text-danger">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+        <!-- jQuery code to fetch location based on pincode -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // Input field for pincode
+                $('#id_pincode').on('input', function() {
+                    var pincode = $(this).val();
+
+                    // Ensure the pincode is 6 digits long
+                    if (pincode.length === 6) {
+                        // Use India's Post Office API to fetch location details
+                        $.ajax({
+                            url: 'https://api.postalpincode.in/pincode/' + pincode,
+                            method: 'GET',
+                            success: function(response) {
+                                if (response[0].Status === 'Success') {
+                                    var postOffice = response[0].PostOffice[0];
+                                    var district = postOffice.District;
+                                    var state = postOffice.State;
+
+                                    // Fill the form fields with the fetched data
+                                    $('#id_district').val(district);
+                                    $('#id_state').val(state);
+                                } else {
+                                    alert('Invalid Pincode');
+                                }
+                            },
+                            error: function() {
+                                alert('Error fetching details. Please try again later.');
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const panYesNoField = document.getElementById('id_pan_yes_or_no');
+                const vendorPANField = document.getElementById('id_PAN_number');
+
+                // Function to toggle the disabled state of the PAN Number field
+                function togglePANField() {
+                    if (panYesNoField.value === 'yes') {
+                        vendorPANField.disabled = false;
+                    } else {
+                        vendorPANField.disabled = true;
+                        vendorPANField.value = '';
+                    }
+                }
+
+                // Initial check on page load
+                togglePANField();
+
+                // Add event listener for changes to the PAN Yes/No field
+                panYesNoField.addEventListener('change', togglePANField);
+            });
+        </script>
+    </div>
+</div>
+{% endblock %}

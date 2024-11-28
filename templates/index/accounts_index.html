@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- Top Bar End -->
+
+<!-- Top Bar End -->
+
+
+<div class="page-content-wrapper ">
+
+                        <div class="container-fluid">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="page-title-box">
+                                        <div class="btn-group float-right">
+                                            <ol class="breadcrumb hide-phone p-0 m-0">
+                                                <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                                                <li class="breadcrumb-item active">Dashboard</li>
+                                            </ol>
+                                        </div>
+                                        <h4 class="page-title">Accounts Dashboard</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end page title end breadcrumb -->
+                            <div class="row">
+                                <div class="col-lg-9">
+                       <div class="row">
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+<!--                                        <div class="col-2 align-self-center">-->
+<!--                                            <i class="fas fa-tasks text-gradient-success"></i>-->
+<!--                                        </div>-->
+                                        <div class="col-10 text-right">
+<!--                                            <h5 class="mt-0 mb-1">CURRENT MONTH SALES VOLUME</h5>-->
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">Current Month Sales Volume</p>
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">Annual Sales Volume</p>
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">Annual Targeted Sales</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+<!--                                        <div class="col-2 align-self-center">-->
+<!--                                            <i class="far fa-gem text-gradient-danger"></i>-->
+<!--                                        </div>-->
+                                        <div class="col-10 text-right">
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">Current Month Production Volume</p>
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">Annual PRODUCTION VOLUME</p>
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">ANNUAL TARGETED PRODUCTION</p>
+
+<!--                                            <p class="mb-0 font-12 text-muted">Total Damaged Goods</p>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+<!--                                        <div class="col-2 align-self-center">-->
+<!--                                            <i class="fas fa-users text-gradient-warning"></i>-->
+<!--                                        </div>-->
+                                        <div class="col-10 text-right">
+<!--                                            <h5 class="mt-0 mb-1">{{ vendor }}</h5>-->
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">Sundry Creditors</p>
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">Sundry Debtors</p>
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">Average Debtors Ageing</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+<!--                                        <div class="col-2 align-self-center">-->
+<!--                                            <i class="fas fa-users text-gradient-warning"></i>-->
+<!--                                        </div>-->
+                                        <div class="col-10 text-right">
+<!--                                            <h5 class="mt-0 mb-1">8</h5>-->
+                                            <p class="mb-0 font-12 text-muted" style="text-align: left;">Top Employees</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                                <label class="btn btn-primary btn-sm active">
+                                                    <input type="radio" name="options" id="option1" checked=""> This Week
+                                                </label>
+                                                <label class="btn btn-primary btn-sm">
+                                                    <input type="radio" name="options" id="option2"> Last Month
+                                                </label>
+                                            </div>
+                                            <h5 class="header-title mb-4 mt-0">ANNUAL TARGET SALE AND NOW ACHIEVED</h5>
+                                            <canvas id="lineChart" height="82"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="dropdown d-inline-block float-right">
+                                                <a class="nav-link dropdown-toggle arrow-none" id="dLabel4" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v font-20 text-muted"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel4">
+                                                    <a class="dropdown-item" href="#">Create Project</a>
+                                                    <a class="dropdown-item" href="#">Open Project</a>
+                                                    <a class="dropdown-item" href="#">Tasks Details</a>
+                                                </div>
+                                            </div>
+                                            <h5 class="header-title mb-4 mt-0">Production</h5>
+                                            <div>
+                                                <canvas id="dash-doughnut" width="200" height="230"></canvas>
+                                            </div>
+                                            <ul class="list-unstyled list-inline text-center mb-0 mt-3">
+                                                <li class="mb-2 list-inline-item text-muted font-13"><i class="mdi mdi-label text-success mr-2"></i>Active</li>
+                                                <li class="mb-2 list-inline-item text-muted font-13"><i class="mdi mdi-label text-danger mr-2"></i>Complete</li>
+                                                <li class="mb-2 list-inline-item text-muted font-13"><i class="mdi mdi-label text-warning mr-2"></i>Panding</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+<!--                                        <div class="card-body">-->
+<!--                                            <div class="row mb-3">-->
+<!--                                                <div class="col-sm-6">-->
+<!--                                                    <p class="mb-0 text-muted font-13"><i class="mdi mdi-album mr-2 text-warning"></i>New Leads</p>-->
+<!--                                                </div>-->
+<!--                                                <div class="col-sm-6">-->
+<!--                                                    <p class="mb-0 text-muted font-13"><i class="mdi mdi-album mr-2 text-danger"></i>New Leads Target</p>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div class="progress bg-gradient1 mb-3" style="height:5px;">-->
+<!--                                                <div class="progress-bar bg-gradient3" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>-->
+<!--                                            </div>-->
+<!--                                            <a class="btn btn-primary btn-sm btn-block text-white">Read More</a>-->
+<!--                                        </div>-->
+
+                                    </div>
+                                </div>
+                            </div>
+                          <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body">
+
+                                            <h4 class="mt-0 header-title">REGIONAL WISE BUSINESS VS TARGET</h4>
+                                            <p class="text-muted mb-4 font-13">Display as Donut Chart.</p>
+
+                                            <div id="chart"></div>
+
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+
+<!--                                <div class="col-lg-6">-->
+<!--                                    <div class="card">-->
+<!--                                        <div class="card-body">-->
+
+<!--                                            <h4 class="mt-0 header-title">REGIONAL WISE BUSINESS VS TARGET</h4>-->
+<!--                                            <p class="text-muted mb-4 font-13">Display as Bar Chart.</p>-->
+
+<!--                                            <div id="chart"></div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div> &lt;!&ndash; end col &ndash;&gt;-->
+
+<!--                                <div class="col-lg-3">-->
+<!--                                    <div class="card">-->
+<!--                                        <div class="card-body">-->
+
+<!--                                            <h4 class="mt-0 header-title">Pie Chart</h4>-->
+<!--                                            <p class="text-muted mb-4 font-13">Display as Pie Chart.</p>-->
+
+<!--                                            <div id="pie-chart"></div>-->
+
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div> &lt;!&ndash; end col &ndash;&gt;-->
+                            </div> <!-- end row -->
+<!--                            <div class="row">-->
+<!--                                <div class="col-xl-12">-->
+<!--                                    <div class="card">-->
+<!--                                        <div class="card-body">-->
+<!--                                            <h5 class="header-title pb-3 mt-0">Payments</h5>-->
+<!--                                            <div class="table-responsive">-->
+<!--                                                <table class="table table-hover mb-0">-->
+<!--                                                    <thead>-->
+<!--                                                        <tr class="align-self-center">-->
+<!--                                                            <th>Project Name</th>-->
+<!--                                                            <th>Client Name</th>-->
+<!--                                                            <th>Payment Type</th>-->
+<!--                                                            <th>Paid Date</th>-->
+<!--                                                            <th>Amount</th>-->
+<!--                                                            <th>Transaction</th>-->
+<!--                                                        </tr>-->
+<!--                                                    </thead>-->
+<!--                                                    <tbody>-->
+<!--                                                        <tr>-->
+<!--                                                            <td>Product Devlopment</td>-->
+<!--                                                            <td>-->
+<!--                                                                <img src="assets/images/users/avatar-1.jpg" alt="" class="thumb-sm rounded-circle mr-2">-->
+<!--                                                                Kevin Heal-->
+<!--                                                            </td>-->
+<!--                                                            <td>Paypal</td>-->
+<!--                                                            <td>5/8/2018</td>-->
+<!--                                                            <td>$15,000</td>-->
+<!--                                                            <td><span class="badge badge-boxed  badge-soft-warning">panding</span></td>-->
+<!--                                                        </tr>-->
+<!--                                                        <tr>-->
+<!--                                                            <td>New Office Building</td>-->
+<!--                                                            <td>-->
+<!--                                                                <img src="assets/images/users/avatar-2.jpg" alt="" class="thumb-sm rounded-circle mr-2">-->
+<!--                                                                Frank M. Lyons-->
+<!--                                                            </td>-->
+<!--                                                            <td>Paypal</td>-->
+<!--                                                            <td>15/7/2018</td>-->
+<!--                                                            <td>$35,000</td>-->
+<!--                                                            <td><span class="badge badge-boxed  badge-soft-primary">Success</span></td>-->
+<!--                                                        </tr>-->
+
+<!--                                                        <tr>-->
+<!--                                                            <td>Market Research</td>-->
+<!--                                                            <td>-->
+<!--                                                                <img src="assets/images/users/avatar-3.jpg" alt="" class="thumb-sm rounded-circle mr-2">-->
+<!--                                                                Angelo Butler-->
+<!--                                                            </td>-->
+<!--                                                            <td>Pioneer</td>-->
+<!--                                                            <td>30/9/2018</td>-->
+<!--                                                            <td>$45,000</td>-->
+<!--                                                            <td><span class="badge badge-boxed  badge-soft-warning">Panding</span></td>-->
+<!--                                                        </tr>-->
+
+<!--                                                        <tr>-->
+<!--                                                            <td>Website &amp; Blog</td>-->
+<!--                                                            <td>-->
+<!--                                                                <img src="assets/images/users/avatar-4.jpg" alt="" class="thumb-sm rounded-circle mr-2">-->
+<!--                                                                Phillip Morse-->
+<!--                                                            </td>-->
+<!--                                                            <td>Paypal</td>-->
+<!--                                                            <td>2/6/2018</td>-->
+<!--                                                            <td>$70,000</td>-->
+<!--                                                            <td><span class="badge badge-boxed  badge-soft-warning">Success</span></td>-->
+<!--                                                        </tr>-->
+<!--                                                        <tr>-->
+<!--                                                            <td>Product Devlopment</td>-->
+<!--                                                            <td>-->
+<!--                                                                <img src="assets/images/users/avatar-5.jpg" alt="" class="thumb-sm rounded-circle mr-2">-->
+<!--                                                                Kevin Heal-->
+<!--                                                            </td>-->
+<!--                                                            <td>Paypal</td>-->
+<!--                                                            <td>5/8/2018</td>-->
+<!--                                                            <td>$15,000</td>-->
+<!--                                                            <td><span class="badge badge-boxed  badge-soft-primary">panding</span></td>-->
+<!--                                                        </tr>-->
+<!--                                                        <tr>-->
+<!--                                                            <td>New Office Building</td>-->
+<!--                                                            <td>-->
+<!--                                                                <img src="assets/images/users/avatar-6.jpg" alt="" class="thumb-sm rounded-circle mr-2">-->
+<!--                                                                Frank M. Lyons-->
+<!--                                                            </td>-->
+<!--                                                            <td>Paypal</td>-->
+<!--                                                            <td>15/7/2018</td>-->
+<!--                                                            <td>$35,000</td>-->
+<!--                                                            <td><span class="badge badge-boxed  badge-soft-primary">Success</span></td>-->
+<!--                                                        </tr>-->
+<!--                                                    </tbody>-->
+<!--                                                </table>-->
+<!--                                            </div>&lt;!&ndash;end table-responsive&ndash;&gt;-->
+<!--                                            <div class="pt-3 border-top text-right">-->
+<!--                                                <a href="#" class="text-primary">View all <i class="mdi mdi-arrow-right"></i></a>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <!-- end row -->
+
+                        </div><!-- container -->
+
+                    </div> <!-- Page content Wrapper -->
+
+                </div> <!-- content -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+        // Doughnut Chart
+        const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+        const doughnutChart = new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: {{ labels|safe }},  // Replace with your data
+                datasets: [{
+                    label: 'Total Stock',
+                    data: {{ data|safe }},  // Replace with your data
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 1)',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Total Stock of Raw Materials'
+                    }
+                }
+            }
+        });
+
+        // Line Chart
+        const labels = {{ chart_data.labels|safe }};  // Replace with your data
+        const data = {{ chart_data.data|safe }};      // Replace with your data
+
+        const ctxLine = document.getElementById('stockChart').getContext('2d');
+        const lineChart = new Chart(ctxLine, {
+            type: 'line',  // Change to 'bar' if you prefer a bar chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Finished Goods Stock',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

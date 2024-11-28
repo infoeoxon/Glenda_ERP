@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Request List History</h4>
+                    <div>
+                        <!-- Export Options -->
+                        <a href="#" class="btn btn-primary btn-sm mr-2" title="Print">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm" title="Export as Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="row mb-4">
+            <div class="col-12 d-flex align-items-center flex-wrap">
+                <!-- Material Type Filter -->
+                <div class="btn-group mr-3">
+                    <button class="btn btn-primary" onclick="filterMaterialType('all')">All</button>
+                    <button class="btn btn-primary" onclick="filterMaterialType('raw_materials')">Raw Materials</button>
+                    <button class="btn btn-primary" onclick="filterMaterialType('finished_goods')">Finished Goods</button>
+                    <button class="btn btn-primary" onclick="filterMaterialType('semi_finished_goods')">Semi-Finished Goods</button>
+                </div>
+
+                <!-- Material Category Filter -->
+                <div class="input-group mr-3" style="width: 250px;">
+                    <select class="form-control" id="categoryFilter" onchange="filterByCategory()">
+                        <option value="" selected>All Categories</option>
+                        <option value="Preform">Preform</option>
+                        <option value="Cap">Cap</option>
+                        <option value="Water 500ml">Water 500ml</option>
+                        <option value="Water 1L">Water 1L</option>
+                        <option value="Pet Bottle">Pet Bottle</option>
+                    </select>
+                </div>
+
+                <!-- Department Filter -->
+                <div class="input-group mr-3" style="width: 250px;">
+                    <select class="form-control" id="departmentFilter" onchange="filterByDepartment()">
+                        <option value="" selected>All Departments</option>
+                        <option value="Purchase">Purchase</option>
+                        <option value="Production">Production</option>
+                    </select>
+                </div>
+
+                <!-- Date Filter -->
+                <div class="position-relative" style="width: 200px;">
+                    <button type="button" class="btn btn-primary" onclick="showDateFilter()" style="width: 100%;">
+                        <i class="mdi mdi-filter mr-2"></i>Date
+                    </button>
+                    <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                        <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                        <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                        <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="input-group" style="width: 400px; margin: auto;">
+                    <input type="text" class="form-control" placeholder="Search by Request ID or Material" id="searchBox">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" onclick="searchRequests()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Request List Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Request ID</th>
+                                    <th>Material Type</th>
+                                    <th>Material Category</th>
+                                    <th>Department</th>
+                                    <th>Quantity Needed</th>
+                                    <th>Request Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requestTableBody">
+                                <!-- Sample Row -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>REQ-001</td>
+                                    <td>Raw Materials</td>
+                                    <td>Preform</td>
+                                    <td>Purchase</td>
+                                    <td>500</td>
+                                    <td>2024-11-01</td>
+                                    <td>Pending</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showRequestDetails('REQ-001')">View Full Report</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>REQ-002</td>
+                                    <td>Finished Goods</td>
+                                    <td>Water 500ml</td>
+                                    <td>Production</td>
+                                    <td>1000</td>
+                                    <td>2024-11-02</td>
+                                    <td>Approved</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showRequestDetails('REQ-002')">View Full Report</button>
+                                    </td>
+                                </tr>
+                                <!-- More rows can be dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterMaterialType(type) {
+        alert(`Filtering by material type: ${type}`);
+    }
+
+    function filterByCategory() {
+        const category = document.getElementById('categoryFilter').value;
+        alert(`Filtering by category: ${category}`);
+    }
+
+    function filterByDepartment() {
+        const department = document.getElementById('departmentFilter').value;
+        alert(`Filtering by department: ${department}`);
+    }
+
+    function showDateFilter() {
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function searchRequests() {
+        const query = document.getElementById('searchBox').value;
+        alert(`Searching requests for: ${query}`);
+    }
+
+    function showRequestDetails(requestId) {
+        alert(`Showing details for: ${requestId}`);
+    }
+</script>
+{% endblock %}

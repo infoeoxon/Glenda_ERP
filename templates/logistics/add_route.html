@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Add Route</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Add Route</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title"></h4>
+                        <form action="{% url 'create_route' %}" method="post" onsubmit="return showAlert();" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Route Name</label>
+                                {{ form.route_name }}
+                            </div>
+                            <div class="form-group">
+                                <label>Starting Point</label>
+                                {{ form.starting_point }}
+                            </div>
+                            <div class="form-group">
+                                <label>Ending Point</label>
+                                {{ form.ending_point }}
+
+                            </div>
+                            <div class="form-group">
+                                <label>Distance (km)</label>
+                                {{ form.total_distance }}
+                            </div>
+                            <div class="form-group">
+                                <div id="map" style="height: 300px;"></div> <!-- Set a height for the map -->
+                            </div>
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">Cancel</button>
+                                    <button type="button" class="btn btn-warning waves-effect m-l-5" onclick="clearMap()">Clear Map</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<!-- Leaflet JS and CSS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([10.1248261, 76.6645228], 15); // Starting point for the map
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Set starting point marker
+    var startMarker = L.marker([10.1248261, 76.6645228]).addTo(map)
+        .bindPopup('Starting Point: Glenda Aqua Foods').openPopup();
+
+    // Store the starting point name
+    document.getElementById('id_starting_point').value = 'Glenda Aqua Foods';
+
+    // Variables to hold the ending marker and polyline
+    var endMarker, polyline;
+
+    // Listen for map clicks to set the ending point
+    map.on('click', function(e) {
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+
+        // If no ending point is set, set it
+        if (!endMarker) {
+            // Prompt for user input for the ending point name
+            var endingPointName = prompt("Enter the ending point name:");
+
+            if (endingPointName) {
+                endMarker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup('Ending Point: ' + endingPointName).openPopup();
+
+                document.getElementById('id_ending_point').value = endingPointName; // Update ending point field
+
+                // Draw a line between the starting and ending points
+                var latlngs = [
+                    startMarker.getLatLng(),
+                    endMarker.getLatLng()
+                ];
+
+                // Remove existing polyline if it exists
+                if (polyline) {
+                    map.removeLayer(polyline);
+                }
+
+                // Create and add the polyline
+                polyline = L.polyline(latlngs, { color: 'blue' }).addTo(map);
+                map.fitBounds(polyline.getBounds());  // Adjust map view to fit the polyline
+
+                // Calculate the distance
+                var distance = startMarker.getLatLng().distanceTo(endMarker.getLatLng());
+                document.getElementById('id_total_distance').value = (distance / 1000).toFixed(2); // Update field with distance in kilometers
+            }
+        }
+    });
+
+    // Function to clear the map
+    function clearMap() {
+        if (endMarker) {
+            map.removeLayer(endMarker); // Remove the ending point marker
+            endMarker = null; // Reset endMarker variable
+        }
+        if (polyline) {
+            map.removeLayer(polyline); // Remove the polyline
+            polyline = null; // Reset polyline variable
+        }
+        document.getElementById('id_ending_point').value = ''; // Clear ending point input
+        document.getElementById('id_total_distance').value = ''; // Clear distance input
+    }
+
+    function showAlert() {
+        alert('Form submitted successfully!');
+        return true; // allow the form to be submitted
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Vendor List</h4>
+                    <div class="d-flex align-items-center" style="gap: 10px;">
+                        <a href="" class="btn btn-primary btn-sm" title="Print">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="" class="btn btn-primary btn-sm" title="Export as PDF">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="" class="btn btn-primary btn-sm" title="Export as Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search Bar -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <form method="GET" action="" class="d-flex align-items-center">
+                    <!-- Material Type Filter -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Material Type
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?material=Metal">Preform 12.5g</a>
+                            <a class="dropdown-item" href="?material=Plastic">Cap</a>
+                            <a class="dropdown-item" href="?material=Textile">Shrink</a>
+                        </div>
+                    </div>
+
+                    <!-- Vendor Location Filter -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Location
+                        </button>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search Vendor" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Vendor List Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>SR. No.</th>
+                                    <th>Vendor Name</th>
+                                    <th>Company Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Full details</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in view %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ i.user.name }}</td>
+                                    <td>{{ i.company_name }}</td>
+                                    <td>{{ i.user.phone_number }}</td>
+                                    <td>{{ i.user.email }}</td>
+                                    <td>
+                                         <a href="{% url 'create_vendor_details' i.id %}" class="btn btn-primary btn-sm" title="Add Details">
+                                               <i class="fas fa-plus"></i>
+                                         </a>
+                                        <button class="btn btn-sm btn-primary" onclick="viewVendorDetails({{ i.id }})" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                         <button class="btn btn-sm btn-primary" onclick="viewVendorHistory('VendorA')">
+                                            <i class="fas fa-history"></i> History
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vendor Details Modal -->
+<div id="vendorDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Vendor Details</h5>
+                <button type="button" class="close" onclick="closeVendorDetailsModal()" style="border: none; background: transparent;">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tr><th>Name</th><td id="vendorName"></td></tr>
+                    <tr><th>Company Name</th><td id="companyName"></td></tr>
+                    <tr><th>Material Types</th><td id="materialTypes"></td></tr>
+                    <tr><th>District</th><td id="District"></td></tr>
+                    <tr><th>State</th><td id="vendor_state"></td></tr>
+                    <tr><th>Country</th><td id="vendor_country"></td></tr>
+                    <tr><th>Pincode</th><td id="pincode"></td></tr>
+                    <tr><th>Street</th><td id="vendor_Street"></td></tr>
+                    <tr><th>Landmark</th><td id="vendor_Landmark"></td></tr>
+                    <tr><th>Building</th><td id="vendor_Building"></td></tr>
+                    <tr><th>PAN Number</th><td id="vendor_PANNBR"></td></tr>
+                </table>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" onclick="closeVendorDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vendor History Modal -->
+<div id="vendorHistoryModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Vendor History</h5>
+                <button type="button" class="close" onclick="closeVendorHistoryModal()" style="border: none; background: transparent;">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Vendor history details will be displayed here...</p>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" onclick="closeVendorHistoryModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to Handle Modal and Fetch Vendor Details -->
+<script>
+   function viewVendorDetails(vendorId) {
+    // Send AJAX request to the server to get vendor details
+    fetch(`/vendor/details/${vendorId}/`)
+        .then(response => response.json())
+        .then(data => {
+            // Check if the response contains an error
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            // Populate the modal with the fetched vendor details
+            document.getElementById('vendorName').textContent = data.name;
+            document.getElementById('companyName').textContent = data.company_name;
+            document.getElementById('materialTypes').textContent = data.materials.join(", ");
+            document.getElementById('District').textContent = data.vendor_district;
+            document.getElementById('vendor_state').textContent = data.vendor_state;
+            document.getElementById('vendor_country').textContent = data.vendor_country;
+            document.getElementById('pincode').textContent = data.vendor_pincode;
+            document.getElementById('vendor_Street').textContent = data.vendor_Street;
+            document.getElementById('vendor_Landmark').textContent = data.vendor_Landmark;
+            document.getElementById('vendor_Building').textContent = data.vendor_Building;
+            document.getElementById('vendor_PANNBR').textContent = data.vendor_PANNBR;
+
+            // Show the modal
+            $('#vendorDetailsModal').modal('show');
+        })
+        .catch(error => {
+            console.error('Error fetching vendor details:', error);
+        });
+}
+</script>
+
+{% endblock %}

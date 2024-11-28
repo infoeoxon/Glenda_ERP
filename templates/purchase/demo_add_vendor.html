@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Add Vendor</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vendor Form -->
+        <div class="row">
+            <div class="col-md-10 mx-auto">
+                <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body" style="padding: 30px;">
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            
+                            <div class="form-group">
+                                <label for="vendor_name" class="font-weight-bold">Vendor Name</label>
+                                <input type="text" class="form-control" id="vendor_name" name="vendor_name" placeholder="Enter vendor name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="responsible_person_name" class="font-weight-bold">Responsible Person Name</label>
+                                <input type="text" class="form-control" id="responsible_person_name" name="responsible_person_name" placeholder="Enter responsible person's name" required>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="phone_number" class="font-weight-bold">Phone Number</label>
+                                    <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter phone number" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="email" class="font-weight-bold">Email Address</label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="material_type" class="font-weight-bold">Material Type</label>
+                                    <select class="form-control" id="material_type" name="material_type" required>
+                                        <option value="" selected disabled>Select Material Type</option>
+                                        {% for category in material_types %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="material_category" class="font-weight-bold">Material Category</label>
+                                    <select class="form-control" id="material_category" name="material_category" required>
+                                        <option value="" selected disabled>Select Material Category</option>
+                                        {% for category in material_categories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="material_name" class="font-weight-bold">Material Name</label>
+                                    <select class="form-control" id="material_name" name="material_name" required>
+                                        <option value="" selected disabled>Select Material Name</option>
+                                        {% for material in materials %}
+                                        <option value="{{ material.id }}">{{ material.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="pincode" class="font-weight-bold">Pin Code</label>
+                                    <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Enter pin code" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="district" class="font-weight-bold">District</label>
+                                    <input type="text" class="form-control" id="district" name="district" placeholder="Enter district" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="state" class="font-weight-bold">State</label>
+                                    <input type="text" class="form-control" id="state" name="state" placeholder="Enter state" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="country" class="font-weight-bold">Country</label>
+                                    <input type="text" class="form-control" id="country" name="country" placeholder="Enter country" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="street" class="font-weight-bold">Street</label>
+                                    <input type="text" class="form-control" id="street" name="street" placeholder="Enter street" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="landmark" class="font-weight-bold">Landmark</label>
+                                    <input type="text" class="form-control" id="landmark" name="landmark" placeholder="Enter landmark" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="pan_yes_or_no" class="font-weight-bold">Has PAN?</label>
+                                    <select class="form-control" id="pan_yes_or_no" name="pan_yes_or_no" required>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="vendor_PAN_no" class="font-weight-bold">PAN Number</label>
+                                    <input type="text" class="form-control" id="vendor_PAN_no" name="vendor_PAN_no" placeholder="Enter PAN number">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="remarks" class="font-weight-bold">Remarks</label>
+                                <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Enter remarks"></textarea>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                <button type="reset" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

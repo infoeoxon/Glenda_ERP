@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Shift Details</h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px;">
+                        <!-- Date Filter -->
+                        <div class="position-relative" style="flex-shrink: 0;">
+                            <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="width: 200px;">
+                                <i class="mdi mdi-filter mr-2"></i>Date
+                            </button>
+                            <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                                <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                                <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                                <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                                Status
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="?status=Pending">Planned</a>
+                                <a class="dropdown-item" href="?status=Approved">In Progress</a>
+                                <a class="dropdown-item" href="?status=Rejected">Completed</a>
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="input-group" style="flex-shrink: 0; width: 250px;">
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Shift Date</th>
+                                    <th>Shift Name</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Recess Time</th>
+                                    <th>Remarks</th>
+                                    <th>Status</th>
+                                    <th>Employee List</th>
+                                    <th>Entry</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>15-11-2024</td>
+                                    <td>Shift A</td>
+                                    <td>9:00 AM</td>
+                                    <td>5:00 PM</td>
+                                    <td>1:00 PM</td>
+                                    <td>Remark noted</td>
+                                    <td>Planned</td>
+                                    <td >
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 14px; cursor: pointer; align-items: center; margin-left: 30px" title="List"  onclick="openEmployeeListModal()">
+                                            <i class="fa fa-list"></i>
+                                        </button>
+                                    </td>
+
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 14px; cursor: pointer; text-align: center;" title="Entry" onclick="openEntryForm()">
+                                            <i class="fa fa-file"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+<!-- Popup Form with Updated Styling -->
+<div id="entryFormModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Shift Entry</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body" style="padding: 20px;">
+                    <!-- Production Details Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="productionDate" class="form-label">Production Date</label>
+                            <input type="date" class="form-control" id="productionDate" name="production_date" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-control" id="category" name="category" required>
+                                <option value="" selected disabled>Select Category</option>
+                                <option value="Water 500 ml">Water 500 ml</option>
+                                <option value="Water 1 L">Water 1 L</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Product and Shift Details Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="productName" class="form-label">Product Name</label>
+                            <select class="form-control" id="productName" name="product_name" required>
+                                <option value="" selected disabled>Select Product</option>
+                                <option value="Liwa">Liwa</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="shiftName" class="form-label">Shift Name</label>
+                            <input type="text" class="form-control" id="shiftName" name="shift_name" required>
+                        </div>
+                    </div>
+
+                    <!-- Supervisor and Group Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="shiftSupervisor" class="form-label">Shift Supervisor</label>
+                            <input type="text" class="form-control" id="shiftSupervisor" name="shift_supervisor" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="shiftIncharge" class="form-label">Shift Incharge</label>
+                            <input type="text" class="form-control" id="shiftIncharge" name="shift_incharge" required>
+                        </div>
+                    </div>
+
+                    <!-- Quantity Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="plannedQuantity" class="form-label">Planned Quantity</label>
+                            <input type="number" class="form-control" id="plannedQuantity" name="planned_quantity" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="manufacturedQuantity" class="form-label">Manufactured Quantity</label>
+                            <input type="number" class="form-control" id="manufacturedQuantity" name="manufactured_quantity" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="rejectedQuantity" class="form-label">Rejected Quantity</label>
+                            <input type="number" class="form-control" id="rejectedQuantity" name="rejected_quantity" required>
+                        </div>
+                    </div>
+
+                    <!-- Timing Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="startTime" class="form-label">Start Time</label>
+                            <input type="time" class="form-control" id="startTime" name="start_time" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="endTime" class="form-label">End Time</label>
+                            <input type="time" class="form-control" id="endTime" name="end_time" required>
+                        </div>
+                    </div>
+
+                    <!-- Batch Details Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="batchNumber" class="form-label">Batch Number</label>
+                            <input type="text" class="form-control" id="batchNumber" name="batch_number" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="shelfLife" class="form-label">Shelf Life</label>
+                            <input type="text" class="form-control" id="shelfLife" name="shelf_life" required>
+                        </div>
+                    </div>
+
+                    <!-- Expiry and Remarks Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="expiryDate" class="form-label">Expiry Date</label>
+                            <input type="date" class="form-control" id="expiryDate" name="expiry_date" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="remarks" class="form-label">Remarks</label>
+                            <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Employee List Modal -->
+<div id="employeeListModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 12px; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25); background-color: #ffffff;">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #f8f9fa; border-bottom: 1px solid #ddd; padding: 15px 20px;">
+                <h5 class="modal-title" style="font-weight: bold; color: #333;">Shift A - Employee Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeEmployeeListModal()" style="font-size: 20px; color: #555;">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" style="padding: 20px;">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr style="background-color: #f8f9fa; font-weight: bold;">
+                            <th style="width: 20%;">Employee Name</th>
+                            <th style="width: 15%;">Start Time</th>
+                            <th style="width: 15%;">End Time</th>
+                            <th style="width: 15%;">Total Duration</th>
+                            <th style="width: 25%;">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sample Row 1 -->
+                        <tr>
+                            <td>Amelia</td>
+                            <td>
+                                <input type="time" class="form-control" name="start_time_amelia" required>
+                            </td>
+                            <td>
+                                <input type="time" class="form-control" name="end_time_amelia" required>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="duration_amelia" readonly>
+                            </td>
+                            <td>
+                                <textarea class="form-control" name="remarks_amelia" rows="1" placeholder="Enter remarks"></textarea>
+                            </td>
+                        </tr>
+
+                        <!-- Sample Row 2 -->
+                        <tr>
+                            <td>Julian</td>
+                            <td>
+                                <input type="time" class="form-control" name="start_time_julian" required>
+                            </td>
+                            <td>
+                                <input type="time" class="form-control" name="end_time_julian" required>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="duration_julian" readonly>
+                            </td>
+                            <td>
+                                <textarea class="form-control" name="remarks_julian" rows="1" placeholder="Enter remarks"></textarea>
+                            </td>
+                        </tr>
+
+                        <!-- More rows can be added dynamically or manually -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer" style="padding: 15px; border-top: 1px solid #ddd; background-color: #f8f9fa;">
+                <button type="button" class="btn btn-primary" onclick="saveEmployeeDetails()" style="min-width: 120px;">Save</button>
+                <button type="button" class="btn btn-primary" onclick="closeEmployeeListModal()" style="min-width: 120px;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+function showDateFilter() {
+    // Toggle visibility of the date filter section
+    const dateFilter = document.getElementById('date-filter-section');
+    dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+}
+
+function showStatusFilter() {
+    const statusFilter = document.getElementById('status-filter-section');
+    statusFilter.style.display = statusFilter.style.display === 'none' ? 'block' : 'none';
+}
+
+// Open the entry form as a modal
+function openEntryForm() {
+    $('#entryFormModal').modal('show');
+}
+
+// Close the entry form modal
+function closeEntryForm() {
+    $('#entryFormModal').modal('hide');
+}
+
+// Open the Employee List Modal
+    function openEmployeeListModal() {
+        document.getElementById('employeeListModal').style.display = 'block';
+    }
+
+    // Close the Employee List Modal
+    function closeEmployeeListModal() {
+        document.getElementById('employeeListModal').style.display = 'none';
+    }
+
+    // Save Employee Details (Sample Placeholder)
+    function saveEmployeeDetails() {
+        alert("Employee details saved successfully!");
+        closeEmployeeListModal();
+    }
+</script>
+
+{% endblock %}

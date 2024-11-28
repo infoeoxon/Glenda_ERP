@@ -1,0 +1,62 @@
+{% extends 'front/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- main-header end -->
+
+    <!-- Page Title -->
+    <!-- <section class="page-title centred" style="background-image: url(assets/images/background/page-title.jpg);"> -->
+    <!--     <div class="shape" style="background-image: url(assets/images/shape/banner-shap.png);"></div> -->
+    <!--     <div class="auto-container"> -->
+    <!--         <div class="content-box"> -->
+    <!--             <h1>Blog Standard</h1> -->
+    <!--             <ul class="bread-crumb clearfix"> -->
+    <!--                 <li><a href="index.html">Home</a></li> -->
+    <!--                 <li>Blog Standard</li> -->
+    <!--             </ul> -->
+    <!--         </div> -->
+    <!--     </div> -->
+    <!-- </section> -->
+    <!-- End Page Title -->
+
+    <!-- sidebar-page-container -->
+    <section class="sidebar-page-container blog-standard">
+        <div class="auto-container">
+            <div class="row clearfix">
+                <div class="col-lg-8 col-md-12 col-sm-12 content-side">
+                    <div class="blog-details-content">
+                        <div class="news-block-one">
+                            <div class="inner-box">
+                                <figure class="image-box"><img src="assets/images/news/news-14.jpg" alt=""></figure>
+                                <div class="lower-content">
+                                    <div class="category"><a href="blog-details.html">Profile</a></div>
+<!--                                    <ul class="post-info clearfix">-->
+<!--                                        <li><a href=""></a></li>-->
+<!--                                        <li></li>-->
+<!--                                    </ul>-->
+                                    <div class="text">
+                                        <p>Phone Number: {{ vendor_register.vendor_phn }}</p>
+                                        <p>District: {{ vendor_register.vendor_district }}</p>
+                                        <p> State: {{ vendor_register.vendor_state }}</p>
+                                        <p>Country: {{ vendor_register.vendor_country }}</p>
+                                        <p>Pincode: {{ vendor_register.vendor_pincode }}</p>
+                                        <p>PAN Status: {{ vendor_register.pan_yes_or_no }}</p>
+                                        <p>PAN Number: {{ vendor_register.vendor_PANNBR }}</p>
+                                        <p>Street: {{ vendor_register.vendor_Street }}</p>
+                                        <p>Landmark: {{ vendor_register.vendor_Landmark }}</p>
+                                        <p>Building: {{ vendor_register.vendor_Building }}</p>
+                                        <p>Products: {{ vendor_register.vendor_listofpdcts }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% include 'front/profile_slidebar.html' %}
+            </div>
+        </div>
+    </section>
+    <!-- sidebar-page-container end -->
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'front/base.html' %}
+{% load static %}
+{% block content %}
+        <!-- Mobile Menu -->
+        <div class="mobile-menu">
+            <div class="menu-backdrop"></div>
+            <div class="close-btn"><i class="fas fa-times"></i></div>
+            <nav class="menu-box">
+                <div class="nav-logo"><a href="index.html"><img src="assets/images/logo-2.png" alt="" title=""></a></div>
+                <div class="menu-outer"></div>
+                <div class="contact-info">
+                    <h4>Contact Info</h4>
+                    <ul>
+                        <li>Chicago 12, Melborne City, USA</li>
+                        <li><a href="tel:+8801682648101">+88 01682648101</a></li>
+                        <li><a href="mailto:info@example.com">info@example.com</a></li>
+                    </ul>
+                </div>
+                <div class="social-links">
+                    <ul class="clearfix">
+                        <li><a href="#"><span class="fab fa-twitter"></span></a></li>
+                        <li><a href="#"><span class="fab fa-facebook-square"></span></a></li>
+                        <li><a href="#"><span class="fab fa-pinterest-p"></span></a></li>
+                        <li><a href="#"><span class="fab fa-instagram"></span></a></li>
+                        <li><a href="#"><span class="fab fa-youtube"></span></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- End Mobile Menu -->
+
+        <!-- Contact Section -->
+        <section class="contact-style-two">
+            <div class="auto-container">
+                <div class="row clearfix">
+                    <div class="col-lg-5 col-md-12 col-sm-12 info-column">
+                        <div class="info-inner">
+                            <div class="shape" style="background-image: url(assets/images/shape/shape-42.png);"></div>
+                            <ul class="info-list clearfix">
+                                <li>
+                                    <i class="fas fa-truck"></i>
+                                    <h5>Fast Delivery</h5>
+                                </li>
+                                <li>
+                                    <i class="fas fa-star"></i>
+                                    <h5>Five Star Quality</h5>
+                                </li>
+                                <li>
+                                    <i class="fas fa-lock"></i>
+                                    <h5>Highly Secure</h5>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7 col-md-12 col-sm-12 form-column">
+                        <div class="form-inner">
+                            <div class="row clearfix">
+                              <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                  <h3>SignUp</h3>
+                              </div>
+                              <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                  Already have an account? <a href="{% url 'login' %}" style="font-weight: bold;">Sign in Here</a>
+                              </div>
+                            </div>
+
+                            <form method="post" action="" class="default-form">
+                                {% csrf_token %}
+                                <!-- Non-Field Errors -->
+                                {% if form.non_field_errors %}
+                                <ul class="text-danger">
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                                <div class="row clearfix">
+                                    <!-- Name Field -->
+                                    <div class="col-lg-12 col-md-6 col-sm-6 form-group">
+                                        {{ form.name.label_tag }}
+                                        {{ form.name }}
+                                        {% for error in form.name.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Email Field -->
+                                    <div class="col-lg-12 col-md-6 col-sm-6 form-group">
+                                        {{ form.email.label_tag }}
+                                        {{ form.email }}
+                                        {% for error in form.email.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Phone Number Field -->
+                                    <div class="col-lg-12 col-md-6 col-sm-6 form-group">
+                                        {{ form.phone_number.label_tag }}
+                                        {{ form.phone_number }}
+                                        {% for error in form.phone_number.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Password1 Field -->
+                                    <div class="col-lg-12 col-md-6 col-sm-6 form-group">
+                                        {{ form.password1.label_tag }}
+                                        {{ form.password1 }}
+                                        {% for error in form.password1.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Password2 Field -->
+                                    <div class="col-lg-12 col-md-6 col-sm-6 form-group">
+                                        {{ form.password2.label_tag }}
+                                        {{ form.password2 }}
+                                        {% for error in form.password2.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Submit Button -->
+                                    <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                        <button class="theme-btn btn-one" type="submit">Sign Up</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Contact Section End -->
+{% endblock %}

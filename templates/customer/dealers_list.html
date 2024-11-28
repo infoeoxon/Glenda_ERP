@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Dealer List</h4>
+                    <div class="d-flex align-items-center" style="gap: 10px;">
+                        <a href="" class="btn btn-primary btn-sm" title="Print">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="" class="btn btn-primary btn-sm" title="Export as PDF">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="" class="btn btn-primary btn-sm" title="Export as Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search Bar -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <form method="GET" action="" class="d-flex align-items-center">
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search customer" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Customer List Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>SR. No.</th>
+                                    <th>Customer Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Full details</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in view %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ i.user.name }}</td>
+                                    <td>{{ i.user.phone_number }}</td>
+                                    <td>{{ i.user.email }}</td>
+                                    <td>
+                                        <a href="{% url 'create_customer_details' i.id %}" class="btn btn-primary btn-sm" title="Add Details">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-primary" onclick="viewCustomerDetails({{ i.id }})" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="viewCustomerHistory('{{ i.user.name }}')">
+                                            <i class="fas fa-history"></i> History
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Customer Details Modal -->
+<div id="customerDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Customer Details</h5>
+                <button type="button" class="close" onclick="closeCustomerDetailsModal()" style="border: none; background: transparent;">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tr><th>Name</th><td id="customerName"></td></tr>
+                    <tr><th>Address</th><td id="customerAddress"></td></tr>
+                    <tr><th>Pincode</th><td id="customerPincode"></td></tr>
+                    <tr><th>State</th><td id="customerState"></td></tr>
+                    <tr><th>District</th><td id="customerDistrict"></td></tr>
+                    <tr><th>Email</th><td id="customerEmail"></td></tr>
+                    <tr><th>GST Registered</th><td id="customerGSTYesOrNo"></td></tr>
+                    <tr><th>GST Number</th><td id="customerGSTNumber"></td></tr>
+                    <tr><th>PAN Registered</th><td id="customerPANYesOrNo"></td></tr>
+                    <tr><th>PAN Number</th><td id="customerPANNumber"></td></tr>
+                    <tr><th>Phone Number</th><td id="customerPhone"></td></tr>
+                </table>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" onclick="closeCustomerDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to Handle Modal and Fetch Customer Details -->
+<script>
+function viewCustomerDetails(customerId) {
+    // Send AJAX request to the server to get customer details
+    fetch(`/customer/details/${customerId}/`)
+        .then(response => response.json())
+        .then(data => {
+            // Check if the response contains an error
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            // Populate the modal with the fetched customer details
+            document.getElementById('customerName').textContent = data.name;
+            document.getElementById('customerAddress').textContent = data.address;
+            document.getElementById('customerPincode').textContent = data.pincode;
+            document.getElementById('customerState').textContent = data.state;
+            document.getElementById('customerDistrict').textContent = data.district;
+            document.getElementById('customerEmail').textContent = data.email;
+            document.getElementById('customerGSTYesOrNo').textContent = data.GST_yes_or_no;
+            document.getElementById('customerGSTNumber').textContent = data.GST_number;
+            document.getElementById('customerPANYesOrNo').textContent = data.pan_yes_or_no;
+            document.getElementById('customerPANNumber').textContent = data.PAN_number;
+            document.getElementById('customerPhone').textContent = data.phone_number;
+
+            // Show the modal
+            $('#customerDetailsModal').modal('show');
+        })
+        .catch(error => {
+            console.error('Error fetching customer details:', error);
+        });
+}
+
+function closeCustomerDetailsModal() {
+    $('#customerDetailsModal').modal('hide');
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Request for Quotation History</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-end">
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
+                    <i class="far fa-file-pdf"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
+                    <i class="fas fa-file-excel"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm" title="Print">
+                    <i class="fas fa-print"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters and Search Bar -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <form method="GET" action="" class="d-flex align-items-center">
+                    <!-- Material Type Filter -->
+                    <div class="input-group mr-3" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Material Type
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?material_type=Preform">Preform</a>
+                            <a class="dropdown-item" href="?material_type=Cap">Cap</a>
+                            <a class="dropdown-item" href="?material_type=PET Bottle">PET Bottle</a>
+                        </div>
+                    </div>
+                    <!-- Date Filter -->
+                    <div class="position-relative mr-3" style="width: 200px;">
+                        <button type="button" class="btn btn-primary waves-effect waves-light w-100" onclick="toggleDateFilter()">
+                            <i class="mdi mdi-filter mr-2"></i>Date
+                        </button>
+                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                            <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                            <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search by RFQ ID or Material Type" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- RFQ History Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>RFQ ID</th>
+                                    <th>Material Type</th>
+                                    <th>Quantity</th>
+                                    <th>Expected Delivery Date</th>
+                                    <th>Vendors</th>
+                                    <th>Deadline</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sample Rows -->
+                                <tr>
+                                    <td>RFQ-001</td>
+                                    <td>Preform</td>
+                                    <td>5000</td>
+                                    <td>15-Dec-24</td>
+                                    <td>Vendor 1, Vendor 2</td>
+                                    <td>29-Nov-24</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showRFQDetails('RFQ-001')">View Details</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>RFQ-002</td>
+                                    <td>Cap</td>
+                                    <td>3000</td>
+                                    <td>20-Dec-24</td>
+                                    <td>Vendor A, Vendor B</td>
+                                    <td>02-Dec-24</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showRFQDetails('RFQ-002')">View Details</button>
+                                    </td>
+                                </tr>
+                                <!-- Additional rows can be dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- RFQ Details Modal -->
+<div id="rfqDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document" style="width: 80%; max-height: 90vh;">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: white; padding: 20px; align-items: center; border-bottom: 1px solid #ddd;">
+                <h5 class="modal-title" style="font-weight: bold; flex-grow: 1; color: #333;">RFQ Details</h5>
+                <div class="d-flex" style="gap: 10px;">
+                    <a href="#" class="btn btn-primary btn-sm" title="Print" onclick="printRFQDetails()">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" title="Export as PDF" onclick="exportRFQAsPDF()">
+                        <i class="far fa-file-pdf"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary btn-sm" title="Export as Excel" onclick="exportRFQAsExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <button type="button" class="btn-close" onclick="closeRFQDetailsModal()" style="border: none; background: transparent; font-size: 20px; color: #333; margin-left: 15px;">
+                        &times;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" style="padding: 30px; max-height: 70vh; overflow-y: auto;">
+                <table class="table table-striped" style="table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f1f1f1;">
+                            <th style="width: 40%; text-align: left; white-space: nowrap;">Field</th>
+                            <th style="width: 60%; text-align: left; word-wrap: break-word;">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>RFQ ID</strong></td>
+                            <td>RFQ-001</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Material Type</strong></td>
+                            <td>Preform</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quantity</strong></td>
+                            <td>5000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Expected Delivery Date</strong></td>
+                            <td>15-Dec-24</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vendors</strong></td>
+                            <td>Vendor 1, Vendor 2</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deadline</strong></td>
+                            <td>29-Nov-24</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Remarks</strong></td>
+                            <td>Urgent requirement for seasonal demand.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeRFQDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDateFilter() {
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showRFQDetails(rfqId) {
+        document.getElementById('rfqDetailsModal').style.display = 'block';
+    }
+
+    function closeRFQDetailsModal() {
+        document.getElementById('rfqDetailsModal').style.display = 'none';
+    }
+
+    function printRFQDetails() {
+        const modalContent = document.querySelector('#rfqDetailsModal .modal-body').innerHTML;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print RFQ Details</title></head><body>');
+        printWindow.document.write(modalContent);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    function exportRFQAsPDF() {
+        alert("Export as PDF functionality goes here.");
+    }
+
+    function exportRFQAsExcel() {
+        alert("Export as Excel functionality goes here.");
+    }
+</script>
+{% endblock %}

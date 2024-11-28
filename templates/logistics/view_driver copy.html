@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Drivers List</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Icons for Print, PDF, Excel, Home -->
+        <div class="row mb-4">
+            <div class="col-12 text-right">
+                <a href="#" class="fas fa-print" title="Print" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                <a href="#" class="far fa-file-pdf" title="PDF" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                <a href="#" class="fas fa-file-excel" title="Excel" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                <a href="#" class="fas fa-home" title="Home" style="font-size: 1.5em; color:#605daf;"></a>
+            </div>
+        </div>
+
+        <!-- Toolbar with Driver Filter Dropdown, Search Bar, and Add Drivers Button -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <!-- Left side: Driver Filter Dropdown, License Number Filter, and Search Bar -->
+                <div class="d-flex">
+                    <!-- Driver Filter Dropdown -->
+                    <div class="input-group" style="width: 200px; margin-right: 15px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Driver
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?vendor=Driver A">Driver A</a>
+                            <a class="dropdown-item" href="?vendor=Driver B">Driver B</a>
+                            <a class="dropdown-item" href="?vendor=Driver C">Driver C</a>
+                        </div>
+                    </div>
+
+                    <!-- License Number Filter Dropdown -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            License Number
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?status= License Number 1">License Number 1</a>
+                            <a class="dropdown-item" href="?status= License Number 2">License Number 2</a>
+                            <a class="dropdown-item" href="?status= License Number 3">License Number 3</a>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <form method="GET" action="" class="d-flex align-items-center" style="max-width: 400px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                        </div>
+                        <button class="btn btn-primary ml-2" type="submit" id="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right side: Add Drivers Button -->
+                <a href="{% url 'Add_driver' %}" class="btn btn-primary btn-lg ml-3">
+                    <i class="fas fa-plus"></i> Add Drivers
+                </a>
+            </div>
+        </div>
+
+        <!-- Driver Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>SR No</th> 
+                                    <th>Driver Name</th>
+                                    <th>License Number</th>
+                                    <th>License Expiry Date</th>
+                                    <th>Phone Number</th>
+                                    <th>Aadhar Number</th>
+                                    <th>Remarks</th>
+                                    <th>Ratings</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% now "Y-m-d" as today %}
+                                {% for i in dr %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{ i.user.name }}</td>
+                                    <td>{{ i.license_number }}</td>
+                                    <td>{{ i.license_exp_date|date:"Y-m-d" }}<br>
+                                        {% if i.license_exp_date|date:"Y-m-d" < today %}
+                                            <span style="color: red;">Expired</span>
+                                        {% elif i.license_exp_date|date:"Y-m-d" == today %}
+                                            <span style="color: orange;">Expires Today</span>
+                                        {% else %}
+                                            <span style="color: green;">Valid</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ i.phone_number }}</td>
+                                    <td>{{ i.aadhaar_number }}</td>
+                                    <td>{{ i.remarks }}</td>
+                                    <td>
+                                        {% if i.ratings %}
+                                        <div class="star-rating">
+                                            {% for star in range_5 %}
+                                            <span class="star {% if star <= i.ratings %}selected{% endif %}">&#9733;</span>
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'update_driver' i.id %}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                                    </td>
+                                  
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateRating(starElement) {
+        var rating = starElement.getAttribute('data-value');
+        var stars = document.querySelectorAll('.star-rating .star');
+        stars.forEach(function(star, index) {
+            if (index < rating) {
+                star.classList.add('selected');
+            } else {
+                star.classList.remove('selected');
+            }
+        });
+        document.getElementById('ratings').value = rating;
+    }
+</script>
+
+<style>
+    .star-rating {
+        font-size: 1.5em;
+        color: #ccc;
+    }
+
+    .star-rating .star {
+        padding: 0 3px;
+        cursor: pointer;
+    }
+
+    .star-rating .star.selected {
+        color: #f39c12; /* Gold color for selected stars */
+    }
+</style>
+{% endblock %}

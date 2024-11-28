@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Vehicle Maintenance</h4>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Icons (Top Right) -->
+        <div class="row mb-4">
+            <div class="col-12 text-right">
+                <div class="btn-group float-right">
+                    <a href="#" class="fas fa-print" title="Print" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="far fa-file-pdf" title="PDF" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="fas fa-file-excel" title="Excel" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="fas fa-home" title="Home" style="font-size: 1.5em; color:#605daf;"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Maintenance List Filters -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                    <!-- Vehicle Maintenance Filter Dropdown -->
+                    <div class="input-group" style="width: 200px; margin-right: 15px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Maintenance
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?vendor=Vehicle Maintenance 1">Vehicle Maintenance 1</a>
+                            <a class="dropdown-item" href="?vendor=Vehicle Maintenance 2">Vehicle Maintenance 2</a>
+                            <a class="dropdown-item" href="?vendor=Vehicle Maintenance 3">Vehicle Maintenance 3</a>
+                        </div>
+                    </div>
+
+                    <!-- Vehicle Filter Dropdown -->
+                    <div class="input-group mr-2" style="width: 200px; margin-right: 15px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Vehicle
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?vehicle=Vehicle 1">Vehicle 1</a>
+                            <a class="dropdown-item" href="?vehicle=Vehicle 2">Vehicle 2</a>
+                            <a class="dropdown-item" href="?vehicle=Vehicle 3">Vehicle 3</a>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <form method="GET" action="" class="d-flex align-items-center" style="max-width: 400px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                        </div>
+                        <button class="btn btn-primary ml-2" type="submit" id="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Add Maintenance Button (aligned to the right side) -->
+                <div class="text col-right" style="margin-left:12px;">
+                    <button class="btn btn-primary ml-3" data-toggle="modal" data-target="#addMaintenanceModal">
+                        <i class="fas fa-plus"></i> Add Maintenance
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Maintenance List Table -->
+        <table class="table mb-0" id="my-table">
+            <thead>
+                <tr>
+                    <th>SI.No</th>
+                    <th>Vehicle Name</th>
+                    <th>Types of Maintenance</th>
+                    <th>Amount</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in dr %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.vehicle }}</td>
+                    <td>{{ i.TypeofMaintenance }}</td>
+                    <td>{{ i.amount }}</td>
+                    <td>{{ i.Remarks }}</td>
+                    <td>
+                        <a href="{% url 'update_vmaintenance' i.id %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Maintenance Modal -->
+<div class="modal fade" id="addMaintenanceModal" tabindex="-1" role="dialog" aria-labelledby="addMaintenanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMaintenanceModalLabel">Add Vehicle Maintenance</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'Maintenanace' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="vehicle">Vehicle</label>
+                        <input type="text" class="form-control" id="vehicle" name="vehicle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="TypeofMaintenance">Types of Maintenance</label>
+                        <input type="text" class="form-control" id="TypeofMaintenance" name="TypeofMaintenance" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Maintenance</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

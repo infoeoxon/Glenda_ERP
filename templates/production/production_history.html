@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Production Histories</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Boxes -->
+        <div class="row">
+            <!-- Shift Group History -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'shift_group_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Shift Group History</h5>
+                            <p class="text-muted">View the history of employee groups assigned to different shifts for production tasks.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Shift Plan History -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'shift_plan_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Shift Plan History</h5>
+                            <p class="text-muted">Track the history of planned shifts and assigned employee groups for production tasks.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Production Plan History -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'production_plan_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Production Plan History</h5>
+                            <p class="text-muted">Monitor planned production goals, including day-time intervals and quantities.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Post Production History -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'post_production_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Post Production History</h5>
+                            <p class="text-muted">The history of batch numbers and other details assigned after production completion.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Attendance History -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'attendance_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Attendance History</h5>
+                            <p class="text-muted">Track employee attendance, including check-in and check-out times for each shift.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

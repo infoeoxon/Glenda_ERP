@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                            <li class="breadcrumb-item active">Editable</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Raw Materials</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-10">
+                                <!-- Search Bars at the top of the card -->
+                                <form method="GET" action="{% url 'raw_material_search_and_export' %}" class="d-flex align-items-center">
+                                    {% csrf_token %}
+                                    <!-- Category Dropdown Search -->
+                                    <div class="input-group mr-2" style="width: 30%;">
+                                        <select class="form-control" name="category">
+                                            <option value="" disabled {% if not search_category %}selected{% endif %}>Search by Category</option>
+                                            {% for i in categories %}
+                                            <option value="{{ i.id }}" {% if search_category == i.id|stringformat:"s" %}selected{% endif %}>
+                                                {{ i.category_name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <!-- Name Search Bar -->
+                                    <div class="input-group mr-2" style="width: 30%;">
+                                        <input type="text" class="form-control" name="name" placeholder="Search by Name">
+                                    </div>
+
+                                    <!-- Single Search Button -->
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+
+                            <!-- Buttons on the same line and aligned to the right -->
+                            <div class="col-2 d-flex align-items-center justify-content-end">
+                                <!-- View request list Button -->
+                                <a href="{% url 'raw_material_request_list' %}" class="mr-2">
+                                    <button type="button" class="btn btn-primary btn-lg" style="margin-right: 30px;">
+                                        Request Section
+                                    </button>
+                                </a>
+
+                                <!-- Export Button -->
+                                <div class="btn-group" style="margin-right: 10px;">
+                                    <button type="button" class="btn btn-success btn-lg">Export as</button>
+                                    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'raw_material_search_and_export' %}?export=csv&name={{ search_name }}&category={{ search_category }}">Excel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Category</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Size</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total Stock</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in view %}
+                                <tr>
+                                    <td><img src="{{ i.image.url }}" alt="Image description" width="120" height="70" /></td>
+                                    <td>      </td>
+                                    <td>      </td>
+                                    <td>{{ i.category.category_name }}</td>
+                                    <td>      </td>
+                                    <td>      </td>
+                                    <td>{{ i.name }}</td>
+                                    <td>      </td>
+                                    <td>      </td>
+                                    <td>{{ i.size }}</td>
+                                    <td>      </td>
+                                    <td>      </td>
+                                    <td>{{ i.total_stock }}</td>  <!-- Display total stock -->
+                                    <td>      </td>
+                                    <td>      </td>
+
+                                    <td>
+                                        <a href="{% url 'raw_material_allocate' i.id %}">
+                                            <button type="button" class="btn btn-purple waves-effect waves-light">
+                                                <i class="fas fa-share-square"></i> Allocate
+                                            </button>
+                                        </a>
+                                    </td>
+
+                                    <td>      </td>
+                                    <td>      </td>
+
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-purple dropdown-toggle waves-effect waves-light" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="mdi mdi-send mr-2"></i>History
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="{% url 'raw_materials_stock_history' i.id %}">Stock</a>
+                                                <a class="dropdown-item" href="{% url 'raw_material_allocate_history' i.id %}">Allocate</a>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{%endblock%}

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Validation</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Vehicle</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="mt-0 header-title">Add Vehicle</h4>
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+
+                            <div class="form-group">
+                                <label for="{{ form.vehicle_name.id_for_label }}">Vehicle Name</label>
+                                {{ form.vehicle_name }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.vehicle_nbr.id_for_label }}">Vehicle Number</label>
+                                {{ form.vehicle_nbr }}
+                                {% if form.vehicle_nbr.errors %}
+                                    <div class="alert alert-danger">
+                                        {% for error in form.vehicle_nbr.errors %}
+                                            {{ error }}<br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.vehicle_img.id_for_label }}">Vehicle Image</label>
+                                {{ form.vehicle_img }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.vehicle_insurance_date.id_for_label }}">Vehicle Insurance</label>
+                                {{ form.vehicle_insurance_date }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.vehicle_fasttag.id_for_label }}">Fasttag</label>
+                                {{ form.vehicle_fasttag }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.vehicle_pollution_date.id_for_label }}">Vehicle Pollution</label>
+                                {{ form.vehicle_pollution_date }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.vehicle_taxes_date.id_for_label }}">Vehicle Taxes</label>
+                                {{ form.vehicle_taxes_date }}
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">Cancel</button>
+                                    <a href="{% url 'view_vehicle' %}" class="btn btn-link">View Vehicles</a>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+{% endblock %}

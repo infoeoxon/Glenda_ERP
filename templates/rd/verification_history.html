@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">R&D Verification History</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center flex-wrap">
+                    <!-- Material Type Filter -->
+                    <div class="btn-group mr-3">
+                        <button class="btn btn-primary"  onclick="filterMaterialType('all')">All</button>
+                        <button class="btn btn-primary" onclick="filterMaterialType('raw')">Raw Materials</button>
+                        <button class="btn btn-primary" onclick="filterMaterialType('finished')">Finished Goods</button>
+                        <button class="btn btn-primary" onclick="filterMaterialType('semi_finished')">Semi-Finished Goods</button>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div class="input-group mr-3" style="max-width: 200px;">
+                        <select class="form-control" id="departmentFilter" onchange="filterByDepartment()">
+                            <option value="" selected>All Departments</option>
+                            <option value="Purchase">Purchase</option>
+                            <option value="Production">Production</option>
+                        </select>
+                    </div>
+
+                    <!-- Date Filter -->
+                    <div class="position-relative mr-3" style="max-width: 200px;">
+                        <button type="button" class="btn btn-primary" onclick="showDateFilter()" style="width: 100%;">
+                            <i class="mdi mdi-filter mr-1"></i>Date
+                        </button>
+                        <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded"
+                             style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                            <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                            <input type="date" id="from_date" name="from_date" class="form-control mb-2" />
+                            <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                            <input type="date" id="to_date" name="to_date" class="form-control mb-2" />
+                            <button class="btn btn-primary btn-block btn-sm" type="submit">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="max-width: 200px;">
+                        <input type="text" class="form-control" placeholder="Search " id="searchBox">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" onclick="searchQualityChecks()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quality Check History Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Department</th>
+                                    <th>Material Type</th>
+                                    <th>Batch No</th>
+                                    <th>Received Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="qualityCheckTableBody">
+                                <!-- Sample Data -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>Production</td>
+                                    <td>Finished Goods</td>
+                                    <td>GA/C/20241118</td>
+                                    <td>2024-11-22</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showQualityCheckDetails('BT-001')">View <i class="fa-solid fa-clock-rotate-left"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Purchase</td>
+                                    <td>Raw Materials</td>
+                                    <td>RM-102</td>
+                                    <td>2024-11-20</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="showQualityCheckDetails('RM-102')">View <i class="fa fa-clock-rotate-left"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Popup for Full Details -->
+<div id="qualityCheckDetailsModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Verification Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">Field</th>
+                            <th style="width: 60%;">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Department</strong></td>
+                            <td id="departmentDetail">Production</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Material Type</strong></td>
+                            <td id="materialTypeDetail">Finished Goods</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Batch No</strong></td>
+                            <td id="batchNoDetail">GA/C/20241118</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Date</strong></td>
+                            <td id="dateDetail">2024-11-22</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Category</strong></td>
+                            <td id="categoryDetail">Water Bottles</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Product Name</strong></td>
+                            <td id="productNameDetail">500ml Bottles</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Manufactured/Arrived Quantity</strong></td>
+                            <td id="quantityDetail">1000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Expiry Date</strong></td>
+                            <td id="expiryDateDetail">2025-11-22</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Remarks (Manager)</strong></td>
+                            <td id="managerRemarksDetail">All criteria met</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Remarks (R&D)</strong></td>
+                            <td id="rdRemarksDetail">Quality is acceptable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>No. of Approved Quantity</strong></td>
+                            <td id="approvedQuantityDetail">950</td>
+                        </tr>
+                        <tr>
+                            <td><strong>No. of Rejected Quantity</strong></td>
+                            <td id="rejectedQuantityDetail">50</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function filterMaterialType(type) {
+        console.log('Filter Material Type:', type);
+    }
+
+    function filterByDepartment() {
+        const department = document.getElementById('departmentFilter').value;
+        console.log('Filter by Department:', department);
+    }
+
+    function showDateFilter() {
+        const dateFilterSection = document.getElementById('date-filter-section');
+        dateFilterSection.style.display = dateFilterSection.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function searchQualityChecks() {
+        const searchQuery = document.getElementById('searchBox').value;
+        console.log('Search:', searchQuery);
+    }
+
+    function showQualityCheckDetails(batchNo) {
+    console.log('View Details for Batch:', batchNo);
+
+    // Example: Updating modal content dynamically (replace with actual logic to fetch and display details)
+    document.getElementById('batchNoDetail').textContent = batchNo;
+    document.getElementById('departmentDetail').textContent = 'Production'; // Placeholder for dynamic data
+    document.getElementById('materialTypeDetail').textContent = 'Finished Goods'; // Placeholder for dynamic data
+
+    // Use Bootstrap modal API to show the modal
+    $('#qualityCheckDetailsModal').modal('show');
+}
+
+function closeQualityCheckDetailsModal() {
+    // Use Bootstrap modal API to hide the modal
+    $('#qualityCheckDetailsModal').modal('hide');
+}
+
+</script>
+{% endblock %}

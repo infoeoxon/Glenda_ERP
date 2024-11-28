@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Quality Check List</h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px;">
+                        <!-- Date Filter -->
+                        <div class="position-relative" style="flex-shrink: 0;">
+                            <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="width: 200px;">
+                                <i class="mdi mdi-filter mr-2"></i>Date
+                            </button>
+                            <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                                <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                                <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                                <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                                Status
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="?status=Pending">Checked</a>
+                                <a class="dropdown-item" href="?status=Rejected">Unchecked</a>
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="input-group" style="flex-shrink: 0; width: 300px;">
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <table class="table mb-0" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Department</th>
+                                    <th>Material Type</th>
+                                    <th>Batch No</th>
+                                    <th>Verified Date</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Production</td>
+                                    <td>Finished Good</td>
+                                    <td>GA/A/241115</td>
+                                    <td>15 Nov</td>
+                                    <td>Checked</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 14px; cursor: pointer; text-align: center;" title="Entry" onclick="openEntryForm()" >
+                                            <i class="fa fa-file"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>Inventory</td>
+                                    <td>Raw Material</td>
+                                    <td>RM-05</td>
+                                    <td>16 Nov</td>
+                                    <td>Unchecked</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 14px; cursor: pointer; text-align: center;" title="Entry" onclick="openEntryForm()">
+                                            <i class="fa fa-file"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<!-- Modal for Quality Check Details -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="detailsModalLabel">Quality Check</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="font-weight-bold" style="width: 40%;">Entry Date</td>
+                            <td>15 Nov</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Category</td>
+                            <td>Category Name</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Product Name</td>
+                            <td>Product X</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Received Quantity</td>
+                            <td>100 Nos</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Rejected Quantity</td>
+                            <td>10 Nos</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Batch Number</td>
+                            <td>GA/A/241115</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Shelf Life</td>
+                            <td>6 months</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Expiry Date</td>
+                            <td>15 May 2025</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Approved Quantity</td>
+                            <td>
+                                <input type="number" class="form-control" placeholder="Enter approved quantity">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Unapproved Quantity</td>
+                            <td>
+                                <input type="number" class="form-control" placeholder="Enter unapproved quantity">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Reason for Unapproval</td>
+                            <td>
+                                <input type="text" class="form-control" placeholder="Enter reason for unapproval">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Remarks</td>
+                            <td>
+                                <input type="text" class="form-control" placeholder="Enter remarks">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+function openEntryForm() {
+    // Show the modal when the "Details" button is clicked
+    $('#detailsModal').modal('show');
+}
+
+function openEntryForm() {
+    // Show the modal when the "Details" button is clicked
+    $('#detailsModal').modal('show');
+}
+</script>
+
+{% endblock %}

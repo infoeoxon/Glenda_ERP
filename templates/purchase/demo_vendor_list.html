@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Vendor List</h4>
+                    <div class="d-flex align-items-center" style="gap: 10px;">
+                        <a href="" class="btn btn-primary btn-sm" title="Print">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="" class="btn btn-primary btn-sm" title="Export as PDF">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="" class="btn btn-primary btn-sm" title="Export as Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        <a href="{% url 'demo_add_vendor' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Add Vendor
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search Bar -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <form method="GET" action="" class="d-flex align-items-center">
+                    <!-- Material Type Filter -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Material Type
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?material=Metal">Preform 12.5g</a>
+                            <a class="dropdown-item" href="?material=Plastic">Cap</a>
+                            <a class="dropdown-item" href="?material=Textile">Shrink</a>
+                        </div>
+                    </div>
+
+                    <!-- Vendor Location Filter -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                            Location
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?location=City1">City1</a>
+                            <a class="dropdown-item" href="?location=City2">City2</a>
+                            <a class="dropdown-item" href="?location=City3">City3</a>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" name="search" placeholder="Search Vendor" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Vendor List Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>SR. No.</th>
+                                    <th>Vendor Name</th>
+                                    <th>Company Name</th>
+                                    <th>Material Types</th>
+                                    <th>Phone</th>
+                                    <th>Location</th>
+                                    <th>Full details</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sample Data -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>Vendor A</td>
+                                    <td>Company X</td>
+                                    <td>Preform, Cap</td>
+                                    <td>+91-9345678955</td>
+                                    <td>City1, Country</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="viewVendorDetails('VendorA')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                         <button class="btn btn-sm btn-primary" onclick="viewVendorHistory('VendorA')">
+                                            <i class="fas fa-history"></i> History
+                                        </button>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Vendor B</td>
+                                    <td>Company Y</td>
+                                    <td>Cap</td>
+                                    <td>+91-8765432100</td>
+                                    <td>City2, Country</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="viewVendorDetails('VendorB')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                         <button class="btn btn-sm btn-primary" onclick="viewVendorHistory('VendorA')">
+                                            <i class="fas fa-history"></i> History
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vendor Details Modal -->
+<div id="vendorDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Vendor Details</h5>
+                <button type="button" class="close" onclick="closeVendorDetailsModal()" style="border: none; background: transparent;">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tr><th>Vendor Name</th><td id="vendorName"></td></tr>
+                    <tr><th>Company Name</th><td id="companyName"></td></tr>
+                    <tr><th>Material Types</th><td id="materialTypes"></td></tr>
+                    <tr><th>Phone</th><td id="phone"></td></tr>
+                    <tr><th>Email</th><td id="email"></td></tr>
+                    <tr><th>Location</th><td id="location"></td></tr>
+                    <tr><th>Remarks</th><td id="remarks"></td></tr>
+                </table>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" onclick="closeVendorDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vendor History Modal -->
+<div id="vendorHistoryModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Vendor History</h5>
+                <button type="button" class="close" onclick="closeVendorHistoryModal()" style="border: none; background: transparent;">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Vendor history details will be displayed here...</p>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" onclick="closeVendorHistoryModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function viewVendorDetails(vendorId) {
+        // Populate modal with vendor details (replace with dynamic logic)
+        const vendorDetails = {
+            VendorA: { vendorName: "Vendor A", companyName: "Company X", materialTypes: "Preform, Cap", phone: "+91-9345678955", email: "vendorA@example.com", location: "City1, Country", remarks: "Reliable vendor." },
+            VendorB: { vendorName: "Vendor B", companyName: "Company Y", materialTypes: "Cap", phone: "+91-8765432100", email: "vendorB@example.com", location: "City2, Country", remarks: "Quality supplier." },
+        };
+        const details = vendorDetails[vendorId];
+        if (details) {
+            document.getElementById("vendorName").innerText = details.vendorName;
+            document.getElementById("companyName").innerText = details.companyName;
+            document.getElementById("materialTypes").innerText = details.materialTypes;
+            document.getElementById("phone").innerText = details.phone;
+            document.getElementById("email").innerText = details.email;
+            document.getElementById("location").innerText = details.location;
+            document.getElementById("remarks").innerText = details.remarks;
+        }
+        document.getElementById("vendorDetailsModal").style.display = "block";
+    }
+
+    function viewVendorHistory(vendorId) {
+        alert("Fetching history for " + vendorId);
+        document.getElementById("vendorHistoryModal").style.display = "block";
+    }
+
+    function closeVendorDetailsModal() {
+        document.getElementById("vendorDetailsModal").style.display = "none";
+    }
+
+    function closeVendorHistoryModal() {
+        document.getElementById("vendorHistoryModal").style.display = "none";
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Request Details</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mt-4" style="margin-top: 20px;">
+                    <div class="card-body">
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <!-- Display error message if needed -->
+                        {% if error_message %}
+                            <div class="alert alert-danger">{{ error_message }}</div>
+                        {% endif %}
+
+                        <!-- Request details -->
+                        <table class="table mb-2" id="my-table">
+                            <tbody>
+                                <tr>
+                                    <th>Category</th>
+                                    <td>{{ data.category.category_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <td>{{ data.name.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Required Stock Quantity</th>
+                                    <td>{{ data.stock }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Expected Date</th>
+                                    <td>{{ data.input_date }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Remarks</th>
+                                    <td>{{ data.remarks }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Form Section -->
+                        <form id="formResponse" method="POST" action="{% url 'request_messages_detail' data.id %}">
+                            {% csrf_token %}
+
+                            <!-- Hidden input to capture action type -->
+                            <input type="hidden" name="action_type" id="action_type" value="">
+
+                            <!-- Buttons Section -->
+                            <div class="text-center mt-4">
+                                <!-- Accept Button triggers modal -->
+                                <button type="button" id="accept-btn" class="btn btn-success mr-2">Accept</button>
+
+                                <!-- Decline Button triggers modal -->
+                                <button type="button" id="decline-btn" class="btn btn-danger">Decline</button>
+                            </div>
+
+                            <!-- Accept Modal -->
+                            <div class="modal fade" id="acceptModal" tabindex="-1" role="dialog" aria-labelledby="acceptModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="acceptModalLabel">Accept Stock Request</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="accept_response">Enter response:</label>
+                                                <textarea name="response" id="accept_response" class="form-control input-box" placeholder="Enter response here" required></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-success" onclick="submitForm('accept')">Accept</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Decline Modal -->
+                            <div class="modal fade" id="declineModal" tabindex="-1" role="dialog" aria-labelledby="declineModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="declineModalLabel">Decline Stock Request</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="decline_response">Enter response:</label>
+                                                <textarea name="response" id="decline_response" class="form-control input-box" placeholder="Enter reason for declining here" required></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-danger" onclick="submitForm('decline')">Decline</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<!-- JavaScript to show Accept or Decline Modal and submit the form -->
+<script>
+    document.getElementById('accept-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        $('#acceptModal').modal('show');
+    });
+
+    document.getElementById('decline-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        $('#declineModal').modal('show');
+    });
+
+    function submitForm(action) {
+        // Set action type based on the button clicked
+        document.getElementById('action_type').value = action;
+
+        // Copy the correct response text based on action type to ensure it is captured
+        if (action === 'accept') {
+            document.getElementById('accept_response').name = 'response';
+            document.getElementById('decline_response').name = '';
+        } else if (action === 'decline') {
+            document.getElementById('decline_response').name = 'response';
+            document.getElementById('accept_response').name = '';
+        }
+
+        // Submit the form
+        document.getElementById('formResponse').submit();
+    }
+</script>
+
+<!-- Custom CSS for Uniform Box Length -->
+<style>
+    .input-box {
+        width: 100%; /* Full width within the modal */
+        max-width: 400px; /* Same max-width for both input and textarea */
+        margin: 0 auto; /* Center align inside modal */
+    }
+</style>
+
+{% endblock %}

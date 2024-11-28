@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Salary Calculation</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+
+<!--                        {% if messages %}-->
+<!--                            <ul class="messages text-warning">-->
+<!--                                {% for message in messages %}-->
+<!--                                    <li class="{{ message.tags }}">{{ message }}</li>-->
+<!--                                {% endfor %}-->
+<!--                            </ul>-->
+<!--                        {% endif %}-->
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+
+                            <div class="form-group">
+                                {{ form.employee.label }}
+                                {{ form.employee }}
+                                {{ form.employee.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="basic">Basic Salary</label>
+                                <input type="text" id="basic" class="form-control" value="{{ basic_salary }}" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.hra.label }}
+                                {{ form.hra }}
+                                {{ form.hra.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.da.label }}
+                                {{ form.da }}
+                                {{ form.da.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.ot.label }}
+                                {{ form.ot }}
+                                {{ form.ot.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.medical.label }}
+                                {{ form.medical }}
+                                {{ form.medical.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.insurance.label }}
+                                {{ form.insurance }}
+                                {{ form.insurance.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.ta.label }}
+                                {{ form.ta }}
+                                {{ form.ta.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.food_allowance.label }}
+                                {{ form.food_allowance }}
+                                {{ form.food_allowance.errors }}
+                            </div>
+
+                            <h3>Deductions</h3>
+
+                            <div class="form-group">
+                                {{ form.leave_plus.label }}
+                                {{ form.leave_plus }}
+                                {{ form.leave_plus.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.canteen_expense.label }}
+                                {{ form.canteen_expense }}
+                                {{ form.canteen_expense.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.pf.label }}
+                                {{ form.pf }}
+                                {{ form.pf.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.esi.label }}
+                                {{ form.esi }}
+                                {{ form.esi.errors }}
+                            </div>
+
+                            <h3>Bonuses</h3>
+
+                            <div class="form-group">
+                                {{ form.bonuses.label }}
+                                {{ form.bonuses }}
+                                {{ form.bonuses.errors }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.pay_date.label }}
+                                {{ form.pay_date }}
+                                {{ form.pay_date.errors }}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Create Payroll</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+{% endblock %}

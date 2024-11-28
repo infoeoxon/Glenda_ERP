@@ -1,0 +1,60 @@
+
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+                   <div class="page-content-wrapper ">
+
+                        <div class="container-fluid">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="page-title-box">
+                                        <div class="btn-group float-right">
+                                            <ol class="breadcrumb hide-phone p-0 m-0">
+                                                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+
+                                            </ol>
+                                        </div>
+                                        <h4 class="page-title">Select a User to Chat</h4>
+                                    </div>
+                                </div>
+                            </div>
+                           <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+
+                                            <h4 class="mt-0 header-title"></h4>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 50%;">Name</th>
+                                                    <th>Department and Designation</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                            {% for user in users %}
+
+                                                <tr>
+                                                    <td><a href="{% url 'chat_with_user' user.id %}" id="" data-type="text" data-pk="1" data-title="Enter username">{{ user.name }}</a></td>
+                                                    <td>
+                                                        <a href="{% url 'chat_with_user' user.id %}" id=" " data-type="text" data-pk="1" data-title="Enter username">{{ user.department.dept_Name }}<br>{{ user.designation.user_type }}</a></td>
+                                                    </td>
+                                                </tr>
+                                                            {% endfor %}
+
+
+
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+                            </div>
+                        </div>
+                   </div>
+
+{% endblock %}

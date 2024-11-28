@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">REVIEW REPORT</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mt-4" style="margin-top: 20px;">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        {% if error_message %}
+                            <div class="error text-danger">{{ error_message }}</div>
+                        {% endif %}
+
+                        <table class="table mb-2" id="my-table">
+                            <tbody>
+                                <tr>
+                                    <th>Category</th>
+                                    <td>{{ data.raw_materials.raw_materials.category.category_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <td>{{ data.raw_materials.raw_materials.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Requested Stock Quantity</th>
+                                    <td>{{ data.raw_materials.stock }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Approved Stock Quantity</th>
+                                    <td>{{ data.approved_stock }}</td>
+                                </tr>
+                                <!-- Unapproved Stock Quantity row with red font -->
+                                <tr style="color: red;">
+                                    <th>Unapproved Stock Quantity</th>
+                                    <td>{{ data.unapproved_stock }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Requested Date</th>
+                                    <td>{{ data.raw_materials.date }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Reviewed Date</th>
+                                    <td>{{ data.date }}</td>
+                                </tr>
+
+                                <!-- Conditionally render Remarks row if response is not null with red font -->
+                                {% if data.raw_materials.response %}
+                                <tr style="color: red;">
+                                    <th>Remarks</th>
+                                    <td>{{ data.raw_materials.response }}</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+<!-- Custom CSS for Uniform Box Length -->
+<style>
+    /* Set both input and textarea to the same width */
+    .input-box {
+        width: 100%; /* Full width within the modal */
+        max-width: 400px; /* Same max-width for both input and textarea */
+        margin: 0 auto; /* Center align inside modal */
+    }
+</style>
+
+{% endblock %}

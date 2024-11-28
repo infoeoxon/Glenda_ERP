@@ -1,0 +1,69 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+                    <div class="page-content-wrapper ">
+
+                        <div class="container-fluid">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="page-title-box">
+                                        <div class="btn-group float-right">
+
+                                        </div>
+                                        <h4 class="page-title">Designation</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end page title end breadcrumb -->
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body">
+            
+                                            <h4 class="mt-0 header-title"></h4>
+<!--                                            <p class="text-muted mb-4 font-13">Parsley is a javascript form validation-->
+<!--                                                library. It helps you provide your users with feedback on their form-->
+<!--                                                submission before sending it to your server.</p>-->
+<!--            -->
+                                            <form class="" action="" method="post">
+                                        {% csrf_token %}
+
+                                                <div class="form-group">
+                                                    <label>Department</label>
+                                                  {{form.dept}}
+                                                </div>
+                                                 <div class="form-group">
+                                                    <label>Designation </label>
+                                                  {{form.user_type}}
+                                                </div>
+
+                                                <div class="form-group mb-0">
+                                                    <div>
+                                                        <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                                            Submit
+                                                        </button>
+                                                        <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+            
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+
+                            </div> <!-- end row --> 
+
+                        </div><!-- container -->
+
+                    </div> <!-- Page content Wrapper -->
+
+                </div> <!-- content -->
+
+
+
+
+               {% endblock %}

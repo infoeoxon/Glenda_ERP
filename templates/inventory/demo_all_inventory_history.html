@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Inventory Histories</h4>
+                    <p class="text-muted">Click on any section to view its detailed history.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Boxes -->
+        <div class="row">
+            <!-- Stock History -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'demo_stock_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Stock History</h5>
+                            <p class="text-muted">View the history of stock added to different material types and their categories.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Request History -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'demo_request_list_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Request History</h5>
+                            <p class="text-muted">Track all requests sent by inventory to purchase and production departments.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Stock Verification History -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'demo_arrived_stock_verification_history' %}" class="text-decoration-none">
+                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body" style="padding: 20px;">
+                            <h5 class="font-weight-bold text-primary">Stock Verification History</h5>
+                            <p class="text-muted">Explore the history of stocks verified after arrival from different vendors.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

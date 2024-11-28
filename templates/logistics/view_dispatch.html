@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Dispatch Advice</h4>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Icons (Top Right) -->
+        <div class="row mb-4">
+            <div class="col-12 text-right">
+                <div class="btn-group float-right">
+                    <a href="#" class="fas fa-print" title="Print" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="far fa-file-pdf" title="PDF" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="fas fa-file-excel" title="Excel" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
+                    <a href="#" class="fas fa-home" title="Home" style="font-size: 1.5em; color:#605daf;"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Form and Export Buttons -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                    <!-- Vehicle Maintenance Filter Dropdown -->
+                    <div class="input-group" style="width: 200px; margin-right: 15px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                           Dispatch
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?vendor=Dispatch Advice 1">Dispatch Advice 1</a>
+                            <a class="dropdown-item" href="?vendor=Dispatch Advice 2">Dispatch Advice 2</a>
+                            <a class="dropdown-item" href="?vendor=Dispatch Advice 3">Dispatch Advice 3</a>
+                        </div>
+                    </div>
+
+                    <!-- Search Field and Button -->
+                    <div class="input-group" style="width: 300px; margin-right: 15px;">
+                        <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Product Name or Dealer Name" value="{{ request.GET.search_query }}">
+                        <button class="btn btn-primary" type="submit" id="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Export Button Group -->
+               
+                    
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table class="table mb-0" id="my-table">
+            <thead>
+                <tr>
+                    <th>SI.No</th>
+                    <th>Product Name</th>
+                    <th>Qty</th>
+                    <th>Route Name</th>
+                    <th>Destination</th>
+                    <th>Dealer Name</th>
+                    <th>Date</th>
+                    <th>Driver Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in dr %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.quantity }}</td>
+                    <td>{{ i.route_plan }}</td>
+                    <td>{{ i.destination }}</td>
+                    <td>{{ i.dealer }}</td>
+                    <td>{{ i.date }}</td>
+                    <td>{{ i.user }}</td>
+                    <td>
+                        <!-- Action buttons (e.g., edit, delete) -->
+                        {% comment %} <a href="{% url 'view_dispatchadvice' i.id %}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'delete_dispatchadvice' i.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fas fa-trash-alt"></i></a> {% endcomment %}
+                    </td>
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">No dispatch advice found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+{% endblock %}

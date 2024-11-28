@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active">Validation</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Route Plan</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Route</label>
+                                {{ form.route }}
+                            </div>
+                            <div class="form-group">
+                                <label>Vehicle</label>
+                                {{ form.vehicle }}
+                            </div>
+                            <div class="form-group">
+                                <label>Driver</label>
+                                {{ form.driver }}
+                            </div>
+                            <div class="form-group">
+                                <label>Estimated Date</label>
+                                {{ form.date }}
+                            </div>
+                            <div class="form-group">
+                                <label>Estimated Time</label>
+                                {{ form.time }}
+                            </div>
+                            <div class="form-group">
+                                <label>Per Case cost</label>
+                                {{ form.percasecost }}
+                            </div>
+                            <div class="form-group">
+                                <label>Dealer Name</label>
+                                {{ form.dealer }}
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                {{ form.status }}
+                            </div>
+
+
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+
+
+
+{% endblock %}

@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- Top Bar End -->
+
+<!-- Top Bar End -->
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Dashboard</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+                                        <div class="col-2 align-self-center">
+                                            <i class="fas fa-tasks text-gradient-success"></i>
+                                        </div>
+                                        <div class="col-10 text-right">
+                                            <h5 class="mt-0 mb-1">{{ goods }}</h5>
+                                            <p class="mb-0 font-12 text-muted">Total Finished Goods</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+                                        <div class="col-2 align-self-center">
+                                            <i class="far fa-gem text-gradient-danger"></i>
+                                        </div>
+                                        <div class="col-10 text-right">
+                                            <h5 class="mt-0 mb-1">{{ da }}</h5>
+                                            <p class="mb-0 font-12 text-muted">Total Damaged Goods</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+                                        <div class="col-2 align-self-center">
+                                            <i class="fas fa-users text-gradient-warning"></i>
+                                        </div>
+                                        <div class="col-10 text-right">
+                                            <h5 class="mt-0 mb-1">{{ vendor }}</h5>
+                                            <p class="mb-0 font-12 text-muted">Total Vendors</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="icon-contain">
+                                    <div class="row">
+                                        <div class="col-2 align-self-center">
+                                            <i class="fas fa-users text-gradient-warning"></i>
+                                        </div>
+                                        <div class="col-10 text-right">
+                                            <h5 class="mt-0 mb-1">8</h5>
+                                            <p class="mb-0 font-12 text-muted">Total Customers</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="header-title mb-4 mt-0">Daily Production</h5>
+                        <canvas id="stockChart" height="60"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="header-title mb-4 mt-0">Raw Materials</h5>
+                        <canvas id="doughnutChart" width="500" height="1000"></canvas>
+                    </div>
+                </div>
+
+<!--                <div class="card">-->
+<!--                    <div class="card-body">-->
+<!--                        <h5 class="header-title mb-4 mt-0">Raw Materials Line Chart</h5>-->
+<!--                        <canvas id="rawMaterialsChart" height="60"></canvas>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="mt-0 header-title">Raw Materials Line Chart</h4>
+                        <p class="text-muted mb-4 font-13 d-inline-block text-truncate w-100">Create an area chart using
+                            Morris.Area(options). Area charts take all the same options as line
+                            charts.</p>
+
+                        <div id="morris-area-example" style="height: 300px"></div>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="mt-0 header-title">Line Chart</h4>
+                        <p class="text-muted mb-4 font-13 d-inline-block text-truncate w-100">The public API is terribly simple. It's
+                            just one function: Morris.Line (options), where options is an object
+                            containing some of the configuration options.</p>
+
+                        <div id="morris-line-example" style="height: 300px"></div>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+
+        </div> <!-- end row -->
+
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="header-title pb-3 mt-0">Vendors</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="align-self-center">
+                                        <th>Vendor Name</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Address</th>
+                                        <th>Products</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for i in ven %}
+                                <tr>
+                                    <td>{{ i.user.name }}</td>
+                                    <td>{{ i.user.email }}</td>
+                                    <td>{{ i.user.phone_number }}</td>
+                                    <td>
+                                        Country: {{ i.vendor_country }}<br/>
+                                        State: {{ i.vendor_state }}<br/>
+                                        District: {{ i.vendor_district }}<br/>
+                                        Street: {{ i.vendor_Street }}<br/>
+                                        Building: {{ i.vendor_Building }}<br/>
+                                        Landmark: {{ i.vendor_Landmark }}<br/>
+                                        Pincode: {{ i.vendor_pincode }}<br/>
+                                    </td>
+                                    <td>{{ i.materials.name }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pt-3 border-top text-right">
+                            <a href="#" class="text-primary">View all <i class="mdi mdi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+    </div><!-- container -->
+</div> <!-- Page content Wrapper -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+        // Doughnut Chart
+        const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+        const doughnutChart = new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: {{ labels|safe }},  // Replace with your data
+                datasets: [{
+                    label: 'Total Stock',
+                    data: {{ data|safe }},  // Replace with your data
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 1)',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Total Stock of Raw Materials'
+                    }
+                }
+            }
+        });
+
+        // Line Chart
+        const labels = {{ chart_data.labels|safe }};  // Replace with your data
+        const data = {{ chart_data.data|safe }};      // Replace with your data
+
+        const ctxLine = document.getElementById('stockChart').getContext('2d');
+        const lineChart = new Chart(ctxLine, {
+            type: 'line',  // Change to 'bar' if you prefer a bar chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Finished Goods Stock',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+{% endblock %}

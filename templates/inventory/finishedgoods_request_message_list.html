@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center"  style="margin-right: 55px;">
+                    <h4 class="page-title">Message Requests</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Filter Dropdown with Date Picker -->
+            <div class="col text-left">
+                <form method="GET" action="{% url 'finishedgoods_request_messages_list' %}" id="filter-form" class="d-flex align-items-center gap-3">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-purple waves-effect waves-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="mdi mdi-filter mr-2"></i>Filter by
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onclick="showDateFilter()">Date</a>
+                        </div>
+                    </div>
+
+                    <div id="date-filter-section" style="display: {% if is_filtered %}inline-flex{% else %}none{% endif %}; margin-left: 10px;">
+                        <input type="date" name="query" class="form-control" value="{{ query_date }}" style="font-size: 14px; padding: 6px 10px; width: 160px; display: inline-block; vertical-align: middle; margin-right: 10px;" />
+                        <input type="date" name="query_end" class="form-control" value="{{ query_date_end }}" style="font-size: 14px; padding: 6px 10px; width: 160px; display: inline-block; vertical-align: middle;" />
+                        <button class="btn btn-primary" type="submit" style="margin-left: 10px; vertical-align: middle;">Filter</button>
+                        {% if is_filtered %}
+                            <a href="{% url 'finishedgoods_request_messages_list' %}" class="btn btn-secondary" style="margin-left: 10px; vertical-align: middle;">Cancel Filter</a>
+                        {% endif %}
+                    </div>
+
+                    <input type="hidden" name="filter" value="date">
+                </form>
+            </div>
+
+            <!-- Export to PDF and CSV button with dynamic query parameter -->
+            <div class="col text-right" style="margin-right: 30px;">
+                <div class="btn-group float-right">
+                    <div class="btn-group mo-mb-2">
+                        <button type="button" class="btn btn-success btn-sm">Export as</button>
+                        <button type="button" class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            {% if is_filtered %}
+                                <a class="dropdown-item" href="{% url 'finishedgoods_message_request_list_pdf' %}?query={{ query_date|urlencode }}&query_end={{ query_date_end|urlencode }}">PDF</a>
+                                <a class="dropdown-item" href="{% url 'finishedgoods_message_request_list_excel' %}?query={{ query_date|urlencode }}&query_end={{ query_date_end|urlencode }}">EXCEL</a>
+                            {% else %}
+                                <a class="dropdown-item" href="{% url 'finishedgoods_message_request_list_pdf'%}">PDF</a>
+                                <a class="dropdown-item" href="{% url 'finishedgoods_message_request_list_excel' %}">EXCEL</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-right: 30px;">
+                <a href="{% url 'finishedgoods_message_request' %}">
+                    <button class="btn btn-primary" id="send-request">
+                        New Request
+                    </button>
+                </a>
+            </div>
+
+        </div>
+        <!-- end page title end breadcrumb -->
+
+        <div class="row mt-3"> <!-- Added margin-top to create gap -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">Request</th>
+                                    <th>Requested Date</th>
+                                    <th>Status</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                <tr>
+                                    <td>Request for {{ i.category.category_name }}</td>
+                                    <td>{{ i.date }}</td>
+                                    <td>
+                                        {{ i.status }}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if i.response %}
+                                            <button class="btn btn-sm" type="button" data-toggle="collapse" data-target="#reason-{{ forloop.counter }}" aria-expanded="false" aria-controls="reason-{{ forloop.counter }}" title="View Reason" style="background: none; border: none; padding: 0; margin: 0; color: #dc3545;">
+                                                <i class="fas fa-eye" style="font-size: 1.2em; color: #6e54ab;"></i>
+                                            </button>
+                                        {% else %}
+                                            <button class="btn btn-sm" type="button" title="No Reason Available" disabled style="background: none; border: none; padding: 0; margin: 0; color: #6e54ab;">
+                                                <i class="fas fa-eye" style="font-size: 1.2em;"></i>
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                                {% if i.response %}
+                                <tr class="collapse" id="reason-{{ forloop.counter }}">
+                                    <td colspan="4">
+                                        <div class="card card-body" style="background-color: #e2e3e5;">
+                                            <strong>Reason for Decline:</strong> {{ i.response }}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Pagination Controls -->
+                {% if data.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-3">
+                        {% if data.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if filter_type %}&filter={{ filter_type }}{% endif %}{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span> <!-- First Page -->
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ data.previous_page_number }}{% if filter_type %}&filter={{ filter_type }}{% endif %}{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}" aria-label="Previous">
+                                    &laquo; <!-- Previous Page -->
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in data.paginator.page_range %}
+                            {% if num == data.number %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li> <!-- Current Page -->
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if filter_type %}&filter={{ filter_type }}{% endif %}{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}">{{ num }}</a>
+                                </li> <!-- Other Pages -->
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if data.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ data.next_page_number }}{% if filter_type %}&filter={{ filter_type }}{% endif %}{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}" aria-label="Next">
+                                    &raquo; <!-- Next Page -->
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ data.paginator.num_pages }}{% if filter_type %}&filter={{ filter_type }}{% endif %}{% if query_date %}&query={{ query_date|urlencode }}{% endif %}{% if query_date_end %}&query_end={{ query_date_end|urlencode }}{% endif %}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span> <!-- Last Page -->
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+<script>
+    function showDateFilter() {
+        document.getElementById('date-filter-section').style.display = 'inline-flex';
+    }
+</script>
+
+{% endblock %}

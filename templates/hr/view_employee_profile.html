@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-content-wrapper">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Employee Details</h4>
+                </div>
+                <div class="float-left">
+                    <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'update_employee_details' view.user.id %}"><i class="mdi mdi-alert-outline mr-2"></i> Update </a>
+                    <a type="button" class="btn btn-primary waves-effect waves-light" href=""><i class="mdi mdi-power mr-2"></i>Delete</a>
+                    <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'create_payroll' view.user.id %}"><i class="mdi mdi-send mr-2"></i>Salary addition</a>
+
+                    <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'payroll_summary' view.user.id %}"><i class="mdi mdi-send mr-2"></i>Payroll Summary</a>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mt-4" style="margin-top: 20px;">
+                    <div class="card-body" >
+
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <table class="table mb-2 " id="my-table">
+                            <tbody>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>{{ view.user.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ view.user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Phone Number</th>
+                                    <td>{{ view.user.phone_number }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Pincode</th>
+                                    <td>{{ view.pincode }}</td>
+                                </tr>
+                                <tr>
+                                    <th>District</th>
+                                    <td>{{ view.district }}</td>
+                                </tr>
+                                <tr>
+                                    <th>State</th>
+                                    <td>{{ view.state }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Country</th>
+                                    <td>{{ view.country }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Street</th>
+                                    <td>{{ view.street }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Landmark</th>
+                                    <td>{{ view.landmark }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Building</th>
+                                    <td>{{ view.building }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Id Type</th>
+                                    <td>{{ view.id_proof_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Id Number</th>
+                                    <td>{{ view.id_proof_type_number }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Salary Information</th>
+                                    <td>{{ view.basic }}</td>
+                                </tr>
+                                <tr>
+                                    <th>PF Number</th>
+                                    <td>{{ view.pf_no }}</td>
+                                </tr>
+                                <tr>
+                                    <th>ESI Number</th>
+                                    <td>{{ view.employee_esi_no }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date of Birth</th>
+                                    <td>{{ view.date_of_birth }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}

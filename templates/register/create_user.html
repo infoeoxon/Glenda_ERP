@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title and Breadcrumb -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+
+                    </div>
+                    <h4 class="page-title">User Registration</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{% url 'register_view' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="form-group">
+                                <label>Name</label>
+                                {{ form.name }}
+                                {% for error in form.name.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                {{ form.email }}
+                                {% for error in form.email.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                {{ form.phone_number }}
+                                {% for error in form.phone_number.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Department</label>
+                                {{ form.department }}
+                                {% for error in form.department.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Designation</label>
+                                <select id="id_designation" name="designation" class="form-control">
+                                    <option value="">Select a designation</option>
+                                </select>
+                                {% for error in form.designation.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Joining Date</label>
+                                {{ form.joining_date }}
+                                {% for error in form.joining_date.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                             <div class="form-group">
+                                <label>Profile Photo</label>
+                                {{ form.image }}
+                                {% for error in form.image.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Password</label>
+                                {{ form.password1 }}
+                                {% for error in form.password1.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                {{ form.password2 }}
+                                {% for error in form.password2.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                        Submit
+                                    </button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AJAX Script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#id_department').change(function () {
+            var departmentId = $(this).val();
+            if (departmentId) {
+                $.ajax({
+                    url: '{% url "load_designations" %}',  // Update with your URL
+                    data: {
+                        'department_id': departmentId
+                    },
+                    success: function (data) {
+                        var designationSelect = $('#id_designation');
+                        designationSelect.empty();
+                        designationSelect.append('<option value="">Select a designation</option>');
+                        $.each(data, function (key, value) {
+                            designationSelect.append('<option value="' + value.id + '">' + value.user_type + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#id_designation').empty();
+                $('#id_designation').append('<option value="">Select a designation</option>');
+            }
+        });
+    });
+</script>
+{% endblock %}
