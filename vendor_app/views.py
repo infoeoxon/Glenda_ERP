@@ -100,7 +100,9 @@ def request(request):
 
 @login_required(login_url='login')
 def my_profile(request):
-    return render(request,'front/profile.html')
+    ven=request.user
+    vendor=vendor_register.objects.get(user_id=ven.id)
+    return render(request,'front/profile.html',{'vendor':vendor})
 
 def vendor_request_list(request):
     use = request.user  # Get the current user

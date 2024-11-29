@@ -6,14 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="487c743b-a1ab-4bbb-8f30-bff34a2f1b57" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory_app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/inventory_app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/customer/Reg_customers.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/customer/Reg_customers.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/customer/viewcustomer.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/customer/viewcustomer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/vendor/add_vendor_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/vendor/add_vendor_details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/vendor/view_vendors.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/vendor/view_vendors.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor_app/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendor_app/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor_app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendor_app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor_app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendor_app/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/front/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/front/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/front/profile_slidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/front/profile_slidebar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/front/request.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/front/request.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vendor_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendor_app/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
