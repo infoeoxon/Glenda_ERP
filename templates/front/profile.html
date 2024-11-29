@@ -2,61 +2,80 @@
 {% load static %}
 
 {% block content %}
-    <!-- main-header end -->
-
-    <!-- Page Title -->
-    <!-- <section class="page-title centred" style="background-image: url(assets/images/background/page-title.jpg);"> -->
-    <!--     <div class="shape" style="background-image: url(assets/images/shape/banner-shap.png);"></div> -->
-    <!--     <div class="auto-container"> -->
-    <!--         <div class="content-box"> -->
-    <!--             <h1>Blog Standard</h1> -->
-    <!--             <ul class="bread-crumb clearfix"> -->
-    <!--                 <li><a href="index.html">Home</a></li> -->
-    <!--                 <li>Blog Standard</li> -->
-    <!--             </ul> -->
-    <!--         </div> -->
-    <!--     </div> -->
-    <!-- </section> -->
-    <!-- End Page Title -->
-
-    <!-- sidebar-page-container -->
-    <section class="sidebar-page-container blog-standard">
-        <div class="auto-container">
-            <div class="row clearfix">
-                <div class="col-lg-8 col-md-12 col-sm-12 content-side">
-                    <div class="blog-details-content">
-                        <div class="news-block-one">
-                            <div class="inner-box">
-                                <figure class="image-box"><img src="assets/images/news/news-14.jpg" alt=""></figure>
-                                <div class="lower-content">
-                                    <div class="category"><a href="blog-details.html">Profile</a></div>
-<!--                                    <ul class="post-info clearfix">-->
-<!--                                        <li><a href=""></a></li>-->
-<!--                                        <li></li>-->
-<!--                                    </ul>-->
-                                    <div class="text">
-                                        <p>Phone Number: {{ vendor_register.vendor_phn }}</p>
-                                        <p>District: {{ vendor_register.vendor_district }}</p>
-                                        <p> State: {{ vendor_register.vendor_state }}</p>
-                                        <p>Country: {{ vendor_register.vendor_country }}</p>
-                                        <p>Pincode: {{ vendor_register.vendor_pincode }}</p>
-                                        <p>PAN Status: {{ vendor_register.pan_yes_or_no }}</p>
-                                        <p>PAN Number: {{ vendor_register.vendor_PANNBR }}</p>
-                                        <p>Street: {{ vendor_register.vendor_Street }}</p>
-                                        <p>Landmark: {{ vendor_register.vendor_Landmark }}</p>
-                                        <p>Building: {{ vendor_register.vendor_Building }}</p>
-                                        <p>Products: {{ vendor_register.vendor_listofpdcts }}</p>
-                                    </div>
+<section class="sidebar-page-container blog-standard">
+    <div class="auto-container">
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12 col-sm-12 content-side">
+                <div class="blog-details-content">
+                    <div class="news-block-one">
+                        <div class="inner-box">
+                            <figure class="image-box">
+                                <img src="{% static 'assets/images/news/news-14.jpg' %}" alt="">
+                            </figure>
+                            <div class="lower-content">
+                                <div class="category"><a href="blog-details.html">Profile</a></div>
+                                <div class="text">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <th>Phone Number</th>
+                                                <td>{{ vendor.user.phone_number }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>District</th>
+                                                <td>{{ vendor.vendor_district }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>State</th>
+                                                <td>{{ vendor.vendor_state }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Country</th>
+                                                <td>{{ vendor.vendor_country }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Pincode</th>
+                                                <td>{{ vendor.vendor_pincode }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>PAN Status</th>
+                                                <td>{{ vendor.pan_yes_or_no }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>PAN Number</th>
+                                                <td>{{ vendor.vendor_PANNBR }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Street</th>
+                                                <td>{{ vendor.vendor_Street }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Landmark</th>
+                                                <td>{{ vendor.vendor_Landmark }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Building</th>
+                                                <td>{{ vendor.vendor_Building }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Products</th>
+                                                <td>
+                                                    {% for material in vendor.materials_name.all %}
+                                                        {{ material.name }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {% include 'front/profile_slidebar.html' %}
             </div>
-        </div>
-    </section>
-    <!-- sidebar-page-container end -->
 
+            {% include 'front/profile_slidebar.html' %}
+        </div>
+    </div>
+</section>
 {% endblock %}

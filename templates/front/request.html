@@ -1,133 +1,81 @@
 {% extends 'front/base.html' %}
 {% load static %}
+
 {% block content %}
-
-        <!-- main-header end -->
-
-
-
-
-        <!-- Page Title -->
-<!--        <section class="page-title centred" style="background-image: url(assets/images/background/page-title.jpg);">-->
-<!--            <div class="shape" style="background-image: url(assets/images/shape/banner-shap.png);"></div>-->
-<!--            <div class="auto-container">-->
-<!--                <div class="content-box">-->
-<!--                    <h1>Blog Standard</h1>-->
-<!--                    <ul class="bread-crumb clearfix">-->
-<!--                        <li><a href="index.html">Home</a></li>-->
-<!--                        <li>Blog Standard</li>-->
-<!--                    </ul>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </section>-->
-        <!-- End Page Title -->
-
-
-        <!-- sidebar-page-container -->
-        <section class="sidebar-page-container blog-standard">
-            <div class="auto-container">
-                <div class="row clearfix">
-                    <div class="col-lg-8 col-md-12 col-sm-12 content-side">
-                        <div class="blog-details-content">
-<!--                            <div class="news-block-one">-->
-<!--                                <div class="inner-box">-->
-<!--                                    <figure class="image-box"><img src="assets/images/news/news-14.jpg" alt=""></figure>-->
-<!--                                    <div class="lower-content">-->
-<!--                                        <div class="category"><a href="blog-details.html">Consulting</a></div>-->
-<!--                                        <h3>Consecter Elit Dui Eiusmod Didunt Labore Dolor.</h3>-->
-<!--                                        <ul class="post-info clearfix">-->
-<!--                                            <li><a href="blog-details.html">Nelly Farel</a></li>-->
-<!--                                            <li>Aug 07, 2021</li>-->
-<!--                                        </ul>-->
-<!--                                        <div class="text">-->
-<!--                                            <p>Lorem ipsum dolor sit amet, consecte adipisicing elit sed do eiusmod tempor incididunt labore aliqua enim  minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum.</p>-->
-<!--                                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. nemo enim ipsam voluptatem quia voluptas.</p>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="content-one">-->
-<!--                                <blockquote>-->
-<!--                                    <div class="shape" style="background-image: url(assets/images/shape/shape-40.png);"></div>-->
-<!--                                    <div class="icon-box"><i class="fas fa-quote-right"></i></div>-->
-<!--                                    <h5>“Enim minim veniam quis nostrud exercitation   lamco laboris nisi ut aliquip ex ea commodo con sequat duis aute irure reprehenderit.</h5>-->
-<!--                                </blockquote>-->
-<!--                                <div class="text">-->
-<!--                                    <p>Lorem ipsum dolor sit amet, consecte adipisicing elit sed do eiusmod tempor incididunt labore aliqua enim  minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>-->
-<!--                                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam rem aperiam eaque ipsa quae illo inventore.</p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="content-two">-->
-<!--                                <div class="image-box">-->
-<!--                                    <div class="row clearfix">-->
-<!--                                        <div class="col-lg-6 col-md-6 col-sm-12 image-column">-->
-<!--                                            <figure class="image"><img src="assets/images/news/news-16.jpg" alt=""></figure>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-lg-6 col-md-6 col-sm-12 image-column">-->
-<!--                                            <figure class="image"><img src="assets/images/news/news-17.jpg" alt=""></figure>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="text">-->
-<!--                                    <h3>Purified Bottled Water</h3>-->
-<!--                                    <p>Lorem ipsum dolor sit amet, consecte adipisicing elit sed do eiusmod tempor incididunt labore aliqua enim  minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>-->
-<!--                                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam rem aperiam eaque ipsa quae illo inventore.</p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="post-share-option">-->
-<!--                                <div class="shape" style="background-image: url(assets/images/shape/shape-41.png);"></div>-->
-<!--                                <ul class="social-links clearfix">-->
-<!--                                    <li><h5>Share On:</h5></li>-->
-<!--                                    <li><a href="blog-details.html"><i class="fab fa-facebook-f"></i></a></li>-->
-<!--                                    <li><a href="blog-details.html"><i class="fab fa-twitter"></i></a></li>-->
-<!--                                    <li><a href="blog-details.html"><i class="fab fa-google-plus-g"></i></a></li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-
-                            <div class="comments-form-area">
-                                <div class="group-title">
-                                    <h3>Request</h3>
-                                </div>
-                                <div class="form-inner">
-                                    <form method="post" action="" id="contact-form" class="default-form" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <div class="row clearfix">
-                                            <div class="col-lg-12 col-md-6 col-sm-12 form-group">
-                                                {{ form.upload_file }}
-                                            </div>
-                                            <div class="col-lg-12 col-md-6 col-sm-12 form-group">
-                                                {{ form.remarks }}
-                                            </div>
-
-
-                                            <div class="col-lg-12 col-md-12 col-sm-12 form-group message-btn">
-                                                <button class="theme-btn btn-one" type="submit" name="submit-form">Submit Now</button>
-                                            </div>
-                                        </div>
-                                    </form>
+<section class="sidebar-page-container blog-standard">
+    <div class="auto-container">
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12 col-sm-12 content-side">
+                <div class="blog-details-content">
+                    <div class="news-block-one">
+                        <div class="inner-box">
+                            <figure class="image-box">
+                                <img src="{% static 'assets/images/news/news-14.jpg' %}" alt="">
+                            </figure>
+                            <div class="lower-content">
+                                <div class="category"><a href="blog-details.html">Profile</a></div>
+                                <div class="text">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <th></th>
+                                                <td>{{ vendor.user.phone_number }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>District</th>
+                                                <td>{{ vendor.vendor_district }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>State</th>
+                                                <td>{{ vendor.vendor_state }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Country</th>
+                                                <td>{{ vendor.vendor_country }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Pincode</th>
+                                                <td>{{ vendor.vendor_pincode }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>PAN Status</th>
+                                                <td>{{ vendor.pan_yes_or_no }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>PAN Number</th>
+                                                <td>{{ vendor.vendor_PANNBR }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Street</th>
+                                                <td>{{ vendor.vendor_Street }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Landmark</th>
+                                                <td>{{ vendor.vendor_Landmark }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Building</th>
+                                                <td>{{ vendor.vendor_Building }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Products</th>
+                                                <td>
+                                                    {% for material in vendor.materials_name.all %}
+                                                        {{ material.name }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                                {% include 'front/profile_slidebar.html' %}
-
-<!--                    <div class="col-lg-4 col-md-12 col-sm-12 sidebar-side">-->
-<!--                        <div class="service-sidebar">-->
-<!--                            <div class="category-widget">-->
-<!--                                <h3>My Profile</h3>-->
-<!--                                <ul class="category-list clearfix">-->
-<!--                                    <li><a href=" "><i class="fas fa-caret-right"></i>Request</a></li>-->
-<!--                                    <li><a href="service-details-2.html"><i class="fas fa-caret-right"></i></a></li>-->
-<!--                                    <li><a href="service-details-3.html"><i class="fas fa-caret-right"></i></a></li>-->
-<!--                                    <li><a href="service-details-4.html"><i class="fas fa-caret-right"></i></a></li>-->
-<!--                                    <li><a href="service-details-6.html"><i class="fas fa-caret-right"></i></a></li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
             </div>
-        </section>
-        <!-- sidebar-page-container end -->
 
+            {% include 'front/profile_slidebar.html' %}
+        </div>
+    </div>
+</section>
 {% endblock %}

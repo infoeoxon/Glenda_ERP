@@ -31,12 +31,13 @@ class CustomUserForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = [
+            'name',
+
             'email',
             'phone_number',
-            'designation',
             'department',
+            'designation',
             'joining_date',
-            'name',
             'image',  # Added profile_photo field
             'password1',
             'password2',

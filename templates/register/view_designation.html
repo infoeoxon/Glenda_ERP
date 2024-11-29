@@ -4,116 +4,173 @@
 {% block content %}
 
 <div class="page-content-wrapper">
-
     <div class="container-fluid">
-
-<div class="row">
+        <div class="row">
             <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
+                <div class="page-title-box">
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Department</span>
+                    </h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
+                        <!-- Date Filter -->
 
-                          <div class="mb-3">
-    <form method="GET" action="{% url 'user_search_export' %}">
-        <div class="row mb-4 align-items-end">
-            <div class="col-md-2">
-               <h3>Designation </h3>
-            </div>
-           <div class="col-md-2">
-<!--               <h3>User List</h3>-->
-            </div>
+                        <!-- Status Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                                Status
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="?status=Pending">Planned</a>
+                                <a class="dropdown-item" href="?status=Approved">In Progress</a>
+                                <a class="dropdown-item" href="?status=Rejected">Completed</a>
+                            </div>
+                        </div>
+
+                        <!-- Sort Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
+                                Sort
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="?status=Pending">Ascending</a>
+                                <a class="dropdown-item" href="?status=Rejected">Descending</a>
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="input-group" style="flex-shrink: 0; width: 300px;">
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Create Plan Button -->
+                        <button type="button" class="btn btn-primary " style="margin: 20px;" data-toggle="modal" data-target="#shiftModal">
+                            <i class="fa fa-plus mr-2"></i>Create Shift
+                        </button>
 
 
-<!--            <div class="col-md-8 text-right">-->
-<!--                <a type="button" class="btn btn-primary waveslight" href="{% url 'register_view' %}" style="margin-left:12px;"><i class="mdi mdi-plus mr-2"></i>Department</a>-->
-<!--                <a href="" class="fas fa-print fa-1x" title="Print" style="color:#605daf; margin-right: 10px;"></a>-->
-<!--                <a href="" class="far fa-file-pdf fa-1x" title="Pdf" style="color:#605daf; margin-right: 10px;"></a>-->
-<!--                <a href="" class="fas fa-file-excel fa-1x" title="Excel" style="color:#605daf; margin-right: 10px;"></a>-->
-<!--                <a href="" class="fas fa-home fa-1x" title="Home" style="color:#605daf;"></a>-->
-<!--            </div>-->
-        </div>
-    </form>
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                             <button type="button" class="btn btn-primary" id="delete-selected-btn" style="margin-right: 10px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table mb-0" id="my-table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="select-all-checkbox">
+                                            </th>
+                                            <th>Department Name</th>
+                                            <th>Designation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in page_obj %}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" class="select-item-checkbox" data-id="{{ i.id }}">
+                                            </td>
+                                            <td>{{ i.dept }}</td>
+                                            <td>{{ i.user_type }}</td>
+
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="4" class="text-center">No designations available.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                                <!-- Pagination -->
+                                <div class="pagination mt-3">
+                                    <span class="step-links">
+                                        {% if page_obj.has_previous %}
+                                            <a href="?page=1">&laquo; first</a>
+                                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                                        {% endif %}
+                                        <span class="current">
+                                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                        </span>
+                                        {% if page_obj.has_next %}
+                                            <a href="?page={{ page_obj.next_page_number }}">next</a>
+                                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+            </div><!-- container -->
+        </div> <!-- Page content Wrapper -->
+    </div>
 </div>
 
-                    </div>
-                </div>
-            </div>
-        </div>
+<script>
+    document.getElementById('select-all-checkbox').addEventListener('change', function(event) {
+        const checkboxes = document.querySelectorAll('.select-item-checkbox');
+        checkboxes.forEach(checkbox => checkbox.checked = event.target.checked);
+    });
 
-        <!-- end page title end breadcrumb -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
+    document.getElementById('delete-selected-btn').addEventListener('click', function() {
+        const selectedIds = [];
+        const checkboxes = document.querySelectorAll('.select-item-checkbox:checked');
+        checkboxes.forEach(checkbox => selectedIds.push(checkbox.getAttribute('data-id')));
 
-                        <h4 class="mt-0 header-title"></h4>
-                        <div class="mb-3">
-                            <form method="GET" action="{% url 'user_search_export' %}">
-                                <div class="row mb-6 align-items-end">
-<div class="col-md-12 text-right">
-<!--                    <a type="button" class="btn btn-primary waveslight" href="{% url 'register_view' %}" style="margin-left:12px;"><i class="mdi mdi-plus mr-2"></i>Department</a>-->
+        if (selectedIds.length === 0) {
+            alert('Please select at least one item to delete.');
+            return;
+        }
 
-                <a type="button" class="btn btn-primary waveslight" href="{% url 'add_designation' %}" style="margin-left:12px;"><i class="mdi mdi-plus mr-2"></i>Designation</a>
-                <a href="" class="fas fa-print fa-1x" title="Print" style="color:#605daf; margin-right: 10px;"></a>
-                <a href="" class="far fa-file-pdf fa-1x" title="Pdf" style="color:#605daf; margin-right: 10px;"></a>
-                <a href="" class="fas fa-file-excel fa-1x" title="Excel" style="color:#605daf; margin-right: 10px;"></a>
-                <a href="" class="fas fa-home fa-1x" title="Home" style="color:#605daf;"></a>
-            </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <table class="table mb-0" id="my-table">
-                            <thead>
-                                <tr>
-                                    <th>Department Name</th>
-                                    <th>Designation</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for i in page_obj %}
-                                <tr>
-                                    <td>{{ i.dept }}</td>
-                                    <td>{{ i.user_type }}</td>
-                                    <td>
-                                        <a href="{% url 'update_designation' i.id %}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                                        <a href="{% url 'delete_designation' i.id %}" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete this user?');"><i class="fas fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="3" class="text-center">No designations available.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-
-                        <!-- Pagination -->
-                        <div class="pagination mt-3">
-                            <span class="step-links">
-                                {% if page_obj.has_previous %}
-                                    <a href="?page=1">&laquo; first</a>
-                                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                                {% endif %}
-
-                                <span class="current">
-                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                                </span>
-
-                                {% if page_obj.has_next %}
-                                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                                {% endif %}
-                            </span>
-                        </div>
-
-                    </div>
-                </div>
-            </div> <!-- end col -->
-        </div> <!-- end row -->
-
-    </div><!-- container -->
-
-</div> <!-- Page content Wrapper -->
+        if (confirm('Are you sure you want to delete the selected items?')) {
+            // You can send the selected IDs to the server via AJAX or a form submission
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{% url 'delete_multiple_designations' %}";  // Change this URL to the URL handling multiple deletions
+            form.innerHTML = `
+                <input type="hidden" name="selected_ids" value="${selectedIds.join(',')}">
+                {% csrf_token %}
+            `;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+</script>
 
 {% endblock %}

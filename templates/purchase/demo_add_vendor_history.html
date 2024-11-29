@@ -7,24 +7,20 @@
         <!-- Page Title -->
         <div class="row">
             <div class="col-sm-12">
-                <div class="page-title-box d-flex justify-content-between align-items-center">
-                    <h4 class="page-title">Vendor History</h4>
+                <div class="page-title-box ">
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Vendor Report</span>
+                    </h4>
                 </div>
-            </div>
-        </div>
-
-        <!-- Export Buttons -->
-        <div class="row mb-3">
-            <div class="col-12 d-flex justify-content-end">
-                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
-                    <i class="far fa-file-pdf"></i>
-                </a>
-                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
-                    <i class="fas fa-file-excel"></i>
-                </a>
-                <a href="#" class="btn btn-primary btn-sm" title="Print">
-                    <i class="fas fa-print"></i>
-                </a>
             </div>
         </div>
 
@@ -64,6 +60,22 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Action Buttons (Aligned to the Right) -->
+                    <div class="ml-auto d-flex align-items-center">
+                        <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Home">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -82,7 +94,8 @@
                                     <th>Phone</th>
                                     <th>Email</th>
                                     <th>Status</th>
-                                    <th>Actions</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -96,7 +109,12 @@
                                     <td>Active</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" onclick="showVendorDetails('1')">
-                                            View Details
+                                             <i class="fas fa-eye"></i> Details
+                                        </button>
+                                    </td>
+                                    <td>
+                                         <button class="btn btn-sm btn-primary" onclick="viewVendorHistory('VendorA')">
+                                            <i class="fas fa-history"></i> History
                                         </button>
                                     </td>
                                 </tr>
@@ -109,7 +127,12 @@
                                     <td>Inactive</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" onclick="showVendorDetails('2')">
-                                            View Details
+                                            <i class="fas fa-eye"></i> Details
+                                        </button>
+                                    </td>
+                                    <td>
+                                         <button class="btn btn-sm btn-primary" onclick="viewVendorHistory('VendorA')">
+                                            <i class="fas fa-history"></i> History
                                         </button>
                                     </td>
                                 </tr>
@@ -194,7 +217,25 @@
         </div>
     </div>
 </div>
-
+<!-- Vendor History Modal -->
+<div id="vendorHistoryModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Vendor History</h5>
+                <button type="button" class="close" onclick="closeVendorHistoryModal()" style="border: none; background: transparent;">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Vendor history details will be displayed here...</p>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" onclick="closeVendorHistoryModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     function showVendorDetails(vendorId) {
         document.getElementById('vendorDetailsModal').style.display = 'block';
@@ -220,6 +261,13 @@
 
     function exportVendorAsExcel() {
         alert("Export as Excel functionality goes here.");
+    }
+    function viewVendorHistory(vendorId) {
+        alert("Fetching history for " + vendorId);
+        document.getElementById("vendorHistoryModal").style.display = "block";
+    }
+    function closeVendorHistoryModal() {
+        document.getElementById("vendorHistoryModal").style.display = "none";
     }
 </script>
 {% endblock %}

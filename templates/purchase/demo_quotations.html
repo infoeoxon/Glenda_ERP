@@ -8,7 +8,18 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box d-flex justify-content-between align-items-center">
-                    <h4 class="page-title">Quotations</h4>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Quotations</span>
+                    </h4>
                     <!-- Export Buttons -->
                     <div>
                         <a href="" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
@@ -19,6 +30,9 @@
                         </a>
                         <a href="#" class="btn btn-primary btn-sm" title="Print">
                             <i class="fas fa-print"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm" title="Home">
+                            <i class="fas fa-home"></i>
                         </a>
                     </div>
                 </div>
@@ -107,7 +121,7 @@
                                     <th>Delivery Date</th>
                                     <th>Status</th>
                                     <th>Validity</th>
-                                    <th>Actions</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,8 +133,8 @@
                                     <td>Pending</td>
                                     <td>29-Dec-2024</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary" onclick="openVerificationPopup('Q001')">
-                                            <i class="fas fa-check-circle"></i> Verify
+                                        <button class="btn btn-sm btn-primary" onclick="openQuotationDetails('Q001')">
+                                            <i class="fas fa-eye"></i> Verify
                                         </button>
                                     </td>
                                 </tr>
@@ -132,8 +146,8 @@
                                     <td>Approved</td>
                                     <td>28-Dec-2024</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary" onclick="openVerificationPopup('Q002')">
-                                            <i class="fas fa-check-circle"></i> Verify
+                                        <button class="btn btn-sm btn-primary" onclick="openQuotationDetails('Q002')">
+                                            <i class="fas fa-eye"></i> Verify
                                         </button>
                                     </td>
                                 </tr>
@@ -147,11 +161,132 @@
     </div>
 </div>
 
+<!-- Quotation Details Modal -->
+<div class="modal fade" id="quotationModal" tabindex="-1" aria-labelledby="quotationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h5 class="modal-title" id="quotationModalLabel">Quotation Details</h5>
+                <!-- Export Buttons -->
+                <div>
+                    <button class="btn btn-primary btn-sm mr-2" onclick="printQuotationDetails()">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm mr-2" onclick="exportPDF()">
+                        <i class="far fa-file-pdf"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="exportExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </button>
+                    <button type="button" class="close ml-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Quotation No.</th>
+                            <td id="quotation-number"></td>
+                        </tr>
+                        <tr>
+                            <th>Vendor</th>
+                            <td id="vendor-name"></td>
+                        </tr>
+                        <tr>
+                            <th>Quoted Price</th>
+                            <td id="quoted-price"></td>
+                        </tr>
+                        <tr>
+                            <th>Delivery Date</th>
+                            <td id="delivery-date"></td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td id="quotation-status"></td>
+                        </tr>
+                        <tr>
+                            <th>Validity</th>
+                            <td id="validity-date"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="acceptQuotation()">Accept</button>
+                <button class="btn btn-primary" onclick="rejectQuotation()">Reject</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function showDateFilter() {
-        // Toggle visibility of the date filter section
         const dateFilter = document.getElementById('date-filter-section');
         dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function openQuotationDetails(quotationId) {
+        const data = {
+            Q001: {
+                quotationNumber: "Q001",
+                vendor: "Vendor A",
+                quotedPrice: "₹ 5,00,000",
+                deliveryDate: "20-Dec-2024",
+                status: "Pending",
+                validity: "29-Dec-2024"
+            },
+            Q002: {
+                quotationNumber: "Q002",
+                vendor: "Vendor B",
+                quotedPrice: "₹ 2,00,000",
+                deliveryDate: "18-Dec-2024",
+                status: "Approved",
+                validity: "28-Dec-2024"
+            }
+        };
+
+        const details = data[quotationId];
+        if (details) {
+            document.getElementById('quotation-number').textContent = details.quotationNumber;
+            document.getElementById('vendor-name').textContent = details.vendor;
+            document.getElementById('quoted-price').textContent = details.quotedPrice;
+            document.getElementById('delivery-date').textContent = details.deliveryDate;
+            document.getElementById('quotation-status').textContent = details.status;
+            document.getElementById('validity-date').textContent = details.validity;
+
+            $('#quotationModal').modal('show');
+        }
+    }
+
+    function acceptQuotation() {
+        alert("Quotation Accepted");
+        $('#quotationModal').modal('hide');
+    }
+
+    function rejectQuotation() {
+        alert("Quotation Rejected");
+        $('#quotationModal').modal('hide');
+    }
+
+    function printQuotationDetails() {
+        const content = document.querySelector('.modal-body').innerHTML;
+        const printWindow = window.open('', '', 'height=600,width=800');
+        printWindow.document.write('<html><head><title>Print Quotation Details</title></head><body>');
+        printWindow.document.write(content);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    function exportPDF() {
+        alert("Export to PDF functionality not implemented yet."); // Replace with actual implementation
+    }
+
+    function exportExcel() {
+        alert("Export to Excel functionality not implemented yet."); // Replace with actual implementation
     }
 </script>
 {% endblock %}

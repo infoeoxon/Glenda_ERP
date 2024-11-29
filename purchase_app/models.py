@@ -1,6 +1,8 @@
 from django.db import models
 
 
+
+
 # Create your models here.
 class RawMaterialCategory(models.Model):
     category_name = models.CharField(max_length=150, null=True)
@@ -20,3 +22,31 @@ class RawMaterials(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# new code begins here
+
+class RFQ_raw_materials(models.Model):
+    rfq_number = models.CharField(max_length=50,null=True)
+    request_date = models.DateField(auto_now_add=True)
+    request_time = models.TimeField(auto_now_add=True)
+    requested_by = models.CharField(max_length=220, null=True)
+    approver = models.CharField(max_length=220, null=True)
+    material_category = models.ForeignKey('inventory_app.AddCategory', on_delete=models.CASCADE, null=True, related_name='rfq_raw_material_category')
+    material_name = models.ForeignKey('inventory_app.Add_RawMaterial', on_delete=models.CASCADE, null=True, related_name='rfq_raw_material_name')
+    quantity_needed = models.IntegerField()
+    batch_requirements = models.TextField(null=True, blank=True)
+    quality_standards = models.FileField(upload_to='quality_standards/', null=True, blank=True)
+    expected_delivery_date = models.DateField()
+    vendor_list = models.TextField(null=True)
+    preferred_vendors = models.TextField(null=True)
+    quotation_deadline = models.DateField()
+    delivery_address = models.TextField()
+    spoc_name = models.CharField(max_length=220, null=True)
+    spoc_number = models.BigIntegerField()
+    special_notes = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=220)
+
+
+    def __str__(self):
+        return f"RFQ {self.rfq_number} - {self.department_requesting}"

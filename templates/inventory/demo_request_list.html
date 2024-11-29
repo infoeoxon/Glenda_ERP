@@ -8,15 +8,28 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box d-flex justify-content-between align-items-center">
-                    <h4 class="page-title">Request List</h4>
-                    <div>
-                        <!-- New Request Buttons -->
-                        <a href="javascript:void(0);" onclick="openRequestModal('purchase')" class="btn btn-primary btn-sm mr-2">
-                            <i class="fas fa-plus"></i> New Purchase Request
-                        </a>
-                        <a href="javascript:void(0);" onclick="openRequestModal('production')" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus"></i> New Production Request
-                        </a>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Request List</span>
+                    </h4>
+                    <!-- New Request Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="requestDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-plus"></i> New Request
+                        </button>
+                        <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addRawMaterialModal">Raw Materials</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addFinishedModal">Finished Goods</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addSemiFinishedModal">Semi-Finished Goods</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -92,45 +105,33 @@
                             <thead>
                                 <tr style="background-color: #f1f1f1;">
                                     <th>Serial No</th>
-                                    <th>Request Type</th>
+                                    <th>Department</th>
                                     <th>Category</th>
-                                    <th>Material</th>
+                                    <th>Name</th>
                                     <th>Quantity</th>
-                                    <th>Request Date</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>Required Date</th>
+                                    <th>Requested Date</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="requestTableBody">
-                                <!-- Sample Data (To Be Dynamically Rendered) -->
+                                <!-- Dynamic Data (Replace with actual content) -->
+                                {% for x in requests %}
                                 <tr>
-                                    <td>1</td>
-                                    <td>Purchase</td>
-                                    <td>Raw Material</td>
-                                    <td>Preform</td>
-                                    <td>1000</td>
-                                    <td>2024-11-01</td>
-                                    <td>Pending</td>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{x.department.dept_Name}}</td>
+                                    <td>{{x.category.category_name}}</td>
+                                    <td>{{x.product_name.name}}</td>
+                                    <td>{{x.quantity_required}}</td>
+                                    <td>{{x.required_date}}</td>
+                                    <td>{{x.date}}</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Production</td>
-                                    <td>Finished Goods</td>
-                                    <td>500ml Bottles</td>
-                                    <td>500</td>
-                                    <td>2024-11-02</td>
-                                    <td>Completed</td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm" title="View Details">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -140,86 +141,104 @@
     </div>
 </div>
 
-<!-- Modal for New Request -->
-<div id="newRequestModal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content" style="border-radius: 10px; box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.25);">
-            <div class="modal-header" style="background-color: #ffffff; border-bottom: 1px solid #ddd;">
-                <h5 class="modal-title" id="modalTitle" style="font-weight: bold; color: #333;">New Request</h5>
-                <button type="button" class="btn-close" onclick="closeRequestModal()" style="border: none; background: transparent; font-size: 20px; color: #333;">
-                    &times;
-                </button>
+<!-- Add Raw Material Modal -->
+<div class="modal fade" id="addRawMaterialModal" tabindex="-1" aria-labelledby="addRawMaterialModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRawMaterialModalLabel">New Request for Raw Material</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" style="padding: 20px;">
-                <!-- Purchase Request Form -->
-                <form id="purchaseRequestForm" style="display: block;">
-                    <h6>Send Request to Purchase Department</h6>
-                    <div class="form-group mb-3">
-                        <label for="purchaseRequestDate">Required Date</label>
-                        <input type="date" id="purchaseRequestDate" class="form-control">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="materialType">Material Type</label>
-                        <input type="text" id="materialType" class="form-control" placeholder="Enter material type">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="quantityRequired">Quantity</label>
-                        <input type="number" id="quantityRequired" class="form-control" placeholder="Enter quantity">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="purchaseRemarks">Remarks</label>
-                        <textarea id="purchaseRemarks" class="form-control" rows="3"></textarea>
-                    </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'raw_material_purchase_request' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-primary" type="submit">Submit</button>
                 </form>
-
-                <!-- Production Request Form -->
-                <form id="productionRequestForm" style="display: none;">
-                    <h6>Send Request to Production Department</h6>
-                    <div class="form-group mb-3">
-                        <label for="productionRequestDate">Required Date</label>
-                        <input type="date" id="productionRequestDate" class="form-control">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="productType">Product Type</label>
-                        <input type="text" id="productType" class="form-control" placeholder="Enter product type">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="productionQuantityRequired">Quantity</label>
-                        <input type="number" id="productionQuantityRequired" class="form-control" placeholder="Enter quantity">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="productionRemarks">Remarks</label>
-                        <textarea id="productionRemarks" class="form-control" rows="3"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer" style="background-color: #f8f9fa; border-top: 1px solid #ddd;">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-secondary" onclick="closeRequestModal()">Cancel</button>
             </div>
         </div>
-    </div>
+ </div>
+</div>
+
+<!-- Add Finished Good Modal -->
+<div class="modal fade" id="addFinishedModal" tabindex="-1" aria-labelledby="addFinishedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFinishedModalLabel">New Request for Finished Goods</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data" action="">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+ </div>
+</div>
+
+<!-- Add Semi-Finished Good Modal -->
+<div class="modal fade" id="addSemiFinishedModal" tabindex="-1" aria-labelledby="addSemiFinishedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSemiFinishedModalLabel">New Request for Semi-Finished Goods</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'semi_finished_purchase_request' %}">
+                    {% csrf_token %}
+                    {{ form1.as_p }}
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+ </div>
 </div>
 
 <script>
-    // Open Modal and toggle forms
-    function openRequestModal(requestType) {
+    // Open Modal with Selected Material Type
+    function openRequestModal(materialType) {
         document.getElementById('newRequestModal').style.display = 'block';
-        if (requestType === 'purchase') {
-            document.getElementById('purchaseRequestForm').style.display = 'block';
-            document.getElementById('productionRequestForm').style.display = 'none';
-            document.getElementById('modalTitle').innerText = 'New Purchase Request';
-        } else if (requestType === 'production') {
-            document.getElementById('purchaseRequestForm').style.display = 'none';
-            document.getElementById('productionRequestForm').style.display = 'block';
-            document.getElementById('modalTitle').innerText = 'New Production Request';
-        }
+        document.getElementById('materialType').value = materialType;
+
+        // Fetch Categories for Selected Material Type
+        fetch(`/filter-categories/?material_type=${materialType}`)
+            .then(response => response.json())
+            .then(data => {
+                const categoryDropdown = document.getElementById('category');
+                categoryDropdown.innerHTML = '<option value="" selected disabled>Select Category</option>';
+                data.categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categoryDropdown.appendChild(option);
+                });
+            });
     }
+
+    // Fetch Products for Selected Category
+    document.getElementById('category').addEventListener('change', function () {
+        const categoryId = this.value;
+        fetch(`/filter-products/?category_id=${categoryId}`)
+            .then(response => response.json())
+            .then(data => {
+                const productDropdown = document.getElementById('productName');
+                productDropdown.innerHTML = '<option value="" selected disabled>Select Product</option>';
+                data.products.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.textContent = product.name;
+                    productDropdown.appendChild(option);
+                });
+            });
+    });
 
     // Close Modal
     function closeRequestModal() {
         document.getElementById('newRequestModal').style.display = 'none';
     }
 </script>
-
 {% endblock %}

@@ -1,61 +1,89 @@
+
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
+
 <div class="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <div class="btn-group float-right">
-                        <ol class="breadcrumb hide-phone p-0 m-0">
-                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
-                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
-                            <li class="breadcrumb-item active">Editable</li>
-                        </ol>
-                    </div>
-                    <h4 class="page-title">View Customers List</h4>
-                </div>
-            </div>
-        </div>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Department</span>
+                    </h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
+                        <!-- Date Filter -->
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="mt-0 header-title"></h4>
-                        <p class="text-muted mb-4 font-13"></p>
-
-                        <div class="mb-3">
-                            <form method="GET" action="{% url 'customer_search' %}">
-                                <div class="row mb-4 align-items-end">
-                                    <div class="col-md-4">
-                                        <div class="input-group">
-                                            <label for="search" class="sr-only">Search by Name or Number</label>
-                                            <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary" type="submit" id="search-btn">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="btn-group float-right">
-                                        <div class="btn-group mo-mb-2">
-                                            <button type="button" class="btn btn-success btn-lg">Export as</button>
-                                            <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="sr-only">Toggle Dropdown</span>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="{% url 'customer_exportsearch' %}?search_query={{ request.GET.search_query }}&export=excel">Excel</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                        <!-- Status Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                                Status
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="?status=Pending">Planned</a>
+                                <a class="dropdown-item" href="?status=Approved">In Progress</a>
+                                <a class="dropdown-item" href="?status=Rejected">Completed</a>
+                            </div>
                         </div>
+
+                        <!-- Sort Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
+                                Sort
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="?status=Pending">Ascending</a>
+                                <a class="dropdown-item" href="?status=Rejected">Descending</a>
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="input-group" style="flex-shrink: 0; width: 300px;">
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Create Plan Button -->
+                        <button type="button" class="btn btn-primary " style="margin: 20px;" data-toggle="modal" data-target="#shiftModal">
+                            <i class="fa fa-plus mr-2"></i>Create Shift
+                        </button>
+
+
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                             <button type="button" class="btn btn-primary" id="delete-selected-btn" style="margin-right: 10px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
 
                         <table class="table mb-0" id="my-table">
                             <thead>

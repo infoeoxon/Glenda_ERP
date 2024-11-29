@@ -8,15 +8,33 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box d-flex justify-content-between align-items-center">
-                    <h4 class="page-title">Inventory Overview</h4>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Inventory Overview</span>
+                    </h4>
                     <div>
                         <!-- Add Category and Add Product Buttons -->
-                        <a href="{% url 'add_category' %}" class="btn btn-primary btn-sm mr-2">
+                        <button class="btn btn-primary btn-sm mr-2" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
                             <i class="fas fa-plus"></i> Add Category
-                        </a>
-                        <a href="#" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus"></i> Add Product
-                        </a>
+                        </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-plus"></i> Add Product
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addRawMaterialModal">Raw Materials</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addFinishedModal">Finished Goods</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addSemiFinishedModal">Semifinished Goods</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,46 +112,26 @@
                                     <th>Size</th>
                                     <th>Color</th>
                                     <th>Total Stock</th>
-                                    <th id="damagedStockHeader" style="display: none;">Damaged Goods</th>
+                                    <th id="damagedStockHeader" class="damagedStockColumn" style="display: none;">Damaged Goods</th>
                                     <th>Date Added</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="inventoryTableBody">
-                                <!-- Sample Data (To Be Dynamically Rendered) -->
-                                <tr>
-                                    <td>1</td>
-                                    <td><img src="{% static 'images/sample.png' %}" alt="Product Image" style="width: 50px; height: 50px;"></td>
-                                    <td>Preform</td>
-                                    <td>Steel Rod</td>
-                                    <td>12 mm</td>
-                                    <td>Silver</td>
-                                    <td>500</td>
-                                    <td class="damagedStockColumn" style="display: none;">20</td>
-                                    <td>2024-11-20</td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm" title="View History">
-                                            <i class="fas fa-history"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td><img src="{% static 'images/sample2.png' %}" alt="Product Image" style="width: 50px; height: 50px;"></td>
-                                    <td>Water 500ml</td>
-                                    <td>Wooden Chair</td>
-                                    <td>Large</td>
-                                    <td>Brown</td>
-                                    <td>50</td>
-                                    <td class="damagedStockColumn" style="display: none;">5</td>
-                                    <td>2024-11-18</td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm" title="View History">
-                                            <i class="fas fa-history"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <!-- Dynamic rows go here -->
+                                {% for x in products %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><img src="{{ x.image.url }}" alt="Image description" width="120" height="70" /></td>
+                                        <td>{{ x.category.category_name }}</td>
+                                        <td>{{ x.name }}</td>
+                                        <td>{{ x.size }}</td>
+                                        <td>{{ x.color }}</td>
+                                        <td>{{ x.total_stock }}</td>
+                                        <td class="damagedStockColumn" style="display: none;">{{ x.total_damaged_stock }}</td>
+                                        <td>{{ x.date }}</td>
+                                        <td></td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -143,6 +141,91 @@
     </div>
 </div>
 
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addCategoryForm" method="POST" action="{% url 'add_new_category' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="category_name" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="category_name" name="category_name" placeholder="Enter category name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="material_type" class="form-label">Material Type</label>
+                        <select class="form-control" id="material_type" name="material_type">
+                            <option value="Raw Materials">Raw Materials</option>
+                            <option value="Finished Goods">Finished Goods</option>
+                            <option value="Semi Finished Goods">Semi Finished Goods</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Raw Material Modal -->
+<div class="modal fade" id="addRawMaterialModal" tabindex="-1" aria-labelledby="addRawMaterialModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRawMaterialModalLabel">Add Raw Material</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addRawMaterialForm" method="POST" enctype="multipart/form-data" action="{% url 'add_raw_material' %}">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Finished Good Modal -->
+<div class="modal fade" id="addFinishedModal" tabindex="-1" aria-labelledby="addSemiFinishedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFinishedModalLabel">Add Semi Finished Goods</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addFinishedForm" method="POST" enctype="multipart/form-data" action="{% url 'add_finished_good' %}">
+                    {% csrf_token %}
+                    {{ form1.as_p }}
+                    <button class="btn btn-primary" type="submit">Add Finished Good</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add Semi Finished Good Modal -->
+<div class="modal fade" id="addSemiFinishedModal" tabindex="-1" aria-labelledby="addSemiFinishedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSemiFinishedModalLabel">Add Semi Finished Goods</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addSemiFinishedForm" method="POST" enctype="multipart/form-data" action="{% url 'add_semi_finished_good' %}">
+                    {% csrf_token %}
+                    {{ form2.as_p }}
+                    <button class="btn btn-primary" type="submit">Add Semi Finished Good</button>
+                </form>
+            </div>
+        </div>
+ </div>
+</div>
 <script>
     // Filter by material type
     function filterMaterialType(type) {
@@ -157,17 +240,35 @@
 
     // Toggle display of damaged stocks column
     function toggleDamagedStocks() {
-        const isChecked = document.getElementById('includeDamagedStocks').checked;
-        const damagedHeader = document.getElementById('damagedStockHeader');
-        const damagedColumns = document.querySelectorAll('.damagedStockColumn');
+    const isChecked = document.getElementById('includeDamagedStocks').checked;
+    const damagedHeader = document.getElementById('damagedStockHeader');
+    const damagedColumns = document.querySelectorAll('.damagedStockColumn');
 
-        if (isChecked) {
-            damagedHeader.style.display = '';
-            damagedColumns.forEach((col) => (col.style.display = ''));
-        } else {
-            damagedHeader.style.display = 'none';
-            damagedColumns.forEach((col) => (col.style.display = 'none'));
-        }
+    if (isChecked) {
+        // Show the "Damaged Goods" column
+        damagedHeader.style.display = '';
+        damagedColumns.forEach((col) => {
+            col.style.display = '';
+        });
+    } else {
+        // Hide the "Damaged Goods" column
+        damagedHeader.style.display = 'none';
+        damagedColumns.forEach((col) => {
+            col.style.display = 'none';
+        });
     }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Check if the URL contains the success query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const isSuccess = urlParams.get('success');
+
+        if (isSuccess) {
+            alert('Category added successfully!');
+            // Optionally, remove the success parameter to avoid re-showing the alert
+            history.replaceState(null, '', window.location.pathname);
+        }
+    });
 </script>
 {% endblock %}

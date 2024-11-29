@@ -7,24 +7,20 @@
         <!-- Page Title -->
         <div class="row">
             <div class="col-sm-12">
-                <div class="page-title-box d-flex justify-content-between align-items-center">
-                    <h4 class="page-title">Request for Quotation History</h4>
+                <div class="page-title-box ">
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">RFQ Reports</span>
+                    </h4>
                 </div>
-            </div>
-        </div>
-
-        <!-- Export Buttons -->
-        <div class="row mb-3">
-            <div class="col-12 d-flex justify-content-end">
-                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
-                    <i class="far fa-file-pdf"></i>
-                </a>
-                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
-                    <i class="fas fa-file-excel"></i>
-                </a>
-                <a href="#" class="btn btn-primary btn-sm" title="Print">
-                    <i class="fas fa-print"></i>
-                </a>
             </div>
         </div>
 
@@ -66,6 +62,22 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Action Buttons (Aligned to the Right) -->
+                    <div class="ml-auto d-flex align-items-center">
+                        <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Home">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -84,7 +96,7 @@
                                     <th>Expected Delivery Date</th>
                                     <th>Vendors</th>
                                     <th>Deadline</th>
-                                    <th>Actions</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -97,7 +109,7 @@
                                     <td>Vendor 1, Vendor 2</td>
                                     <td>29-Nov-24</td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" onclick="showRFQDetails('RFQ-001')">View Details</button>
+                                        <button class="btn btn-primary btn-sm" onclick="showRFQDetails('RFQ-001')"><i class="fas fa-eye"></i> Details</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -108,7 +120,7 @@
                                     <td>Vendor A, Vendor B</td>
                                     <td>02-Dec-24</td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" onclick="showRFQDetails('RFQ-002')">View Details</button>
+                                        <button class="btn btn-primary btn-sm" onclick="showRFQDetails('RFQ-002')"><i class="fas fa-eye"></i> Details</button>
                                     </td>
                                 </tr>
                                 <!-- Additional rows can be dynamically populated -->

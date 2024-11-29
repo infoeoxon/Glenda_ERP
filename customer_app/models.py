@@ -20,6 +20,5 @@ class customer_registration(models.Model):
     pan_yes_or_no = models.CharField(max_length=10, choices=PAN_CHOICES, default='yes', null=True)
     PAN_number = models.CharField(max_length=10, null=True, blank=True)
     phone_number = models.CharField(max_length=10, null=True)
-
     def __str__(self):
         return self.name

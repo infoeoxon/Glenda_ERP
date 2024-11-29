@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'Glenda_ERP_Project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'glenda_project_db',
+        'NAME': 'glenda_db',
         'USER':'root',
         'PASSWORD':'',
         'HOST':'localhost'

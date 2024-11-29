@@ -44,11 +44,16 @@ def staff_home(request):
 
 
 def register_view(request):
-    # Fetching menus and their related submenus for display
+
+
+
     use = request.user  # Get the current user
 
     # Get user's permissions
     user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+
+    # Define your custom order (e.g., by menu ID or another attribute)
+    custom_order = ['Master', 'Purchase', 'Production','Inventory','Logistics','R & D','HR','Customer','Vendor','Accounts']  # replace with your actual menu IDs or names
 
     # Create a dictionary to hold menus and their allocated submenus
     allocated_menus = {}
@@ -57,11 +62,30 @@ def register_view(request):
             allocated_menus[perm.menu] = []
         allocated_menus[perm.menu].append(perm.sub_menu)
 
+    # Sort menus based on custom order
+    sorted_menus = sorted(
+        allocated_menus.items(),
+        key=lambda x: custom_order.index(x[0].title) if x[0].title in custom_order else float('inf')
+    )
+    sorted_allocated_menus = dict(sorted_menus)
+
+    # Create a new dictionary for sorted menus
+    import random
+
+    # Generate a random number
+    random_number = random.randint(1000, 9999999)
+
+    # Concatenate "GA" with the random number
+    result = f"GA{random_number}"
+
+    print(result)
     if request.method == 'POST':
         form = CustomUserForm(request.POST,request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_staff = True  # Set is_staff to True
+            user.is_staff = True
+            user.unique_id=result
+            # Set is_staff to True
             user.save()  # Save the user instance
 
             # Log the user in after successful registration
@@ -75,7 +99,7 @@ def register_view(request):
         form = CustomUserForm()
 
     # Render the registration page with the form and menus
-    return render(request, 'register/create_user.html', {'form': form, 'allocated_menus': allocated_menus})
+    return render(request, 'register/create_user.html', {'form': form, 'allocated_menus': sorted_allocated_menus})
 
 
 def Edit_user(request,id):
@@ -223,13 +247,19 @@ def add_designation(request):
 
 
 def view_users(request):
+    form = CustomUserForm()
+
+    sort_order = request.GET.get('sort', 'asc')  # Default sorting is ascending
+    search_query = request.GET.get('search', '')  # Get search query
+    selected_department = request.GET.get('department', None)  # Get selected department filter
+
     use = request.user  # Get the current user
 
     # Get user's permissions
     user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
 
     # Define your custom order (e.g., by menu ID or another attribute)
-    custom_order = ['Master', 'Purchase', 'Production','Inventory','Logistics','R & D','HR','Customer','Vendor','Accounts']  # replace with your actual menu IDs or names
+    custom_order = ['Master', 'Purchase', 'Production', 'Inventory', 'Logistics', 'R & D', 'HR', 'Customer', 'Vendor', 'Accounts']
 
     # Create a dictionary to hold menus and their allocated submenus
     allocated_menus = {}
@@ -247,24 +277,52 @@ def view_users(request):
     # Create a new dictionary for sorted menus
     sorted_allocated_menus = dict(sorted_menus)
 
-
-    # Get selected filters from query parameters
-    selected_department = request.GET.get('department', None)
-
-
+    # Start with a query for CustomUser, excluding superusers and non-staff users
     view = CustomUser.objects.filter(is_superuser=False, is_staff=True)
-    paginator = Paginator(view,5)
+
+    # Apply department filter if selected
+    if selected_department:
+        view = view.filter(department__dept_Name=selected_department)
+
+    # Apply search query if present
+    if search_query:
+        view = view.filter(
+            Q(name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(phone_number__icontains=search_query)
+        )
+
+    # Apply sorting
+    if sort_order == 'asc':
+        view = view.order_by('name')  # Sort by name in ascending order
+    elif sort_order == 'desc':
+        view = view.order_by('-name')  # Sort by name in descending order
+
+    # Pagination
+    paginator = Paginator(view, 5)  # Show 5 users per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {
 
+    context = {
+        'form':form,
+        'sort_order': sort_order,
         'selected_department': selected_department,
-        'page_obj':page_obj,
-        'allocated_menus':sorted_allocated_menus
+        'page_obj': page_obj,
+        'allocated_menus': sorted_allocated_menus,
+        'search_query': search_query,  # Pass search query to template for persistence
     }
 
-    return render(request, 'register/view_users.html',context)
+    return render(request, 'register/view_users.html', context)
 
+def delete_multiple_designations(request):
+    if request.method == 'POST':
+        selected_ids = request.POST.get('selected_ids', '').split(',')
+        designation.objects.filter(id__in=selected_ids).delete()
+        return redirect('view_designation')  # Redirect to the designation list page
+    return HttpResponse(status=405)  # Method Not Allowed if not POST
+def get_item(dictionary, key):
+    """Get value from a dictionary using the key."""
+    return dictionary.get(key)
 
 def create_permission(request, id):
     use = request.user  # Get the current user
@@ -272,12 +330,26 @@ def create_permission(request, id):
     # Get user's permissions
     user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
 
+    # Define your custom order (e.g., by menu ID or another attribute)
+    custom_order = ['Master', 'Purchase', 'Production', 'Inventory', 'Logistics', 'R & D', 'HR', 'Customer', 'Vendor',
+                    'Accounts']  # replace with your actual menu IDs or names
+
     # Create a dictionary to hold menus and their allocated submenus
     allocated_menus = {}
     for perm in user_permissions:
         if perm.menu not in allocated_menus:
             allocated_menus[perm.menu] = []
         allocated_menus[perm.menu].append(perm.sub_menu)
+
+    # Sort menus based on custom order
+    sorted_menus = sorted(
+        allocated_menus.items(),
+        key=lambda x: custom_order.index(x[0].title) if x[0].title in custom_order else float('inf')
+    )
+
+    # Create a new dictionary for sorted menus
+    sorted_allocated_menus = dict(sorted_menus)
+
     if request.method == 'POST':
         form = PermissionForm(request.POST)
         if form.is_valid():
@@ -316,7 +388,11 @@ def create_permission(request, id):
     else:
         form = PermissionForm()
 
-    return render(request, 'register/add_permissions.html', {'form': form,'allocated_menus':allocated_menus})
+    return render(request, 'register/add_permissions.html', {
+        'form': form,
+        'allocated_menus': sorted_allocated_menus,
+    })
+
 
 
 def get_submenus(request, menu_id):
@@ -595,3 +671,43 @@ def delete_designation(request,id):
 
     # Render the confirmation page for GET requests
     return render(request, 'register/delete_designation.html', {'dtl': dtl,'allocated_menus':allocated_menus})
+
+
+def delete_selected_users(request):
+    if request.method == 'POST':
+        selected_ids = request.POST.get('selected_ids', '').split(',')
+        if not selected_ids or selected_ids == ['']:
+            return HttpResponse("No users selected for deletion.", status=400)
+
+        try:
+            # Delete users by their IDs
+            CustomUser.objects.filter(id__in=selected_ids).delete()
+            return redirect('view_users')  # Adjust 'view_users' to the correct URL name
+        except Exception as e:
+            # Log the error (optional)
+            print(f"Error deleting users: {e}")
+            return HttpResponse(f"An error occurred: {e}", status=500)
+    return HttpResponse("Method not allowed", status=405)
+
+def delete_selected_department(request):
+    if request.method == 'POST':
+        selected_ids = request.POST.get('selected_ids', '').split(',')
+        selected_ids = [id.strip() for id in selected_ids if id.strip()]
+
+        if not selected_ids:
+            return HttpResponse("No departments selected for deletion.", status=400)
+
+        try:
+            # Ensure the selected IDs are integers
+            selected_ids = [int(id) for id in selected_ids]
+            # Delete departments by their IDs
+            department.objects.filter(id__in=selected_ids).delete()
+            return redirect('view_departmentlist')  # Adjust this URL as necessary
+        except Exception as e:
+            # Log the error (optional)
+            print(f"Error deleting departments: {e}")
+            return HttpResponse(f"An error occurred: {e}", status=500)
+
+    return HttpResponse("Method not allowed", status=405)
+
+

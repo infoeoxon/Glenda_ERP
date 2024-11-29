@@ -42,5 +42,10 @@ urlpatterns = [
     path('demo_request_list_history', views.demo_request_list_history, name='demo_request_list_history'),
     path('demo_stock_history', views.demo_stock_history, name='demo_stock_history'),
     path('demo_arrived_stock_verification_history', views.demo_arrived_stock_verification_history, name='demo_arrived_stock_verification_history'),
-
+    path('add_new_category', views.add_new_category, name='add_new_category'),
+    path('add_raw_material', views.add_raw_material, name='add_raw_material'),
+    path('raw_material_purchase_request', views.raw_material_purchase_request, name='raw_material_purchase_request'),
+    path('semi_finished_purchase_request', views.semi_finished_purchase_request, name='semi_finished_purchase_request'),
+    path('add_finished_good', views.add_finished_good, name='add_finished_good'),
+    path('add_semi_finished_good', views.add_semi_finished_good, name='add_semi_finished_good')
 ]

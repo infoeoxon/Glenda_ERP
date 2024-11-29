@@ -9,7 +9,6 @@ from django.views.generic import TemplateView
 from xhtml2pdf import pisa
 from django.db.models import Q
 from Glenda_App.models import Menu
-from customer_app.models import customer_registration
 from register_app.forms import CustomUserForm, CustomLoginForm
 from django.contrib import messages
 from register_app.models import CustomUser, MenuPermissions
@@ -38,6 +37,9 @@ def vendor_login(request):
         form = CustomLoginForm()
 
     return render(request,'front/vendor_login.html',{'form':form})
+
+
+
 from django.urls import reverse
 
 def front_logout(request):
@@ -97,7 +99,9 @@ def request(request):
 
 @login_required(login_url='login')
 def my_profile(request):
-    return render(request,'front/profile.html')
+    ven=request.user
+    vendor=vendor_register.objects.get(user_id=ven.id)
+    return render(request,'front/profile.html',{'vendor':vendor})
 
 def vendor_request_list(request):
     use = request.user  # Get the current user
@@ -161,19 +165,19 @@ def approve_as_vendor(request,id):
     messages.success(request, "approved.")
     return redirect('view_customers_list')  # Redirect to the list view
 
-def approve_as_distributor(request,id):
-    ven = get_object_or_404(CustomUser,id=id)
-
-    v=ven.id
-    co = CustomUser.objects.get(id=v)
-    co.is_active = True
-    co.save()
-    vendor =customer_registration()
-    vendor.is_distributor=True
-    vendor.user_id=v
-    vendor.save()
-    messages.success(request, "approved.")
-    return redirect('view_customers_list')  # Redirect to the list view
+# def approve_as_distributor(request,id):
+#     ven = get_object_or_404(CustomUser,id=id)
+#
+#     v=ven.id
+#     co = CustomUser.objects.get(id=v)
+#     co.is_active = True
+#     co.save()
+#     vendor =customer_registration()
+#     vendor.is_distributor=True
+#     vendor.user_id=v
+#     vendor.save()
+#     messages.success(request, "approved.")
+#     return redirect('view_customers_list')  # Redirect to the list view
 
 def approve_as_customer(request,id):
     ven = get_object_or_404(CustomUser,id=id)
@@ -182,6 +186,46 @@ def approve_as_customer(request,id):
     messages.success(request, "approved.")
     return redirect('view_vendor_list')  # Redirect to the list view
 
+
+def vendor_verification(request):
+    use = request.user  # Get the current user
+
+    # Get user's permissions
+    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+
+    # Define your custom order (e.g., by menu ID or another attribute)
+    custom_order = ['Master', 'Purchase', 'Production', 'Inventory', 'Logistics', 'R & D', 'HR', 'Customer', 'Vendor',
+                    'Accounts']  # replace with your actual menu IDs or names
+
+    # Create a dictionary to hold menus and their allocated submenus
+    allocated_menus = {}
+    for perm in user_permissions:
+        if perm.menu not in allocated_menus:
+            allocated_menus[perm.menu] = []
+        allocated_menus[perm.menu].append(perm.sub_menu)
+
+    # Sort menus based on custom order
+    sorted_menus = sorted(
+        allocated_menus.items(),
+        key=lambda x: custom_order.index(x[0].title) if x[0].title in custom_order else float('inf')
+    )
+
+    # Create a new dictionary for sorted menus
+    sorted_allocated_menus = dict(sorted_menus)
+    vendor=vendor_register.objects.all()
+    context={
+        'vendor':vendor,
+        'allocated_menus':sorted_allocated_menus
+
+    }
+    return render(request,'vendor/vendor_verification.html',context)
+
+def approve_as_vendor_details(request,id):
+    vendor = get_object_or_404(vendor_register,id=id)
+    vendor.status="Approved"
+    vendor.save()
+    messages.success(request, "approved.")
+    return redirect('vendor_verification')  # Redirect to the list view
 
 
 
@@ -225,7 +269,7 @@ def view_customers_list(request):
     # Create a new dictionary for sorted menus
     sorted_allocated_menus = dict(sorted_menus)
 
-    view=CustomUser.objects.filter(is_staff=False,is_active=False)
+    view=CustomUser.objects.filter(is_staff=False,is_active=True)
     context = {
         'allocated_menus': sorted_allocated_menus,
         'view':view
@@ -258,7 +302,7 @@ def view_vendors(request):
 
     # Create a new dictionary for sorted menus
     sorted_allocated_menus = dict(sorted_menus)
-    view = vendor_register.objects.all()
+    view = vendor_register.objects.filter(status='pending')
     return render(request,'vendor/view_vendors.html',{'view':view,'allocated_menus':sorted_allocated_menus})
 
 
@@ -303,7 +347,7 @@ def vender_register_view(request):
         form = CustomUserForm(request.POST)
         if form.is_valid():
             vendor = form.save(commit=False)
-            vendor.is_active = False  # Set the user as inactive initially
+            vendor.is_active = True  # Set the user as inactive initially
             vendor.save()
 
             # If you have many-to-many fields, save them explicitly
@@ -330,7 +374,7 @@ def vendor_details(request, vendor_id):
         vendor_data = {
             'name': vendor.user.name,
             'company_name': vendor.company_name,
-            'materials': [material.name for material in vendor.materials.all()],
+            'materials': [material.name for material in vendor.materials_name.all()],
             'vendor_district': vendor.vendor_district,
             'vendor_state': vendor.vendor_state,
             'vendor_country': vendor.vendor_country,
@@ -351,15 +395,19 @@ def vendor_details(request, vendor_id):
 
 def create_vendor_details(request,id):
     menus = Menu.objects.prefetch_related('submenus').all()
+    mem = get_object_or_404(vendor_register,user_id=id)
+
 
     if request.method == 'POST':
-        form = VendorRegisterForm(request.POST, request.FILES)  # Added request.FILES for file uploads if needed
+        form = VendorRegisterForm(request.POST, request.FILES,instance=mem)  # Added request.FILES for file uploads if needed
         if form.is_valid():
             vendor = form.save(commit=False)
-            vendor.user_id = id  # Associate the user
+            vendor.user_id = id
+            vendor.status='pending'
+            # Associate the user
             vendor.save()
             form.save_m2m()  # Save the many-to-many field for materials
-            return redirect('view_vendor_list')  # Redirect to vendor list after successful submission
+            return redirect('view_vendors')  # Redirect to vendor list after successful submission
     else:
         form = VendorRegisterForm()
 

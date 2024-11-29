@@ -149,8 +149,8 @@
                     <!-- Materials -->
                     <div class="form-group">
                         <label for="id_materials">Materials</label>
-                        {{ form.materials }}
-                        {% for error in form.materials.errors %}
+                        {{ form.materials_name }}
+                        {% for error in form.materials_name.errors %}
                             <span class="text-danger">{{ error }}</span>
                         {% endfor %}
                     </div>

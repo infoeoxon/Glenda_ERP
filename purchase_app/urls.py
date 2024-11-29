@@ -35,4 +35,10 @@ urlpatterns = [
     path('demo_rfq_history', views.demo_rfq_history, name='demo_rfq_history'),
     path('demo_purchase_order_history', views.demo_purchase_order_history, name='demo_purchase_order_history'),
     path('demo_dispatch_notification_history', views.demo_dispatch_notification_history, name='demo_dispatch_notification_history'),
+    path('demo_new_rfq', views.demo_new_rfq, name='demo_new_rfq'),
+    path('demo_inventory_request', views.demo_inventory_request, name='demo_inventory_request'),
+    path('demo_vendor_year_report', views.demo_vendor_year_report, name='demo_vendor_year_report'),
+    path('demo_req_from_inventory_report', views.demo_req_from_inventory_report, name='demo_req_from_inventory_report'),
+    path('create_rfq_raw_materials', views.create_rfq_raw_materials, name='create_rfq_raw_materials'),
+
 ]

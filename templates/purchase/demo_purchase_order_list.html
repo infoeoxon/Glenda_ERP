@@ -8,7 +8,18 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box d-flex justify-content-between align-items-center">
-                    <h4 class="page-title">Purchase Orders</h4>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Purchase Order</span>
+                    </h4>
                     <!-- Create New Purchase Order Button -->
                     <a href="{% url 'demo_purchase_order' %}" class="btn btn-primary">
                         <i class="fas fa-plus mr-2"></i>Create Purchase Order
@@ -26,8 +37,11 @@
                 <a href="" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
                     <i class="fas fa-file-excel"></i>
                 </a>
-                <a href="#" class="btn btn-primary btn-sm" title="Print">
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Print">
                     <i class="fas fa-print"></i>
+                </a>
+                <a href="" class="btn btn-primary btn-sm mr-2" title="Home">
+                    <i class="fas fa-home"></i>
                 </a>
             </div>
         </div>
@@ -113,7 +127,7 @@
                                     <th>Date</th>
                                     <th>Total Amount</th>
                                     <th>Status</th>
-                                    <th>Actions</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -124,7 +138,7 @@
                                     <td>₹ 1,00,000</td>
                                     <td>Pending</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary">
+                                        <button class="btn btn-sm btn-primary" onclick="viewPODetails('PO001')">
                                             <i class="fas fa-eye"></i> View Details
                                         </button>
                                     </td>
@@ -136,12 +150,11 @@
                                     <td>₹ 2,50,000</td>
                                     <td>Dispatched</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary">
+                                        <button class="btn btn-sm btn-primary" onclick="viewPODetails('PO002')">
                                             <i class="fas fa-eye"></i> View Details
                                         </button>
                                     </td>
                                 </tr>
-                                <!-- Additional rows as needed -->
                             </tbody>
                         </table>
                     </div>
@@ -151,11 +164,121 @@
     </div>
 </div>
 
+<!-- PO Details Modal -->
+<div class="modal fade" id="poModal" tabindex="-1" aria-labelledby="poModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="poModalLabel">Purchase Order Details</h5>
+                <div>
+                    <button class="btn btn-primary btn-sm mr-2" onclick="printPODetails()">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm mr-2" onclick="exportPDF()">
+                        <i class="far fa-file-pdf"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="exportExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </button>
+                    <button type="button" class="close ml-2" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>PO Number</th>
+                            <td id="po-number"></td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td id="po-date"></td>
+                        </tr>
+                        <tr>
+                            <th>Time</th>
+                            <td id="po-time"></td>
+                        </tr>
+                        <tr>
+                            <th>Requested By</th>
+                            <td id="requested-by"></td>
+                        </tr>
+                        <tr>
+                            <th>Verified By</th>
+                            <td id="verified-by"></td>
+                        </tr>
+                        <tr>
+                            <th>Special Instructions</th>
+                            <td id="special-instructions"></td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td id="po-status"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    function showDateFilter() {
-        // Toggle visibility of the date filter section
-        const dateFilter = document.getElementById('date-filter-section');
-        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    function viewPODetails(poNumber) {
+        const data = {
+            PO001: {
+                poNumber: "PO001",
+                date: "20-Dec-2024",
+                time: "10:30 AM",
+                requestedBy: "John Doe",
+                verifiedBy: "Jane Smith",
+                specialInstructions: "Deliver before New Year",
+                status: "Pending"
+            },
+            PO002: {
+                poNumber: "PO002",
+                date: "18-Dec-2024",
+                time: "11:00 AM",
+                requestedBy: "Alice Johnson",
+                verifiedBy: "Bob Lee",
+                specialInstructions: "Fragile items, handle with care",
+                status: "Dispatched"
+            }
+        };
+
+        const details = data[poNumber];
+        if (details) {
+            document.getElementById("po-number").textContent = details.poNumber;
+            document.getElementById("po-date").textContent = details.date;
+            document.getElementById("po-time").textContent = details.time;
+            document.getElementById("requested-by").textContent = details.requestedBy;
+            document.getElementById("verified-by").textContent = details.verifiedBy;
+            document.getElementById("special-instructions").textContent = details.specialInstructions;
+            document.getElementById("po-status").textContent = details.status;
+
+            $("#poModal").modal("show");
+        }
+    }
+
+    function printPODetails() {
+        const content = document.querySelector(".modal-body").innerHTML;
+        const printWindow = window.open("", "", "height=600,width=800");
+        printWindow.document.write("<html><head><title>Print PO Details</title></head><body>");
+        printWindow.document.write(content);
+        printWindow.document.write("</body></html>");
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    function exportPDF() {
+        alert("Export to PDF functionality not implemented yet."); // Replace with actual implementation
+    }
+
+    function exportExcel() {
+        alert("Export to Excel functionality not implemented yet."); // Replace with actual implementation
     }
 </script>
 {% endblock %}

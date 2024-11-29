@@ -1,116 +1,157 @@
-
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
 
 <div class="page-content-wrapper">
-
     <div class="container-fluid">
-
-<div class="row">
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-
-                          <div class="mb-3">
-    <form method="GET" action="{% url 'user_search_export' %}">
-        <div class="row mb-4 align-items-end">
-            <div class="col-md-2">
-               <h3>Department </h3>
-            </div>
-           <div class="col-md-2">
-<!--               <h3>User List</h3>-->
-            </div>
-
-
-<!--            <div class="col-md-8 text-right">-->
-<!--                <a type="button" class="btn btn-primary waveslight" href="{% url 'register_view' %}" style="margin-left:12px;"><i class="mdi mdi-plus mr-2"></i>Department</a>-->
-<!--                <a href="" class="fas fa-print fa-1x" title="Print" style="color:#605daf; margin-right: 10px;"></a>-->
-<!--                <a href="" class="far fa-file-pdf fa-1x" title="Pdf" style="color:#605daf; margin-right: 10px;"></a>-->
-<!--                <a href="" class="fas fa-file-excel fa-1x" title="Excel" style="color:#605daf; margin-right: 10px;"></a>-->
-<!--                <a href="" class="fas fa-home fa-1x" title="Home" style="color:#605daf;"></a>-->
-<!--            </div>-->
-        </div>
-    </form>
-</div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- end page title end breadcrumb -->
         <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-
-                        <h4 class="mt-0 header-title"></h4>
-                        <div class="mb-3">
-                            <form method="GET" action="{% url 'user_search_export' %}">
-                                <div class="row mb-6 align-items-end">
-<div class="col-md-12 text-right">
-<!--                    <a type="button" class="btn btn-primary waveslight" href="{% url 'register_view' %}" style="margin-left:12px;"><i class="mdi mdi-plus mr-2"></i>Department</a>-->
-
-                <a type="button" class="btn btn-primary waveslight" href="{% url 'adddepartment' %}" style="margin-left:12px;"><i class="mdi mdi-plus mr-2"></i>Department</a>
-                <a href="" class="fas fa-print fa-1x" title="Print" style="color:#605daf; margin-right: 10px;"></a>
-                <a href="" class="far fa-file-pdf fa-1x" title="Pdf" style="color:#605daf; margin-right: 10px;"></a>
-                <a href="" class="fas fa-file-excel fa-1x" title="Excel" style="color:#605daf; margin-right: 10px;"></a>
-                <a href="" class="fas fa-home fa-1x" title="Home" style="color:#605daf;"></a>
-            </div>
-                                </div>
-                            </form>
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50px;">Department</span>
+                    </h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
+                        <!-- Date Filter -->
+                        <!-- Status Filter -->
+                        <!-- Sort Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;">
+                                Sort
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="?status=Pending">Ascending</a>
+                                <a class="dropdown-item" href="?status=Rejected">Descending</a>
+                            </div>
                         </div>
 
-                       <table class="table mb-0" id="my-table">
-    <thead>
-        <tr>
-            <th>Department Name</th>
-            <th>Designations</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+                        <!-- Search Bar -->
+                        <div class="input-group" style="flex-shrink: 0; width: 500px;">
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
 
-        </tr>
-    </thead>
-    <tbody>
-        {% for dept in departments %}
-        <tr>
-            <td>{{ dept.dept_Name }}</td>
-            <td>
-                <ul>
-                    {% for desg in dept.designation_set.all %}
-                    <li>{{ desg.user_type }}</li>
-                    {% endfor %}
-                </ul>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+                        <!-- Create Plan Button -->
+                        <button type="button" class="btn btn-primary" style="margin: 20px;" data-toggle="modal" data-target="#shiftModal">
+                            <i class="fa fa-plus mr-2"></i>
+                        </button>
 
-            <td>
-                <a href="{% url 'update_departmentlist' dept.id %}" class="btn btn-primary">
-                    <i class="fas fa-edit"></i>
-                </a>
-                <a href="{% url 'delete_departmentlist' dept.id %}" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete this user?');">
-                    <i class="fas fa-trash-alt"></i>
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                            <button type="button" class="btn btn-primary" title="Delete" id="delete-selected-btn" style="margin-right: 10px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div> <!-- end col -->
-        </div> <!-- end row -->
 
-    </div><!-- container -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table mb-0" id="my-table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="select-all-checkbox">
+                                            </th>
+                                            <th>Sl No</th>
+                                            <th>Department Name</th>
+                                            <th>Designations</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for dept in departments %}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" class="select-item-checkbox" data-id="{{ dept.id }}">
+                                            </td>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ dept.dept_Name }}</td>
+                                            <td>
+                                                <ul>
+                                                    {% for desg in dept.designation_set.all %}
+                                                    <li>{{ desg.user_type }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <a href="{% url 'update_departmentlist' dept.id %}" class="btn btn-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+            </div><!-- container -->
+        </div> <!-- Page content Wrapper -->
 
-</div> <!-- Page content Wrapper -->
+        <script>
+            document.getElementById('select-all-checkbox').addEventListener('change', function(event) {
+                const checkboxes = document.querySelectorAll('.select-item-checkbox');
+                checkboxes.forEach(checkbox => checkbox.checked = event.target.checked);
+            });
+
+            document.getElementById('delete-selected-btn').addEventListener('click', function() {
+                const selectedIds = [];
+                const checkboxes = document.querySelectorAll('.select-item-checkbox:checked');
+                checkboxes.forEach(checkbox => selectedIds.push(checkbox.getAttribute('data-id')));
+
+                if (selectedIds.length === 0) {
+                    alert('Please select at least one item to delete.');
+                    return;
+                }
+
+                if (confirm('Are you sure you want to delete the selected items?')) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{% url 'delete_selected_department' %}";
+                    form.innerHTML = `
+                        <input type="hidden" name="selected_ids" value="${selectedIds.join(',')}">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    `;
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        </script>
 
 {% endblock %}
