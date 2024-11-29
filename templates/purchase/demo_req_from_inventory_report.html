@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px;">Request from Inventory Reports</span>
+                    </h4>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Filters Section -->
+        <div class="row mb-4">
+            <div class="col-12 d-flex align-items-center flex-wrap">
+                <!-- Material Type Filter -->
+                <div class="btn-group mr-3">
+                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Material Type
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="?material_type=Raw Material">Raw Material</a>
+                        <a class="dropdown-item" href="?material_type=Finished Goods">Finished Goods</a>
+                        <a class="dropdown-item" href="?material_type=Semi-Finished Goods">Semi-Finished Goods</a>
+                    </div>
+                </div>
+
+                <!-- Material Category Filter -->
+                <div class="btn-group mr-3">
+                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Material Category
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="?category=Preform">Preform</a>
+                        <a class="dropdown-item" href="?category=Cap">Cap</a>
+                        <a class="dropdown-item" href="?category=Shrink">Shrink</a>
+                    </div>
+                </div>
+
+                <!-- Date Filter -->
+                <div class="position-relative mr-3">
+                    <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()">
+                        <i class="mdi mdi-filter mr-2"></i>Date
+                    </button>
+                    <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                        <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                        <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                        <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="input-group" style="flex-shrink: 0; width: 300px;">
+                    <input type="text" class="form-control" name="search" placeholder="Search Requests" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary btn-sm" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons (Aligned to the Right) -->
+                <div class="ml-auto d-flex align-items-center">
+                    <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                        <i class="far fa-file-pdf"></i>
+                    </a>
+                    <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <a href="" class="btn btn-primary" title="Home">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Requests Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>SR. No.</th>
+                                    <th>Material ID</th>
+                                    <th>Material Type</th>
+                                    <th>Material Category</th>
+                                    <th>Requested Date</th>
+                                    <th>Quantity Required</th>
+                                    <th>Remarks from Inventory</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sample Data -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>MR01</td>
+                                    <td>Raw Material</td>
+                                    <td>Preform</td>
+                                    <td>25-11-2024</td>
+                                    <td>1000</td>
+                                    <td>No issues reported</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="openRequestModal('REQ001')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>MR02</td>
+                                    <td>Raw Material</td>
+                                    <td>Cap</td>
+                                    <td>22-11-2024</td>
+                                    <td>2000</td>
+                                    <td>Urgent Requirement</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="openRequestModal('REQ002')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Request Details Modal -->
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="requestModalLabel">Request Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Material Type</th>
+                            <td id="modal-material-type"></td>
+                        </tr>
+                        <tr>
+                            <th>Material Category</th>
+                            <td id="modal-material-category"></td>
+                        </tr>
+                        <tr>
+                            <th>Requested Date</th>
+                            <td id="modal-requested-date"></td>
+                        </tr>
+                        <tr>
+                            <th>Quantity Required</th>
+                            <td id="modal-quantity-required"></td>
+                        </tr>
+                        <tr>
+                            <th>Remarks</th>
+                            <td id="modal-remarks"></td>
+                        </tr>
+                        <tr>
+                            <th>Requested By</th>
+                            <td id="modal-requested-by"></td>
+                        </tr>
+                        <tr>
+                            <th>Verified By</th>
+                            <td id="modal-verified-by"></td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td id="modal-status"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" title="Print">
+                    <i class="fas fa-print"></i>
+                </button>
+                <button type="button" class="btn btn-primary" title="Export as PDF">
+                    <i class="far fa-file-pdf"></i>
+                </button>
+                <button type="button" class="btn btn-primary" title="Export as Excel">
+                    <i class="fas fa-file-excel"></i>
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showDateFilter() {
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function openRequestModal(requestId) {
+        // Simulate fetching data based on requestId
+        const requestDetails = {
+            REQ001: {
+                materialType: 'Raw Material',
+                materialCategory: 'Preform',
+                requestedDate: '2024-11-25',
+                quantityRequired: '1000',
+                remarks: 'No issues reported',
+                requestedBy: 'John Doe, Manager',
+                verifiedBy: 'Jane Smith, Supervisor',
+                status: 'Pending Approval'
+            },
+            REQ002: {
+                materialType: 'Raw Material',
+                materialCategory: 'Cap',
+                requestedDate: '2024-11-22',
+                quantityRequired: '2000',
+                remarks: 'Urgent Requirement',
+                requestedBy: 'Alice Johnson, Supervisor',
+                verifiedBy: 'Bob Lee, Manager',
+                status: 'Approved'
+            }
+        };
+
+        const details = requestDetails[requestId];
+        if (details) {
+            document.getElementById('modal-material-type').textContent = details.materialType;
+            document.getElementById('modal-material-category').textContent = details.materialCategory;
+            document.getElementById('modal-requested-date').textContent = details.requestedDate;
+            document.getElementById('modal-quantity-required').textContent = details.quantityRequired;
+            document.getElementById('modal-remarks').textContent = details.remarks;
+            document.getElementById('modal-requested-by').textContent = details.requestedBy;
+            document.getElementById('modal-verified-by').textContent = details.verifiedBy;
+            document.getElementById('modal-status').textContent = details.status;
+
+            $('#requestModal').modal('show');
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box ">
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Request from Inventory</span>
+                    </h4>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="row mb-4">
+            <div class="col-12 d-flex align-items-center flex-wrap">
+                <!-- Material Type Filter -->
+                <div class="btn-group mr-3">
+                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Material Type
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="?material_type=Raw Material">Raw Material</a>
+                        <a class="dropdown-item" href="?material_type=Finished Goods">Finished Goods</a>
+                        <a class="dropdown-item" href="?material_type=Semi-Finished Goods">Semi-Finished Goods</a>
+                    </div>
+                </div>
+
+                <!-- Material Category Filter -->
+                <div class="btn-group mr-3">
+                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Material Category
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="?category=Preform">Preform</a>
+                        <a class="dropdown-item" href="?category=Cap">Cap</a>
+                        <a class="dropdown-item" href="?category=Shrink">Shrink</a>
+                    </div>
+                </div>
+
+                <!-- Date Filter -->
+                <div class="position-relative mr-3">
+                    <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()">
+                        <i class="mdi mdi-filter mr-2"></i>Date
+                    </button>
+                    <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                        <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                        <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                        <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                        <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="input-group" style="flex-shrink: 0; width: 300px;">
+                    <input type="text" class="form-control" name="search" placeholder="Search Requests" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary btn-sm" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons (Aligned to the Right) -->
+                <div class="ml-auto d-flex align-items-center">
+                    <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                        <i class="far fa-file-pdf"></i>
+                    </a>
+                    <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <a href="" class="btn btn-primary" title="Home">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requests Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Material Type</th>
+                                    <th>Category</th>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Required Date</th>
+                                    <th>Requested Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for x in requests %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ x.category.material_type }}</td>
+                                <td>{{ x.category.category_name }}</td>
+                                <td>{{ x.product_name.name }}</td>
+                                <td>{{ x.quantity_required }}</td>
+                                <td>{{ x.required_date }}</td>
+                                <td>{{ x.date }}</td>
+                                <td>
+                                    <button
+                                        class="btn btn-primary btn-sm"
+                                        title="View Details"
+                                        data-toggle="modal"
+                                        data-target="#requestModal"
+                                        data-material-type="{{ x.category.material_type }}"
+                                        data-category="{{ x.category.category_name }}"
+                                        data-product-name="{{ x.product_name.name }}"
+                                        data-quantity="{{ x.quantity_required }}"
+                                        data-required-date="{{ x.required_date }}"
+                                        data-remarks="{{ x.remarks }}"
+                                        data-requested-date="{{ x.date }}"
+                                        data-verified-by="{{ x.verified_by }}"
+                                        data-status="{{ x.status }}"
+                                        onclick="populateModal(this)"
+                                    >
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Request Details Modal -->
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="requestModalLabel">Request Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Material Type</th>
+                            <td id="modal-material-type"></td>
+                        </tr>
+                        <tr>
+                            <th>Material Category</th>
+                            <td id="modal-material-category"></td>
+                        </tr>
+                        <tr>
+                            <th>Product Name</th>
+                            <td id="modal-productName"></td>
+                        </tr>
+                        <tr>
+                            <th>Required Date</th>
+                            <td id="modal-required-date"></td>
+                        </tr>
+                        <tr>
+                            <th>Quantity Required</th>
+                            <td id="modal-quantity-required"></td>
+                        </tr>
+                        <tr>
+                            <th>Requested Date</th>
+                            <td id="modal-requested-date"></td>
+                        </tr>
+                        <tr>
+                            <th>Remarks</th>
+                            <td id="modal-remarks"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" title="Print">
+                    <i class="fas fa-print"></i>
+                </button>
+                <button type="button" class="btn btn-primary" title="Export as PDF">
+                    <i class="far fa-file-pdf"></i>
+                </button>
+                <button type="button" class="btn btn-primary" title="Export as Excel">
+                    <i class="fas fa-file-excel"></i>
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showDateFilter() {
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function populateModal(button) {
+        // Get the data attributes from the clicked button
+        const materialType = button.getAttribute('data-material-type');
+        const category = button.getAttribute('data-category');
+        const productName = button.getAttribute('data-product-name');
+        const quantity = button.getAttribute('data-quantity');
+        const requiredDate = button.getAttribute('data-required-date');
+        const remarks = button.getAttribute('data-remarks');
+        const requestedDate = button.getAttribute('data-requested-date');
+        const verifiedBy = button.getAttribute('data-verified-by');
+        const status = button.getAttribute('data-status');
+
+        // Populate the modal fields
+        document.getElementById('modal-material-type').textContent = materialType;
+        document.getElementById('modal-material-category').textContent = category;
+        document.getElementById('modal-productName').textContent = productName;
+        document.getElementById('modal-required-date').textContent = requiredDate;
+        document.getElementById('modal-quantity-required').textContent = quantity;
+        document.getElementById('modal-remarks').textContent = remarks;
+        document.getElementById('modal-requested-date').textContent = requestedDate;
+        document.getElementById('modal-verified-by').textContent = verifiedBy;
+        document.getElementById('modal-status').textContent = status;
+    }
+</script>
+{% endblock %}

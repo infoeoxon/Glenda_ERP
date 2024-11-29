@@ -1,15 +1,20 @@
 import csv
 import io
-from django.http import HttpResponse
+from itertools import chain
+
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
 from Glenda_App.models import Menu
 from django.db.models import F
 from django.contrib import messages
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm, Finished_Goods_RequestForm, \
-    Damaged_Goods_StockForm, Raw_materials_requestForm, Raw_material_allocate_Form, Finished_Goods_allocateForm
+    Damaged_Goods_StockForm, Raw_materials_requestForm, Raw_material_allocate_Form, Finished_Goods_allocateForm, \
+    AddCategoryForm, AddRawMaterialForm, PurchaseRequestRawMaterialForm, PurchaseRequestSemiFinishedForm, \
+    Add_semi_finished_Form, Add_finished_Form
 from inventory_app.models import RawMaterialsStock, Finished_Goods_Stock, Finished_Goods_Request, Damaged_Goods_Stock, \
-    Raw_material_request, Raw_material_allocate, Finished_Goods_allocate
+    Raw_material_request, Raw_material_allocate, Finished_Goods_allocate, AddCategory, Add_RawMaterial, \
+    Purchase_request_raw_material, Purchase_request_semi_finished, Add_finished_good, Add_semi_finished_good
 from production_app.models import water_Finished_Goods, water_Finished_goods_category, damaged_Goods, \
     Damaged_good_category
 from register_app.models import department
@@ -1625,7 +1630,17 @@ def demo_inventory_overview(request):
             allocated_menus[perm.menu] = []
         allocated_menus[perm.menu].append(perm.sub_menu)
 
-    return render(request,'inventory/demo_inventory_overview.html',{'allocated_menus': allocated_menus})
+    form = AddRawMaterialForm()
+    form1 = Add_finished_Form()
+    form2 = Add_semi_finished_Form
+
+    raw_products = Add_RawMaterial.objects.all()
+    finished_products = Add_finished_good.objects.all()
+    semi_products = Add_semi_finished_good.objects.all()
+    products = chain(raw_products, finished_products, semi_products)
+
+    return render(request,'inventory/demo_inventory_overview.html',{'allocated_menus': allocated_menus,'form':form,'form1':form1,'form2':form2,'products':products},)
+
 
 def demo_request_list(request):
     # Fetch menus and counts
@@ -1641,7 +1656,14 @@ def demo_request_list(request):
             allocated_menus[perm.menu] = []
         allocated_menus[perm.menu].append(perm.sub_menu)
 
-    return render(request, 'inventory/demo_request_list.html', {'allocated_menus': allocated_menus})
+    form = PurchaseRequestRawMaterialForm()
+    form1 = PurchaseRequestSemiFinishedForm()
+    raw_requests = Purchase_request_raw_material.objects.all()
+    semi_requests = Purchase_request_semi_finished.objects.all()
+    # Combine raw_requests and semi_requests
+    combined_requests = chain(raw_requests, semi_requests)
+
+    return render(request, 'inventory/demo_request_list.html', {'allocated_menus': allocated_menus,'form':form,'form1':form1,'requests':combined_requests})
 
 
 def demo_all_inventory_history(request):
@@ -1711,5 +1733,106 @@ def demo_arrived_stock_verification_history(request):
         allocated_menus[perm.menu].append(perm.sub_menu)
 
     return render(request, 'inventory/demo_arrived_stock_verification_history.html', {'allocated_menus': allocated_menus})
+
+
+def add_new_category(request):
+    # Fetch menus and counts
+    use = request.user  # Get the current user
+
+    # Get user's permissions
+    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+
+    # Create a dictionary to hold menus and their allocated submenus
+    allocated_menus = {}
+    for perm in user_permissions:
+        if perm.menu not in allocated_menus:
+            allocated_menus[perm.menu] = []
+        allocated_menus[perm.menu].append(perm.sub_menu)
+
+    if request.method == 'POST':
+        form = AddCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirect with success parameter
+            return redirect('/demo_inventory_overview?success=1')
+        else:
+            print(form.errors)  # Debugging step
+            return render(
+                request,
+                'inventory/demo_inventory_overview.html',
+                {'form': form, 'allocated_menus': allocated_menus},
+            )
+    else:
+        form = AddCategoryForm()
+    return render(
+        request,
+        'inventory/demo_inventory_overview.html',
+        {'form': form, 'allocated_menus': allocated_menus},
+    )
+
+
+def add_raw_material(request):
+    if request.method == 'POST':
+        form = AddRawMaterialForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('demo_inventory_overview')  # Redirect to the inventory overview page
+    else:
+        # Instantiate the form with the correct queryset for categories
+        form = AddRawMaterialForm()
+    return render(request, 'inventory/demo_inventory_overview.html', {'form': form})
+
+def add_finished_good(request):
+    if request.method == 'POST':
+        form1 = Add_finished_Form(request.POST, request.FILES)
+        if form1.is_valid():
+            form1.save()
+            return redirect('demo_inventory_overview')  # Redirect to the inventory overview page
+    else:
+        # Instantiate the form with the correct queryset for categories
+        form = Add_finished_Form()
+
+    return render(request, 'inventory/demo_inventory_overview.html', {'form1': form1})
+
+
+
+def add_semi_finished_good(request):
+    if request.method == 'POST':
+        form2 = Add_semi_finished_Form(request.POST, request.FILES)
+        if form2.is_valid():
+            form2.save()
+            return redirect('demo_inventory_overview')  # Redirect to the inventory overview page
+    else:
+        # Instantiate the form with the correct queryset for categories
+        form2 = Add_semi_finished_Form()
+
+    return render(request, 'inventory/demo_inventory_overview.html', {'form2':form2})
+
+
+def raw_material_purchase_request(request):
+    if request.method == 'POST':
+        form = PurchaseRequestRawMaterialForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('demo_request_list')  # Redirect to the list of requests
+        else:
+            # Log form errors to the console for debugging
+            print(form.errors)
+    else:
+        form = PurchaseRequestRawMaterialForm()
+
+    return render(request, 'request_list.html', {'form': form})
+
+
+def semi_finished_purchase_request(request):
+    if request.method == 'POST':
+        form1 = PurchaseRequestSemiFinishedForm(request.POST)
+        if form1.is_valid():
+            form1.save()
+            return redirect('request_list')  # Redirect to the list of requests
+    else:
+        form1 = PurchaseRequestSemiFinishedForm()
+
+    return render(request, 'request_semi_finished_form.html', {'form1': form1})
 
 

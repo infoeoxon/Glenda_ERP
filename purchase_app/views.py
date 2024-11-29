@@ -1,12 +1,15 @@
+import random
+from itertools import chain
 
 from django.shortcuts import render, redirect, get_object_or_404
 from Glenda_App.models import Menu
-from purchase_app.forms import CategoryForm, RawMaterialForm
+from purchase_app.forms import CategoryForm, RawMaterialForm, RFQRawMaterialsForm
 from inventory_app.forms import Raw_materials_StockForm
 from django.contrib import messages
 from django.db.models import Q
-from purchase_app.models import RawMaterials, RawMaterialCategory
-from inventory_app.models import Raw_material_request,RawMaterialsStock
+from purchase_app.models import RawMaterials, RawMaterialCategory, RFQ_raw_materials
+from inventory_app.models import Raw_material_request, RawMaterialsStock, Purchase_request_raw_material, \
+    Purchase_request_semi_finished
 from rd_app.models import RD_stock
 from register_app.models import MenuPermissions
 from django.utils.dateparse import parse_date
@@ -636,7 +639,10 @@ def demo_rfq(request):
             allocated_menus[perm.menu] = []
         allocated_menus[perm.menu].append(perm.sub_menu)
 
-    return render(request, 'purchase/demo_rfq.html', {'allocated_menus': allocated_menus})
+    form = RFQRawMaterialsForm()
+    rfq_requests=RFQ_raw_materials.objects.all()
+
+    return render(request, 'purchase/demo_rfq.html', {'allocated_menus': allocated_menus,'form':form,'rfq':rfq_requests})
 
 
 def demo_quotations(request):
@@ -795,3 +801,85 @@ def demo_dispatch_notification_history(request):
     return render(request, 'purchase/demo_dispatch_notification_history.html', {'allocated_menus': allocated_menus})
 
 
+def demo_new_rfq(request):
+    use = request.user
+
+    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+    allocated_menus = {}
+    for perm in user_permissions:
+        if perm.menu not in allocated_menus:
+            allocated_menus[perm.menu] = []
+        allocated_menus[perm.menu].append(perm.sub_menu)
+
+    return render(request, 'purchase/demo_new_rfq.html', {'allocated_menus': allocated_menus})
+
+
+def demo_inventory_request(request):
+    use = request.user
+
+    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+    allocated_menus = {}
+    for perm in user_permissions:
+        if perm.menu not in allocated_menus:
+            allocated_menus[perm.menu] = []
+        allocated_menus[perm.menu].append(perm.sub_menu)
+
+    raw_requests = Purchase_request_raw_material.objects.all()
+    semi_requests = Purchase_request_semi_finished.objects.all()
+    # Combine raw_requests and semi_requests
+    combined_requests = chain(raw_requests, semi_requests)
+
+    return render(request, 'purchase/demo_inventory_request.html', {'allocated_menus': allocated_menus,'requests':combined_requests})
+
+
+def demo_vendor_year_report(request):
+    use = request.user
+
+    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+    allocated_menus = {}
+    for perm in user_permissions:
+        if perm.menu not in allocated_menus:
+            allocated_menus[perm.menu] = []
+        allocated_menus[perm.menu].append(perm.sub_menu)
+
+    return render(request, 'purchase/demo_vendor_year_report.html', {'allocated_menus': allocated_menus})
+
+
+def demo_req_from_inventory_report(request):
+    use = request.user
+
+    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+    allocated_menus = {}
+    for perm in user_permissions:
+        if perm.menu not in allocated_menus:
+            allocated_menus[perm.menu] = []
+        allocated_menus[perm.menu].append(perm.sub_menu)
+
+    raw_requests = Purchase_request_raw_material.objects.all()
+    semi_requests = Purchase_request_semi_finished.objects.all()
+    # Combine raw_requests and semi_requests
+    combined_requests = chain(raw_requests, semi_requests)
+
+    return render(request, 'purchase/demo_req_from_inventory_report.html', {'allocated_menus': allocated_menus,'requests':combined_requests})
+
+
+def create_rfq_raw_materials(request):
+    if request.method == 'POST':
+        form = RFQRawMaterialsForm(request.POST, request.FILES)
+
+        # Generate a random number for RFQ
+        random_number = random.randint(0, 9999999)
+        result = f"RFQ{random_number}"
+
+        if form.is_valid():
+            rfq_instance = form.save(commit=False)
+            rfq_instance.rfq_number = result
+            rfq_instance.status = "Sent"
+            rfq_instance.save()
+            return redirect('demo_rfq')  # Redirect to a list or detail page
+        else:
+            print(form.errors)
+    else:
+        form = RFQRawMaterialsForm()
+
+    return render(request, 'purchase/demo_rfq.html', {'form': form})

@@ -9,9 +9,6 @@ from register_app.models import department
 
 # Create your models here.
 
-
-
-
 class RawMaterialsStock(models.Model):
     raw_materials = models.ForeignKey(RawMaterials, related_name='stocks', on_delete=models.CASCADE, null=True)
     stock = models.IntegerField(null=True)  # Stock quantity
@@ -81,7 +78,6 @@ class Raw_material_allocate(models.Model):
     remarks = models.TextField(null=True)
 
 
-
 class Finished_Goods_allocate(models.Model):
     stock = models.IntegerField(null=True)
     date = models.DateTimeField(auto_now=True)
@@ -89,7 +85,7 @@ class Finished_Goods_allocate(models.Model):
     finished_good = models.ForeignKey(water_Finished_Goods, on_delete=models.CASCADE, null=True)
 
 
-#new models
+#  new codes start's here
 
 class AddCategory(models.Model):
     category_name = models.CharField(max_length=150, null=True)
@@ -100,7 +96,7 @@ class AddCategory(models.Model):
     ]
     material_type = models.CharField(max_length=50, choices=MATERIAL_TYPE_CHOICES, null=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.category_name
 
 
@@ -116,5 +112,72 @@ class Add_RawMaterial(models.Model):
     total_damaged_stock = models.IntegerField(default=0)
 
 
-    def _str_(self):
+    def __str__(self):
         return self.name
+
+
+class Add_finished_good(models.Model):
+    category = models.ForeignKey(
+        AddCategory, on_delete=models.CASCADE, null=True, related_name="finished_goods_category"
+    )
+    name = models.CharField(max_length=150, null=True, unique=True)
+    size = models.CharField(max_length=150, null=True, unique=True)
+    unit = models.CharField(max_length=150, null=True, unique=True)
+    unit_define = models.IntegerField(null=True)
+    image = models.ImageField(upload_to='images/', null=True)
+    date = models.DateField(auto_now_add=True, null=True)
+    time = models.TimeField(auto_now_add=True, null=True)
+    total_stock = models.IntegerField(default=0)
+    total_damaged = models.IntegerField(default=0)
+
+
+class Add_semi_finished_good(models.Model):
+    category = models.ForeignKey(
+        AddCategory, on_delete=models.CASCADE, null=True, related_name="semi_finished_goods_category"
+    )
+    name = models.CharField(max_length=150, null=True, unique=True)
+    type = models.ForeignKey(
+        AddCategory, on_delete=models.CASCADE, null=True, related_name="semi_finished_goods_type"
+    )
+    size = models.CharField(max_length=150, null=True, unique=True)
+    unit = models.CharField(max_length=150, null=True, unique=True)
+    unit_define = models.IntegerField(null=True)
+    image = models.ImageField(upload_to='images/', null=True)
+    total_stock = models.IntegerField(default=0)
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
+
+class RawMaterialStock(models.Model):
+    raw_materials = models.ForeignKey(Add_RawMaterial, on_delete=models.CASCADE, null=True, related_name="stock_raw_materials")
+    stock_entry = models.IntegerField(default=0)
+    damaged_entry_stock = models.IntegerField(default=0)
+    date = models.DateField(auto_now=True)
+    time = models.TimeField(auto_now_add=True)
+
+
+class Purchase_request_raw_material(models.Model):
+    department = models.ForeignKey(department,on_delete=models.CASCADE,null=True,related_name='department_request')
+    category = models.ForeignKey(AddCategory,on_delete=models.CASCADE,null=True,related_name='category_request')
+    product_name = models.ForeignKey(Add_RawMaterial, on_delete=models.CASCADE, null=True, related_name='product_request')
+    quantity_required = models.IntegerField()
+    required_date = models.DateField()
+    remarks = models.TextField()
+    requested_by = models.CharField(max_length=150, null=True)  # Name and designation of the requestor (foreign key)
+    verified_by = models.CharField(max_length=150, null=True)  # Name and designation of the verifier (foreign key)
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
+    status = models.CharField(max_length=220)
+
+
+class Purchase_request_semi_finished(models.Model):
+    department = models.ForeignKey(department,on_delete=models.CASCADE,null=True,related_name='department_semi_request')
+    category = models.ForeignKey(AddCategory,on_delete=models.CASCADE,null=True,related_name='category_request_semi')
+    product_name = models.ForeignKey(Add_semi_finished_good, on_delete=models.CASCADE, null=True, related_name='product_request_semi')
+    quantity_required = models.IntegerField()
+    required_date = models.DateField()
+    remarks = models.TextField()
+    requested_by = models.CharField(max_length=150, null=True)  # Name and designation of the requestor (foreign key)
+    verified_by = models.CharField(max_length=150, null=True)  # Name and designation of the verifier (foreign key)
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
+    status = models.CharField(max_length=220)
