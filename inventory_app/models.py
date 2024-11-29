@@ -9,6 +9,9 @@ from register_app.models import department
 
 # Create your models here.
 
+
+
+
 class RawMaterialsStock(models.Model):
     raw_materials = models.ForeignKey(RawMaterials, related_name='stocks', on_delete=models.CASCADE, null=True)
     stock = models.IntegerField(null=True)  # Stock quantity
@@ -84,3 +87,34 @@ class Finished_Goods_allocate(models.Model):
     date = models.DateTimeField(auto_now=True)
     remarks = models.TextField(default='')
     finished_good = models.ForeignKey(water_Finished_Goods, on_delete=models.CASCADE, null=True)
+
+
+#new models
+
+class AddCategory(models.Model):
+    category_name = models.CharField(max_length=150, null=True)
+    MATERIAL_TYPE_CHOICES = [
+        ('Raw Materials', 'Raw Materials'),
+        ('Finished Goods', 'Finished Goods'),
+        ('Semi Finished Goods', 'Semi Finished Goods'),
+    ]
+    material_type = models.CharField(max_length=50, choices=MATERIAL_TYPE_CHOICES, null=True)
+
+    def _str_(self):
+        return self.category_name
+
+
+class Add_RawMaterial(models.Model):
+    category = models.ForeignKey(AddCategory, on_delete=models.CASCADE, null=True, related_name="category_raw_materials")
+    name = models.CharField(max_length=150, null=True, unique=True)
+    size = models.CharField(max_length=150, null=True)
+    color = models.CharField(max_length=150, null=True)
+    image = models.ImageField(upload_to='images/', null=True)
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True, null=True)
+    total_stock = models.IntegerField(default=0)  # Field to track total stock
+    total_damaged_stock = models.IntegerField(default=0)
+
+
+    def _str_(self):
+        return self.name

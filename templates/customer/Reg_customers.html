@@ -1,82 +1,89 @@
+
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
 
 <div class="page-content-wrapper">
     <div class="container-fluid">
-
-        <!-- Page Header -->
         <div class="row">
             <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <form method="GET" action="{% url 'user_search_export' %}">
-                                <div class="row mb-4 align-items-end">
-                                    <div class="col-md-2">
-                                        <h3>Customers </h3>
-                                    </div>
-                                    <div class="col-md-12 text-right">
-                                        <a class="btn btn-primary waves-light" href="{% url 'vender_register_view' %}" style="margin-left:12px;">Add Customers</a>
-                                        <a href="" class="fas fa-print fa-1x" title="Print" style="color:#605daf; margin-right: 10px;"></a>
-                                        <a href="" class="far fa-file-pdf fa-1x" title="PDF" style="color:#605daf; margin-right: 10px;"></a>
-                                        <a href="" class="fas fa-file-excel fa-1x" title="Excel" style="color:#605daf; margin-right: 10px;"></a>
-                                        <a href="" class="fas fa-home fa-1x" title="Home" style="color:#605daf;"></a>
-                                    </div>
-                                </div>
-                            </form>
+                <div class="page-title-box">
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Customer List</span>
+                    </h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
+                        <!-- Date Filter -->
+
+                        <!-- Status Filter -->
+<!--                        <div class="input-group" style="flex-shrink: 0; width: 200px;">-->
+<!--                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">-->
+<!--                                Status-->
+<!--                            </button>-->
+<!--                            <div class="dropdown-menu">-->
+<!--                                <a class="dropdown-item" href="?status=Pending">Planned</a>-->
+<!--                                <a class="dropdown-item" href="?status=Approved">In Progress</a>-->
+<!--                                <a class="dropdown-item" href="?status=Rejected">Completed</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <!-- Sort Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
+                                Sort
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="?status=Pending">Ascending</a>
+                                <a class="dropdown-item" href="?status=Rejected">Descending</a>
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="input-group" style="flex-shrink: 0; width: 300px;">
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Create Plan Button -->
+                        <a href="vender_register_view" class="btn btn-primary " style="margin: 20px;" >
+                            <i class="fa fa-plus mr-2"></i>Add Customer
+                        </a>
+
+
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                             <button type="button" class="btn btn-primary" id="delete-selected-btn" style="margin-right: 10px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
                         </div>
                     </div>
+
+
                 </div>
-            </div>
-        </div>
-
-        <!-- Filters and Search -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <form method="GET" action="{% url 'user_search_export' %}">
-                                <div class="row mb-6 align-items-end">
-                                    <div class="col-md-4">
-                                        <div class="input-group">
-                                            <label for="search" class="sr-only">Search by Name or Number</label>
-                                            <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
-                                            <button class="btn btn-primary" type="submit" id="search-btn">
-                                                <i class="fas fa-search"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8 text-right">
-                                        <!-- Department Dropdown -->
-<!--                                        <div class="btn-group">-->
-<!--                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-<!--                                                Department-->
-<!--                                            </button>-->
-<!--                                            <div class="dropdown-menu">-->
-<!--                                                {% for desg in designations %}-->
-<!--                                                <a class="dropdown-item" href="?designation={{ desg.id }}">{{ desg.user_type }}</a>-->
-<!--                                                {% endfor %}-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-
-                                        <!-- Designation Dropdown -->
-<!--                                        <div class="btn-group">-->
-<!--                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-<!--                                                Designation-->
-<!--                                            </button>-->
-<!--                                            <div class="dropdown-menu">-->
-<!--                                                {% for j in desg %}-->
-<!--                                                <a class="dropdown-item" href="?vendor=Vendor A">{{ j.user_type }}</a>-->
-<!--                                                {% endfor %}-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-<!--                        </div>-->
                         <table class="table mt-5" id="my-table">
                             <thead>
                                 <tr>
