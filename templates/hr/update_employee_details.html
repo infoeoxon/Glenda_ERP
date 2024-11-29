@@ -22,12 +22,17 @@
                        <form method="POST">
                         {% csrf_token %}
                         <div>
-                            <label for="emergency_contact_number">Emergency Contact Number:</label>
-                            <input type="text" id="emergency_contact_number" class="form-control"  name="emergency_contact_number" value="{{ view.emergency_contact_number }}">
+                            <label for="id_proof_type">ID Proof Type</label>
+                            <select id="id_proof_type" class="form-control" name="id_proof_type">
+                                <option value="aadhar" {% if view.id_proof_type == 'aadhar' %}selected{% endif %}>Aadhar</option>
+                                <option value="pan" {% if view.id_proof_type == 'pan' %}selected{% endif %}>PAN</option>
+                                <option value="passport" {% if view.id_proof_type == 'passport' %}selected{% endif %}>Passport</option>
+                                <option value="voter_id" {% if view.id_proof_type == 'others' %}selected{% endif %}>Others</option>
+                            </select>
                         </div>
                         <div>
-                            <label for="aadhar_no">Aadhar Number:</label>
-                            <input type="text" id="aadhar_no" class="form-control" name="aadhar_no" value="{{ view.aadhar_no }}">
+                            <label for="aadhar_no">Id Proof Number:</label>
+                            <input type="text" id="aadhar_no" class="form-control" name="aadhar_no" value="{{ view.id_proof_type_number }}">
                         </div>
                         <div>
                             <label for="street">Street:</label>

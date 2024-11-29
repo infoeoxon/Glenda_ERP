@@ -7,50 +7,172 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Attendance History</h4>
-                </div>
-            </div>
-        </div>
-        <!-- end page title end breadcrumb -->
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Attendance List</span>
+                    </h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
+                        <!-- Date Filter -->
 
+                        <!-- Status Filter -->
+<!--                        <div class="input-group" style="flex-shrink: 0; width: 200px;">-->
+<!--                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">-->
+<!--                                Status-->
+<!--                            </button>-->
+<!--                            <div class="dropdown-menu">-->
+<!--                                <a class="dropdown-item" href="?status=Pending">Planned</a>-->
+<!--                                <a class="dropdown-item" href="?status=Approved">In Progress</a>-->
+<!--                                <a class="dropdown-item" href="?status=Rejected">Completed</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <!-- Sort Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
+                                Sort
+                            </button>
+                           <div class="dropdown-menu">
+                              <a class="dropdown-item" href="?sort=asc">Ascending</a>
+                              <a class="dropdown-item" href="?sort=desc">Descending</a>
+                           </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <form method="get" action="{% url 'view_users' %}">
+                        <div class="input-group" style="flex-shrink: 0; width: 500px;">
+
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                        </form>
+
+                        <!-- Create Plan Button -->
+
+                        <a type="button" class="btn btn-primary" href="{% url 'mark_attendance' %}">
+                                <i class="fas fa-eye fas-sm"></i> Control Attendance
+                        </a>
+
+
+
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                             <button type="button" class="btn btn-primary" title="Delete" id="delete-selected-btn" style="margin-right: 10px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+
+        <!-- Table Section -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-
-                        </div>
-
-                        <h4 class="mt-0 header-title"></h4>
-                        <p class="text-muted mb-4 font-13"></p>
-
-                        <table class="table mb-0" id="my-table">
+                        <table class="table table-striped" id="my-table">
                             <thead>
                                 <tr>
                                     <th>Employee Name</th>
                                     <th>History</th>
                                 </tr>
                             </thead>
+                            <tbody>
                                 {% for employee in data %}
-                                <tbody>
                                     <tr>
-                                        <td>{{ employee.user.name }}</td>
-                                        <td><a type="button" class="btn btn-primary" href="{% url 'attendance_report' employee.id month year %}"><i class="fas fa-history"></i>History</a></td>
+                                        <td>{{ employee.name }}</td>
+                                        <td>
+                                            <button class="btn btn-primary"
+                                                    onclick="openCalendar('{{ employee.name|escapejs }}',
+                                                                          '{{ employee.present_dates|default:'[]'|safe|escapejs }}',
+                                                                          '{{ employee.leave_dates|default:'[]'|safe|escapejs }}',
+                                                                          '{{ employee.absent_dates|default:'[]'|safe|escapejs }}')">
+                                                <i class="fas fa-calendar"></i>
+                                                View Attendance
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-center">No attendance records found.</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
-                    </table>
+                        </table>
                     </div>
                 </div>
-            </div> <!-- end col -->
-        </div> <!-- end row -->
-    </div><!-- container -->
-</div> <!-- Page content Wrapper -->
+            </div>
+        </div>
+
+        <!-- Attendance Calendar Modal -->
+        <div id="attendanceCalendarModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="calendar-title">Attendance Calendar</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="attendanceCalendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of container-fluid -->
+</div> <!-- End of page-content-wrapper -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.1.0/main.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.1.0/main.min.css">
 
 <script>
-    function showDateFilter() {
-        // Show the date input and filter button
-        document.getElementById('date-filter-section').style.display = 'inline-flex';
+    function openCalendar(employeeName, presentDates, leaveDates, absentDates) {
+        // Set modal title dynamically
+        document.getElementById('calendar-title').textContent = `Attendance Calendar for ${employeeName}`;
+
+        // Initialize the calendar
+        const calendarEl = document.getElementById('attendanceCalendar');
+        calendarEl.innerHTML = ''; // Clear previous calendar instance
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: [
+                ...JSON.parse(presentDates).map(date => ({ title: 'Present', start: date, color: 'green' })),
+                ...JSON.parse(leaveDates).map(date => ({ title: 'Leave', start: date, color: 'red' })),
+                ...JSON.parse(absentDates).map(date => ({ title: 'Absent', start: date, color: 'yellow' })),
+            ],
+        });
+
+        calendar.render();
+
+        // Show the modal
+        const modal = new bootstrap.Modal(document.getElementById('attendanceCalendarModal'));
+        modal.show();
     }
 </script>
 

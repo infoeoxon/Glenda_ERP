@@ -5,7 +5,7 @@ from register_app import views
 urlpatterns = [
     path('staff_home', views.staff_home, name='staff_home'),
     path('adddepartment',views.add_department,name='adddepartment'),
-    path('admin', views.login_view, name='admin'),  # Ensure this view exists
+    path('admin/', views.login_view, name='admin/'),  # Ensure this view exists
     path('add_designation',views.add_designation,name='add_designation'),
     path('register_view',views.register_view,name='register_view'),
     path('view_users',views.view_users,name='view_users'),

@@ -15,69 +15,79 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <div class="btn-group float-right">
-                        <ol class="breadcrumb hide-phone p-0 m-0">
-                        </ol>
-                    </div>
-                    <h4 class="page-title">Vehicle List</h4>
+                    <!-- Custom Group A Report Title -->
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50px;">Vehicle List</span>
+                    </h4>
                 </div>
             </div>
         </div>
 
-        <!-- Icons (Top Right) -->
-        <div class="btn-group float-right">
-            <a href="#" class="fas fa-print" title="Print" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
-            <a href="#" class="far fa-file-pdf" title="PDF" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
-            <a href="#" class="fas fa-file-excel" title="Excel" style="font-size: 1.5em; color:#605daf; margin-right: 15px;"></a>
-            <a href="#" class="fas fa-home" title="Home" style="font-size: 1.5em; color:#605daf;"></a>
-        </div>
-    </div>
-</div>
-</div>
-<!-- end page title end breadcrumb -->
-<div class="row mb-3">
-<div class="col-12 d-flex justify-content-between align-items-center">
-    <!-- Left side: Driver Filter Dropdown, License Number Filter, and Search Bar -->
-    <div class="d-flex">
-        <!-- Driver Filter Dropdown -->
-        <div class="input-group" style="width: 200px; margin-right: 15px;">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
-                Vehicle
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="?vendor=Vehicle 1">Vehicle 1</a>
-                <a class="dropdown-item" href="?vendor=Vehicle 2">Vehicle 2</a>
-                <a class="dropdown-item" href="?vendor=Vehicle 3">Vehicle 3</a>
-            </div>
-        </div>
+        <!-- Icons and Add Vehicle Button Section (Same Row) -->
+        <div class="row mb-3">
+            <div class="col-8 d-flex">
+                <!-- Left side: Vehicle Filter Dropdown, Capacity Filter, and Search Bar -->
+                <div class="d-flex">
+                    <!-- Vehicle Filter Dropdown -->
+                    <div class="input-group" style="width: 200px; margin-right: 15px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;"> Vehicle </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?vendor=Vehicle 1">Vehicle 1</a>
+                            <a class="dropdown-item" href="?vendor=Vehicle 2">Vehicle 2</a>
+                            <a class="dropdown-item" href="?vendor=Vehicle 3">Vehicle 3</a>
+                        </div>
+                    </div>
 
-        <!-- License Number Filter Dropdown -->
-        <div class="input-group mr-2" style="width: 200px;">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
-               Capacity
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="?status= Capacity 1">Capacity 1</a>
-                <a class="dropdown-item" href="?status= Capacity 2">Capacity 2</a>
-                <a class="dropdown-item" href="?status= Capacity 3">Capacity 3</a>
-            </div>
-        </div>
+                    <!-- Capacity Filter Dropdown -->
+                    <div class="input-group mr-2" style="width: 200px;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;"> Capacity </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="?status=Capacity 1">Capacity 1</a>
+                            <a class="dropdown-item" href="?status=Capacity 2">Capacity 2</a>
+                            <a class="dropdown-item" href="?status=Capacity 3">Capacity 3</a>
+                        </div>
+                    </div>
 
-        <!-- Search Bar -->
-        <form method="GET" action="" class="d-flex align-items-center" style="max-width: 400px;">
-            <div class="input-group">
-                <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
-            </div>
-            <button class="btn btn-primary ml-2" type="submit" id="search-btn">
-                <i class="fas fa-search"></i> Search
-            </button>
-        </form>
-    </div>
+                    <!-- Search Bar -->
+                    <form method="GET" action="" class="d-flex align-items-center" style="max-width: 400px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                        </div>
+                        <button class="btn btn-primary ml-2" type="submit" id="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
 
-                <!-- Add Vehicle Button -->
-                <button class="btn btn-primary btn-lg ml-3" data-toggle="modal" data-target="#addVehicleModal">
-                    <i class="fas fa-plus"></i> Add Vehicle
-                </button>
+                    <!-- Add Vehicle Button placed next to search button -->
+                    <button class="btn btn-primary btn-lg ml-3" data-toggle="modal" data-target="#addVehicleModal">
+                        <i class="fas fa-plus"></i> Add Vehicle
+                    </button>
+                </div>
+            </div>
+
+            <!-- Icons Section (Aligned to the Right) -->
+            <div class="col-4 d-flex justify-content-end">
+                <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                    <i class="fas fa-print"></i>
+                </a>
+                <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                    <i class="far fa-file-pdf"></i>
+                </a>
+                <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                    <i class="fas fa-file-excel"></i>
+                </a>
+                <a href="" class="btn btn-primary" title="Home" style="margin-right: 10px;">
+                    <i class="fas fa-home"></i>
+                </a>
             </div>
         </div>
 

@@ -27,10 +27,13 @@ urlpatterns = [
     path('verify_leave_list',views.verify_leave_list,name='verify_leave_list'),
     path('verify_leave_request',views.verify_leave_request,name='verify_leave_request'),
     path('reject_verify_leave_request',views.reject_verify_leave_request,name='reject_verify_leave_request'),
-    path('attendance_detail',views.attendance_detail,name='attendance_detail'),
-    path('attendance_report/<int:employee_id>/<int:month>/<int:year>/',views.attendance_report,name='attendance_report'),
+    path('attendance_detail',views.attendance_view,name='attendance_detail'),
     path('senior_approval/<int:id>/', views.senior_resignation_approval, name='senior_resignation_approval'),
     path('hr_approval/<int:id>/', views.hr_resignation_approval, name='hr_resignation_approval'),
     path('Resign_list_for_senior',views.Resign_list_for_senior,name='Resign_list_for_senior'),
-    path('Resign_list_for_hr',views.Resign_list_for_hr,name='Resign_list_for_hr')
+    path('Resign_list_for_hr',views.Resign_list_for_hr,name='Resign_list_for_hr'),
+    path('attendance/reports/', views.attendance_reports, name='attendance_reports'),
+    path('attendance/', views.mark_attendance, name='mark_attendance'),
+    path('fetch_attendance',views.fetch_attendance,name='fetch_attendance'),
+    path('verify_employee_by_senior',views.verify_employee_by_senior,name='verify_employee_by_senior')
 ]

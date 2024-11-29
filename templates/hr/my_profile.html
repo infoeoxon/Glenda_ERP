@@ -3,26 +3,92 @@
 {% block content %}
 
 <div class="page-content-wrapper">
-
     <div class="container-fluid">
-
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Employee Details</h4>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Employee Profile</span>
+                    </h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
+                        <!-- Date Filter -->
+
+                        <!-- Status Filter -->
+<!--                        <div class="input-group" style="flex-shrink: 0; width: 200px;">-->
+<!--                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">-->
+<!--                                Status-->
+<!--                            </button>-->
+<!--                            <div class="dropdown-menu">-->
+<!--                                <a class="dropdown-item" href="?status=Pending">Planned</a>-->
+<!--                                <a class="dropdown-item" href="?status=Approved">In Progress</a>-->
+<!--                                <a class="dropdown-item" href="?status=Rejected">Completed</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <!-- Sort Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
+                                Sort
+                            </button>
+                           <div class="dropdown-menu">
+                              <a class="dropdown-item" href="?sort=asc">Ascending</a>
+                              <a class="dropdown-item" href="?sort=desc">Descending</a>
+                           </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <form method="get" action="{% url 'view_users' %}">
+                        <div class="input-group" style="flex-shrink: 0; width: 500px;">
+
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                        </form>
+
+                        <!-- Create Plan Button -->
+                        <a href="{% url 'register_view' %}" class="btn btn-primary" title="Add User" style="margin-right: 10px;">
+                                <i class="fas fa-plus"></i>
+                        </a>
+
+
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                            {% if view %}
+                                <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'update_employee_details' view.user.id %}">
+                                    <i class="mdi mdi-alert-outline mr-2"></i> Update
+                                </a>
+                            {% else %}
+                                <button type="button" class="btn btn-primary waves-effect waves-light" disabled>
+                                    <i class="mdi mdi-alert-outline mr-2"></i> Update
+                                </button>
+                            {% endif %}
+
+                            <a type="button" class="btn btn-primary waves-effect waves-light"
+                               data-toggle="modal"
+                               data-target="#resignationModal"
+                               data-id="{{ user.id }}"
+                               data-name="{{ user.name }}">
+                                <i class="mdi mdi-power mr-2"></i> Resign
+                            </a>
+                        </div>
+                    </div>
+
+
                 </div>
-                <div class="float-left">
-                    <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'update_employee_details' user.id %}"><i class="mdi mdi-alert-outline mr-2"></i> Update </a>
-                    <a type="button" class="btn btn-primary waves-effect waves-light"
-                       data-toggle="modal"
-                       data-target="#resignationModal"
-                       data-id="{{ user.id }}"
-                       data-name="{{ user.name }}">
-                        <i class="mdi mdi-power mr-2"></i>Resign
-                    </a>
-                </div>
-            </div>
-        </div>
         <!-- end page title end breadcrumb -->
         <div class="row">
             <div class="col-12">
@@ -32,71 +98,71 @@
                         <h4 class="mt-0 header-title"></h4>
                         <p class="text-muted mb-4 font-13"></p>
 
-                        <table class="table mb-2 " id="my-table">
+                        <table class="table mb-2" id="my-table">
                             <tbody>
                                 <tr>
                                     <th>Name</th>
-                                    <td>{{ view.user.name }}</td>
+                                    <td>{% if view and view.user.name %}{{ view.user.name }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>Email</th>
-                                    <td>{{ view.user.email }}</td>
+                                    <td>{% if view and view.user.email %}{{ view.user.email }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>Phone Number</th>
-                                    <td>{{ view.user.phone_number }}</td>
+                                    <td>{% if view and view.user.phone_number %}{{ view.user.phone_number }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>Pincode</th>
-                                    <td>{{ view.pincode }}</td>
+                                    <td>{% if view and view.pincode %}{{ view.pincode }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>District</th>
-                                    <td>{{ view.district }}</td>
+                                    <td>{% if view and view.district %}{{ view.district }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>State</th>
-                                    <td>{{ view.state }}</td>
+                                    <td>{% if view and view.state %}{{ view.state }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>Country</th>
-                                    <td>{{ view.country }}</td>
+                                    <td>{% if view and view.country %}{{ view.country }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>Street</th>
-                                    <td>{{ view.street }}</td>
+                                    <td>{% if view and view.street %}{{ view.street }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>Landmark</th>
-                                    <td>{{ view.landmark }}</td>
+                                    <td>{% if view and view.landmark %}{{ view.landmark }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
-                                    <th>Building</th>
-                                    <td>{{ view.building }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Id Type</th>
-                                    <td>{{ view.id_proof_type }}</td>
+                                    <th>Id</th>
+                                    <td>{% if view and view.id_proof_type %}{{ view.id_proof_type }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>Id Number</th>
-                                    <td>{{ view.id_proof_type_number }}</td>
+                                    <td>{% if view and view.id_proof_type_number %}{{ view.id_proof_type_number }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>Salary Information</th>
-                                    <td>{{ view.basic }}</td>
-                                </tr>
-                                <tr>
-                                    <th>PF Number</th>
-                                    <td>{{ view.pf_no }}</td>
-                                </tr>
-                                <tr>
-                                    <th>ESI Number</th>
-                                    <td>{{ view.employee_esi_no }}</td>
+                                    <td>{% if view and view.basic %}{{ view.basic }}{% else %}  {% endif %}</td>
                                 </tr>
                                 <tr>
                                     <th>Date of Birth</th>
-                                    <td>{{ view.date_of_birth }}</td>
+                                    <td>{% if view and view.date_of_birth %}{{ view.date_of_birth }}{% else %}  {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>ESI Number</th>
+                                    <td>{% if view and view.pcc %}{{ view.pcc }}{% else %}  {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>PF Number</th>
+                                    <td>{% if view and view.nsr %}{{ view.nsr }}{% else %}  {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Employee Blood Groups</th>
+                                    <td>{% if view and view.employee_blood_groups %}{{ view.employee_blood_groups }}{% else %}  {% endif %}</td>
                                 </tr>
                             </tbody>
                         </table>
