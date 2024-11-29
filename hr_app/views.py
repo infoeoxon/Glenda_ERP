@@ -1,8 +1,9 @@
-from datetime import datetime, timedelta
+import json
+from datetime import datetime, timedelta, date
 import calendar
 from django.shortcuts import render,redirect,get_object_or_404,reverse
 from register_app.models import CustomUser, MenuPermissions
-from hr_app.models import EmployeeDetails,RequestLeave,Payroll,Attendance,Remarks,Resignation
+from hr_app.models import EmployeeDetails, RequestLeave, Payroll, Attendance, Remarks, Resignation, AttendanceReport
 from Glenda_App.models import Menu
 from .forms import EmployeeDetailsForm,LeaveRequestForm,PayrollForm,ResignationForm,BasicForm
 from django.db.models import Q
@@ -21,6 +22,9 @@ from decimal import Decimal
 from django.utils import timezone
 from django.http import HttpResponse
 from django.db.models import Count
+from django.db.models import Sum, Count
+from django.core.management.base import BaseCommand
+from django.utils.timezone import now
 
 
 @login_required
@@ -42,6 +46,8 @@ def employee_list_and_verify(request):
         if employee_id and action:
             employee = get_object_or_404(EmployeeDetails, user_id=employee_id)
             if action == 'approve':
+                employee.verified = True
+                verified = employee.verified
                 return redirect(reverse('add_employee_details', args=[employee.id]))
             elif action == 'reject':
                 employee.status = 'rejected'
@@ -53,7 +59,7 @@ def employee_list_and_verify(request):
     users_with_details = CustomUser.objects.filter(
         is_staff=True,
         is_superuser=False,
-        employeedetails__status='verified'
+        employeedetails__status='Verified'
     ).distinct()
 
     # Add `details_added` flag to users
@@ -95,6 +101,19 @@ def employee_details_modal(request):
 
         return JsonResponse(data)
 
+@login_required
+def verify_employee_by_senior(request):
+    if request.method == 'POST':
+        employee_id = request.POST.get('employee_id')
+        employee = get_object_or_404(EmployeeDetails, user_id=employee_id)
+
+        # Update employee status to verified
+        employee.status = 'Approved'
+        employee.save()
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False}, status=400)
 
 @login_required
 def verify_employee(request):
@@ -242,21 +261,25 @@ def employee_search_and_export(request):
         allocated_menus[perm.menu].append(perm.sub_menu)
 
     # Start with an empty query to show all staff members by default
-    employee_list = CustomUser.objects.filter(is_staff=True, is_superuser=False)
+    employee_list = EmployeeDetails.objects.select_related('user').filter(
+        user__is_staff=True, user__is_superuser=False
+    )
 
     search_query = request.GET.get('search_query', '').strip()
     export_format = request.GET.get('export', '')
 
     if search_query:
-        filters = Q(is_staff=True, is_superuser=False)
+        # Create a Q object to filter based on the search query
+        filters = Q(user__is_staff=True, user__is_superuser=False)  # Base filter to restrict staff members
         if search_query.isdigit():
-            filters &= Q(phone_number__icontains=search_query)
+            filters &= Q(user__phone_number__icontains=search_query) | Q(pincode__icontains=search_query)
         else:
-            filters &= Q(name__icontains=search_query)
+            filters &= Q(user__name__icontains=search_query) | Q(state__icontains=search_query)
 
-        employee_list = CustomUser.objects.filter(filters)
+        # Apply the filters
+        employee_list = EmployeeDetails.objects.select_related('user').filter(filters)
 
-    # Check for export format (either 'csv' or 'pdf')
+    # Check for export format (either 'excel' or 'pdf')
     if export_format == 'excel':
         wb = Workbook()
         ws = wb.active
@@ -267,7 +290,7 @@ def employee_search_and_export(request):
         ws['A1'].font = headline_font
         ws['A1'].alignment = Alignment(horizontal='center')
 
-        headers = ['Name', 'Email', 'Phone Number']
+        headers = ['Name', 'Email', 'Phone Number', 'State', 'Pincode']
         ws.append(headers)
 
         header_font = Font(bold=True)
@@ -276,7 +299,13 @@ def employee_search_and_export(request):
             cell.font = header_font
 
         for employee in employee_list:
-            ws.append([employee.name, employee.email, employee.phone_number])
+            ws.append([
+                employee.user.name,
+                employee.user.email,
+                employee.user.phone_number,
+                employee.state,
+                employee.pincode,
+            ])
 
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="employee_list.xlsx"'
@@ -287,7 +316,7 @@ def employee_search_and_export(request):
     elif export_format == 'pdf':
         # PDF export
         template = get_template('hr/employee_details_pdf.html')  # A separate template for PDF
-        context = {'users': employee_list, 'allocated_menus': allocated_menus}
+        context = {'employees': employee_list, 'allocated_menus': allocated_menus}
         html = template.render(context)
 
         response = HttpResponse(content_type='application/pdf')
@@ -300,18 +329,20 @@ def employee_search_and_export(request):
 
         return response
 
-    # Normal page rendering (with search functionality)
-
-    for user in employee_list:
-
-        user.details_added = EmployeeDetails.objects.filter(user=user).exists()
+    # Add `details_added` flag to each employee in the list
+    for employee in employee_list:
+        employee.details_added = (
+            employee.basic and employee.pf_no and employee.employee_esi_no
+        )
 
     context = {
-        'users': employee_list,  # Filtered employees list
+        'employees': employee_list,  # Filtered employees list
         'allocated_menus': allocated_menus,
     }
 
     return render(request, 'hr/Employee_list.html', context)
+
+
 
 def view_leave_list(request):
     # Fetch all employees
@@ -758,7 +789,7 @@ def add_employee_details(request, id):
         form = BasicForm(request.POST, instance=employee)
         if form.is_valid():
             form.save()
-            return redirect("employee_list")  # Adjust to your URL name
+            return redirect("employee_list_and_verify")  # Adjust to your URL name
         else:
             # If the form is not valid, render the modal with the errors
             return render(request, "hr/Employee_list.html", {"form": form, "employee": employee})
@@ -835,9 +866,13 @@ def view_my_profile(request):
             allocated_menus[perm.menu] = []
         allocated_menus[perm.menu].append(perm.sub_menu)
 
-    view = get_object_or_404(EmployeeDetails,user=use)
+    # Try to fetch EmployeeDetails object
+    try:
+        view = EmployeeDetails.objects.get(user=use)
+    except EmployeeDetails.DoesNotExist:
+        view = None  # If not found, set to None
 
-    return render(request,'hr/my_profile.html',{'view':view,'allocated_menus':allocated_menus})
+    return render(request, 'hr/my_profile.html', {'view': view, 'allocated_menus': allocated_menus})
 
 def verify_leave_list(request):
     # Fetch all employees
@@ -939,88 +974,62 @@ def calculate_monthly_attendance(employee_id, month, year):
 
     return report
 
-def attendance_detail(request):
-    use = request.user  # Get the current user
-    today = datetime.today()
-    month = today.month
-    year = today.year
-    # Get user's permissions
-    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
 
-    # Create a dictionary to hold menus and their allocated submenus
-    allocated_menus = {}
-    for perm in user_permissions:
-        if perm.menu not in allocated_menus:
-            allocated_menus[perm.menu] = []
-        allocated_menus[perm.menu].append(perm.sub_menu)
-
-    # Get initial queryset for finished goods based on the provided ID
-    Employee = EmployeeDetails.objects.all()
-
-    # Get filter type and query date from the request
-    filter_type = request.GET.get('filter')
-    query_date = request.GET.get('query')  # Expected format: YYYY-MM-DD
-    is_filtered = False
-
-    # Apply filtering if filter type is 'date' and query_date is provided
-    if filter_type == 'date' and query_date:
-        employee_list = Employee.filter(date=query_date)
-        is_filtered = True
-
-    # Prepare context for rendering template
-    context = {
-        'data': Employee,
-        'allocated_menus': allocated_menus,
-        'filter_type': filter_type,
-        'query_date': query_date,
-        'is_filtered': is_filtered,
-        'month':month,
-        'year':year
-    }
-
-    return render(request, 'hr/attendance_view.html', context)
-
-def attendance_report(request, employee_id, month=None, year=None):
-    use = request.user  # Get the current user
+@login_required
+def attendance_view(request):
+    user = request.user
+    today = now().date()
 
     # Get user's permissions
-    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+    user_permissions = MenuPermissions.objects.filter(user=user).select_related('menu', 'sub_menu')
+    allocated_menus = {perm.menu: [] for perm in user_permissions}
 
-    # Create a dictionary to hold menus and their allocated submenus
-    allocated_menus = {}
     for perm in user_permissions:
-        if perm.menu not in allocated_menus:
-            allocated_menus[perm.menu] = []
         allocated_menus[perm.menu].append(perm.sub_menu)
 
+    filter_type = request.GET.get('filter', 'daily')
+    query_date = request.GET.get('query')
     selected_month = request.GET.get('month')
     selected_year = request.GET.get('year')
 
-    if not selected_month or not selected_year:
-        today = datetime.today()
-        month = today.month
-        year = today.year
+    employees = EmployeeDetails.objects.all()
 
-    else:
-        try:
-            month = int(selected_month)
-            year = int(selected_year)
+    # Initialize context
+    context = {
+        'allocated_menus': allocated_menus,
+        'filter_type': filter_type,
+        'employees': employees,
+        'data': []  # Initialize data as an empty list
+    }
 
-        except ValueError:
-            today = timezone.now()
-            month = today.month
-            year = today.year
+    if filter_type == 'daily':
+        filter_date = datetime.strptime(query_date, '%Y-%m-%d').date() if query_date else today
+        attendance_records = Attendance.objects.filter(date=filter_date).select_related('employee')
 
-    months = [
-        (1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'),
-        (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'),
-        (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')
-    ]
+        # Map attendance records by employee ID
+        attendance_map = {record.employee.id: record for record in attendance_records}
 
-    report = calculate_monthly_attendance(employee_id, month, year)
+        leave_dates = [record.date.strftime('%Y-%m-%d') for record in attendance_records if record.status == 'Leave']
+        present_dates = [record.date.strftime('%Y-%m-%d') for record in attendance_records if record.status == 'Present']
+        absent_dates = [record.date.strftime('%Y-%m-%d') for record in attendance_records if record.status == 'Absent']
 
-    context = {'allocated_menus': allocated_menus,'months': months,'month': month,'year': year,'report': report}
-    return render(request, 'hr/attendance_report.html', context)
+        # Prepare data for each employee
+        for employee in employees:
+            record = attendance_map.get(employee.id)
+            context['data'].append({
+                'name': employee.user.name,
+                'present_dates': json.dumps(present_dates),  # Ensure these are valid JSON strings
+                'leave_dates': json.dumps(leave_dates),
+                'absent_dates': json.dumps(absent_dates),
+            })
+
+        context['query_date'] = filter_date.strftime('%Y-%m-%d')
+
+    elif filter_type == 'monthly':
+
+      return render(request, 'hr/attendance_view.html', context)
+
+    return render(request, 'hr/attendance_view.html', context)
 
 def senior_resignation_approval(request, id):
     use = request.user
@@ -1132,3 +1141,123 @@ def Resign_list_for_hr(request):
     }
 
     return render(request, 'hr/Resign_list_for_hr.html', context)
+
+@csrf_exempt
+def mark_attendance(request):
+    use = request.user
+    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+    allocated_menus = {}
+    for perm in user_permissions:
+        if perm.menu not in allocated_menus:
+            allocated_menus[perm.menu] = []
+        allocated_menus[perm.menu].append(perm.sub_menu)
+
+    if request.method == 'POST':
+        employee_id = request.POST.get('employee_id')
+        action = request.POST.get('action')  # 'check_in', 'check_out', or 'status_update'
+
+        # Validate employee existence
+        try:
+            employee = EmployeeDetails.objects.get(pk=employee_id)
+        except EmployeeDetails.DoesNotExist:
+            return JsonResponse({'error': 'Employee not found'}, status=404)
+
+        # Retrieve or create the attendance record for today
+        attendance, created = Attendance.objects.get_or_create(employee=employee, date=date.today())
+
+        if action in ['check_in', 'check_out']:
+            # Prevent marking absent or leave after check-in/check-out
+            if attendance.status in ['Absent', 'Leave']:
+                return JsonResponse({'error': 'Cannot check in or out after marking absent or leave'}, status=400)
+
+        if action == 'check_in':
+            if attendance.check_in_time:
+                return JsonResponse({'error': 'Check-in already recorded'}, status=400)
+            attendance.check_in_time = datetime.now().time()
+            attendance.status = 'Present'
+
+        elif action == 'check_out':
+            if attendance.check_out_time:
+                return JsonResponse({'error': 'Check-out already recorded'}, status=400)
+            attendance.check_out_time = datetime.now().time()
+
+        elif action == 'status_update':
+            new_status = request.POST.get('status')  # 'Present', 'Absent', or 'Leave'
+            # Validate the status
+            if new_status not in dict(Attendance._meta.get_field('status').choices):
+                return JsonResponse({'error': 'Invalid status'}, status=400)
+            attendance.status = new_status
+
+        else:
+            return JsonResponse({'error': 'Invalid action'}, status=400)
+
+        attendance.save()
+        return JsonResponse({'message': 'Attendance updated successfully'})
+
+    # If not POST, render the attendance page
+    employees = EmployeeDetails.objects.all()
+    return render(request, 'hr/attendance.html', {'employees': employees,'allocated_menus':allocated_menus})
+
+
+
+class Command(BaseCommand):
+    help = "Generate attendance reports for the previous month"
+
+    def handle(self, *args, **kwargs):
+        today = datetime.today()
+        first_day_of_current_month = datetime(today.year, today.month, 1)
+        last_day_of_previous_month = first_day_of_current_month - timedelta(days=1)
+        first_day_of_previous_month = datetime(last_day_of_previous_month.year, last_day_of_previous_month.month, 1)
+
+        # Get all employees
+        employees = Attendance.objects.values('employee').distinct()
+
+        for emp in employees:
+            employee = emp['employee']
+            attendances = Attendance.objects.filter(
+                employee_id=employee,
+                date__range=(first_day_of_previous_month, last_day_of_previous_month)
+            )
+
+            total_days_worked = attendances.filter(status='Present').count()
+            total_leaves = attendances.filter(status='Leave').count()
+            total_absent = attendances.filter(status='Absent').count()
+            total_hours_worked = sum(
+                attendance.worked_hours for attendance in attendances if attendance.worked_hours
+            )
+
+            # Create or update the report
+            AttendanceReport.objects.update_or_create(
+                employee_id=employee,
+                report_month=first_day_of_previous_month,
+                defaults={
+                    'total_days_worked': total_days_worked,
+                    'total_leaves': total_leaves,
+                    'total_absent': total_absent,
+                    'total_hours_worked': total_hours_worked,
+                },
+            )
+
+        self.stdout.write(self.style.SUCCESS("Attendance reports generated successfully."))
+
+@csrf_exempt
+def fetch_attendance(request):
+    if request.method == 'GET':
+        today = now().date()
+        attendance_records = Attendance.objects.filter(date=today).select_related('employee')
+        data = [
+            {
+                'employee_id': attendance.employee.id,
+                'employee_name': attendance.employee.user.name,
+                'status': attendance.status,
+                'check_in_time': attendance.check_in_time.strftime('%H:%M:%S') if attendance.check_in_time else 'N/A',
+                'check_out_time': attendance.check_out_time.strftime('%H:%M:%S') if attendance.check_out_time else 'N/A'
+            }
+            for attendance in attendance_records
+        ]
+        return JsonResponse({'attendance': data}, safe=False)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def attendance_reports(request):
+    reports = AttendanceReport.objects.all().select_related('employee').order_by('-report_month')
+    return render(request, 'hr/attendance_reports.html', {'reports': reports})
