@@ -17,4 +17,6 @@ class RD_Unapproved_Stock(models.Model):
     raw_materials = models.ForeignKey(RawMaterials,on_delete=models.CASCADE,null=True)
     total_unapproved_stock = models.IntegerField()
     date = models.DateTimeField(auto_now=True,null=True)
+    status = models.CharField(max_length=150,null=True)
+
 

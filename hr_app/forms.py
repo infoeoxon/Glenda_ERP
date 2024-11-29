@@ -4,7 +4,7 @@ from .models import EmployeeDetails,RequestLeave,Payroll,Resignation,Remarks
 class EmployeeDetailsForm(forms.ModelForm):
     class Meta:
         model = EmployeeDetails
-        fields = ['id_proof_type','other_id_proof_type','id_proof_type_number','id_proof_file','street','pincode','state','country','landmark','district','date_of_birth','employee_blood_groups','qualification','qualification_file','experience','experience_file','joining_date','pcc','nsr','validity','building']
+        fields = ['id_proof_type','other_id_proof_type','id_proof_type_number','id_proof_file','street','pincode','state','country','landmark','district','date_of_birth','employee_blood_groups','qualification','qualification_file','experience','experience_file','joining_date','pcc','nsr','validity','building','gender','resume','bank_details']
         widgets = {
             'id_proof_type': forms.Select(attrs={'class': 'form-control'}),
             'other_id_proof_type': forms.Select(attrs={'class': 'form-control'}),
@@ -27,7 +27,18 @@ class EmployeeDetailsForm(forms.ModelForm):
             'nsr': forms.FileInput(attrs={'class': 'form-control'}),
             'validity':forms.DateInput(attrs={'type': 'date','class':'form-control'}),
             'building':forms.TextInput(attrs={'class':'form-control'}),
+            'gender':forms.Select(attrs={'class':'form-control'}),
+            'resume':forms.FileInput(attrs={'class':'form-control'}),
+            'bank_details':forms.FileInput(attrs={'class':'form-control'})
         }
+
+        def clean_pf_no(self):
+            pf_no = self.cleaned_data.get('pf_no')
+            return pf_no or None
+
+        def clean_employee_esi_no(self):
+            esi_no = self.cleaned_data.get('employee_esi_no')
+            return esi_no or None
 
 class BasicForm(forms.ModelForm):
     class Meta:

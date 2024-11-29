@@ -3,120 +3,159 @@
 {% block content %}
 
 <div class="page-content-wrapper">
-
     <div class="container-fluid">
-
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Employee List</h4>
-                </div>
-            </div>
-        </div>
-        <!-- end page title end breadcrumb -->
-        <div class="row">
-            <div class="col-12">
-                <div class="col-md-12" style="margin-top:23px;">
-                    <form method="GET" action="{% url 'employee_search_and_export' %}">
-                        <div class="row mb-4 align-items-end">
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <label for="search" class="sr-only">Search by Name or Number</label>
-                                    <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <!-- Single Search Button -->
-                                <button class="btn btn-primary" type="submit" id="search-btn">
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Employee List</span>
+                    </h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
+                        <!-- Date Filter -->
+
+                        <!-- Status Filter -->
+<!--                        <div class="input-group" style="flex-shrink: 0; width: 200px;">-->
+<!--                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">-->
+<!--                                Status-->
+<!--                            </button>-->
+<!--                            <div class="dropdown-menu">-->
+<!--                                <a class="dropdown-item" href="?status=Pending">Planned</a>-->
+<!--                                <a class="dropdown-item" href="?status=Approved">In Progress</a>-->
+<!--                                <a class="dropdown-item" href="?status=Rejected">Completed</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <!-- Sort Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
+                                Sort
+                            </button>
+                           <div class="dropdown-menu">
+                              <a class="dropdown-item" href="?sort=asc">Ascending</a>
+                              <a class="dropdown-item" href="?sort=desc">Descending</a>
+                           </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <form method="get" action="{% url 'employee_search_and_export' %}">
+                        <div class="input-group" style="flex-shrink: 0; width: 500px;">
+
+                            <input type="text" class="form-control" name="search_query" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>
+
                         </div>
-                    </form>
-                </div>
-                <div class="col-md-12 text-right" style="margin-top:-60px;">
-                    <a href="{% url 'employee_search_and_export' %}?search_query={{ request.GET.search_query }}&export=pdf" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
-                        <i class="far fa-file-pdf"></i>
-                    </a>
-                    <a href="{% url 'employee_search_and_export' %}?search_query={{ request.GET.search_query }}&export=excel" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
-                        <i class="fas fa-file-excel"></i>
-                    </a>
-                    <a href="#" class="btn btn-primary btn-sm" title="Print">
-                        <i class="fas fa-print"></i>
-                    </a>
-                </div>
-                <div class="card" style="margin-top:12px;">
-                    <div class="card-body">
+                        </form>
 
-                        <h4 class="mt-0 header-title"></h4>
-                        <p class="text-muted mb-4 font-13"></p>
-
-                        <!-- Add User Button -->
+                        <!-- Create Plan Button -->
 
 
-                        <!-- Users Table -->
-                        <table class="table mb-0" id="my-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone Number</th>
-                                    <th>Department</th>
-                                    <th>Designation</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for i in page_obj %}
-                                <tr>
-                                    <td><img src="{{i.image.url}}" alt="Image description" width="70" height="70" />{{ i.name }}</td>
-                                    <td>{{ i.email }}</td>
-                                    <td>{{ i.phone_number }}</td>
-                                    <td>{{ i.department.dept_Name }}</td>
-                                    <td>{{ i.designation.user_type }}</td>
-                                    <td>
-                                        <button class="btn btn-primary verify-button"
-                                            data-id="{{ i.id }}"
-                                            data-name="{{ i.name }}"
-                                            data-email="{{ i.email }}"
-                                            data-phone="{{ i.phone_number }}"
-                                            data-pincode="{{ this.pincode }}"
-                                            data-district="{{ this.district }}"
-                                            data-state="{{ this.state }}"
-                                            data-country="{{ this.country }}"
-                                            data-street="{{ this.street }}"
-                                            data-landmark="{{ this.landmark }}"
-                                            data-idproof="{{ this.id_proof_type }}"
-                                            data-idnumber="{{ this.id_proof_type_number }}"
-                                            data-dob="{{ this.date_of_birth }}"
-                                            data-bloodgroup="{{ this.employee_blood_groups }}">
-                                            Verify
-                                        </button>
-                                        <button class="btn btn-primary" onclick="openAddModal({{ i.id }})"><i class="fa fa-plus fa-sm"></i> Add Details</button>
-                                    </td>
-                                    <td>
-                                        {% if not i.details_added %}
-                                            <button type="button" class="btn btn-secondary" style="width: 120px;" disabled>
-                                               Not added
-                                            </button>
-                                        {% else %}
-                                            <a href="{% url 'view_employee_profile' i.id %}">
-                                                <button type="button" class="btn btn-primary waves-effect waves-light">
-                                                    <i class="fa fa-user"></i>  View Profile
-                                                </button>
-                                            </a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
 
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                             <button type="button" class="btn btn-primary" title="Delete" id="delete-selected-btn" style="margin-right: 10px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <a href="#" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="{% url 'employee_search_and_export' %}?search_query={{ request.GET.search_query }}&export=pdf" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="{% url 'employee_search_and_export' %}?search_query={{ request.GET.search_query }}&export=excel" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="#" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
                     </div>
+
+
                 </div>
-                {% if page_obj.has_other_pages %}
+
+
+
+        <!-- Employee Table -->
+        <div class="card">
+            <div class="card-body">
+                <table class="table mb-0" id="my-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Department</th>
+                            <th>Designation</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in page_obj %}
+                        <tr>
+                            <td>
+                                <img src="{{ i.image.url }}" alt="Image of {{ i.name }}" width="70" height="70" />
+                                {{ i.name }}
+                            </td>
+                            <td>{{ i.email }}</td>
+                            <td>{{ i.phone_number }}</td>
+                            <td>{{ i.department.dept_Name }}</td>
+                            <td>{{ i.designation.user_type }}</td>
+                            <td>
+                                <button class="btn btn-primary verify-button"
+                                        data-id="{{ i.id }}"
+                                        data-name="{{ i.name }}"
+                                        data-email="{{ i.email }}"
+                                        data-phone="{{ i.phone_number }}"
+                                        data-pincode="{{ this.pincode }}"
+                                        data-district="{{ this.district }}"
+                                        data-state="{{ this.state }}"
+                                        data-country="{{ this.country }}"
+                                        data-street="{{ this.street }}"
+                                        data-landmark="{{ this.landmark }}"
+                                        data-idproof="{{ this.id_proof_type }}"
+                                        data-idnumber="{{ this.id_proof_type_number }}"
+                                        data-dob="{{ this.date_of_birth }}"
+                                        data-bloodgroup="{{ this.employee_blood_groups }}"
+                                        {% if user.employeedetails.status == verified %}disabled{% endif %}>
+                                        {% if user.employeedetails.status == verified %}Verified{% else %}Verify{% endif %}
+                                </button>
+                                <button class="btn btn-primary" onclick="openAddModal({{ i.id }})"><i class="fa fa-plus fa-sm"></i></button>
+                            </td>
+                            <td>
+                                {% if not i.details_added %}
+                                    <button type="button" class="btn btn-secondary" style="width: 120px;" disabled>
+                                        Not added
+                                    </button>
+                                {% else %}
+                                    <a href="{% url 'view_employee_profile' i.id %}">
+                                        <button type="button" class="btn btn-primary waves-effect waves-light">
+                                            <i class="fa fa-user"></i>  View Profile
+                                        </button>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% if page_obj.has_other_pages %}
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center mt-3">
                             {% if page_obj.has_previous %}
@@ -239,6 +278,7 @@
             </div>
         </div>
     </div>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
@@ -326,5 +366,4 @@
 }
 
 </script>
-
 {% endblock %}
