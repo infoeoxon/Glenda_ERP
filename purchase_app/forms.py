@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 
 from inventory_app.models import Add_RawMaterial, AddCategory
 from purchase_app.models import RawMaterialCategory, RawMaterials, RFQ_raw_materials
+from vendor_app.models import vendor_register
 
 
 class CategoryForm(forms.ModelForm):
@@ -55,6 +56,15 @@ class RFQRawMaterialsForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control'}),
         empty_label="Select Material Name"
     )
+    # Vendor List as Multiple Choice (Rendered Separately in Template)
+    vendor_list = forms.ModelMultipleChoiceField(
+        queryset=vendor_register.objects.filter(
+            status='Approved',
+            materials_name__category__material_type='Raw Materials'
+        ).distinct(),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'vendor-checkbox'}),
+        required=False,
+    )
 
     class Meta:
         model = RFQ_raw_materials
@@ -65,24 +75,21 @@ class RFQRawMaterialsForm(forms.ModelForm):
             'batch_requirements',
             'quality_standards',
             'expected_delivery_date',
-            'vendor_list',
             'quotation_deadline',
             'delivery_address',
             'special_notes',
             'spoc_name',
             'spoc_number',
         ]
+        exclude = ['vendor_list']  # Exclude vendor_list from automatic rendering
         widgets = {
             'quantity_needed': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter quantity needed'}),
             'batch_requirements': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter batch requirements'}),
             'quality_standards': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'expected_delivery_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'vendor_list': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter vendor list'}),
             'quotation_deadline': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'delivery_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter delivery address'}),
             'special_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter special notes'}),
             'spoc_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter SPOC name'}),
             'spoc_number': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter SPOC number'}),
         }
-
-

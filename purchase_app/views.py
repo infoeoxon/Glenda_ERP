@@ -876,6 +876,8 @@ def create_rfq_raw_materials(request):
             rfq_instance.rfq_number = result
             rfq_instance.status = "Sent"
             rfq_instance.save()
+            # Save the selected vendors to the many-to-many relationship
+            rfq_instance.vendor_list.set(form.cleaned_data['vendor_list'])
             return redirect('demo_rfq')  # Redirect to a list or detail page
         else:
             print(form.errors)
