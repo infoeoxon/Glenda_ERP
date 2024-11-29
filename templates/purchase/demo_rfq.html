@@ -8,11 +8,28 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box d-flex justify-content-between align-items-center">
-                    <h4 class="page-title">Request for Quotation</h4>
-                    <!-- Create New Request Button at top right -->
-                    <a href="" class="btn btn-primary">
-                        <i class="fas fa-plus mr-2"></i>Create New RFQ
-                    </a>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Request for Quotation</span>
+                    </h4>
+                    <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="requestDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-plus mr-2"></i>Create New RFQ
+                        </button>
+                        <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addRawMaterialModal">Raw Materials</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addFinishedModal">Finished Goods</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addSemiFinishedModal">Semi-Finished Goods</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -26,8 +43,11 @@
                 <a href="" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
                     <i class="fas fa-file-excel"></i>
                 </a>
-                <a href="#" class="btn btn-primary btn-sm" title="Print">
+                <a href="#" class="btn btn-primary btn-sm mr-2" title="Print">
                     <i class="fas fa-print"></i>
+                </a>
+                <a href="" class="btn btn-primary btn-sm mr-2" title="Home">
+                    <i class="fas fa-home"></i>
                 </a>
             </div>
         </div>
@@ -50,18 +70,14 @@
 
                     <!-- Financial Year Filter -->
                     <div class="dropdown mr-3" style="width: 200px;">
-                        <!-- Filter Button -->
                         <button class="btn btn-primary dropdown-toggle w-100 d-flex justify-content-between align-items-center" type="button" id="finYearDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: none; border-radius: 4px; padding: 8px 12px;">
-                            <!-- Title and Current Fin Year -->
                             <span>Fin Year</span>
                             <span>2023-2024</span>
                         </button>
-
-                        <!-- Dropdown Menu -->
                         <div class="dropdown-menu w-100" aria-labelledby="finYearDropdown" style="border-radius: 4px;">
-                            <a class="dropdown-item text-center" href="?financial_year=2023-2024" style="padding: 8px 12px;">2023-2024</a>
-                            <a class="dropdown-item text-center" href="?financial_year=2022-2023" style="padding: 8px 12px;">2022-2023</a>
-                            <a class="dropdown-item text-center" href="?financial_year=2021-2022" style="padding: 8px 12px;">2021-2022</a>
+                            <a class="dropdown-item text-center" href="?financial_year=2023-2024">2023-2024</a>
+                            <a class="dropdown-item text-center" href="?financial_year=2022-2023">2022-2023</a>
+                            <a class="dropdown-item text-center" href="?financial_year=2021-2022">2021-2022</a>
                         </div>
                     </div>
 
@@ -104,7 +120,6 @@
             </div>
         </div>
 
-
         <!-- Data Table -->
         <div class="row mt-4">
             <div class="col-12">
@@ -131,9 +146,9 @@
                                     <td>Vendor 1, Vendor 2</td>
                                     <td>29-Nov-24</td>
                                     <td>
-                                        <a href="" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+                                        <button class="btn btn-sm btn-primary" onclick="openRFQModal('RFQ001')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -144,12 +159,11 @@
                                     <td>Vendor A, Vendor B</td>
                                     <td>02-Dec-24</td>
                                     <td>
-                                        <a href="" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+                                        <button class="btn btn-sm btn-primary" onclick="openRFQModal('RFQ002')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
                                     </td>
                                 </tr>
-                                <!-- Additional rows as needed -->
                             </tbody>
                         </table>
                     </div>
@@ -159,11 +173,207 @@
     </div>
 </div>
 
+<!-- RFQ Details Modal -->
+<div class="modal fade" id="rfqModal" tabindex="-1" aria-labelledby="rfqModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rfqModalLabel">RFQ Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Action Buttons -->
+                <div class="mb-3 text-right">
+                    <button class="btn btn-primary btn-sm" onclick="printRFQDetails()">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="exportPDF()">
+                        <i class="far fa-file-pdf"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="exportExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </button>
+                </div>
+
+                <!-- RFQ Details Table -->
+                <div id="rfq-details-container">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th style="width: 30%;">RFQ Number</th>
+                                <td id="rfq-number" style="width: 70%;"></td>
+                            </tr>
+                            <tr>
+                                <th>Request Date</th>
+                                <td id="request-date"></td>
+                            </tr>
+                            <tr>
+                                <th>Request Time</th>
+                                <td id="request-time"></td>
+                            </tr>
+                            <tr>
+                                <th>Department Requesting</th>
+                                <td id="department-requesting"></td>
+                            </tr>
+                            <tr>
+                                <th>Requested By</th>
+                                <td id="requested-by"></td>
+                            </tr>
+                            <tr>
+                                <th>Approver</th>
+                                <td id="approver"></td>
+                            </tr>
+                            <tr>
+                                <th>Material Type</th>
+                                <td id="material-type"></td>
+                            </tr>
+                            <tr>
+                                <th>Material Category</th>
+                                <td id="material-category"></td>
+                            </tr>
+                            <tr>
+                                <th>Material Name</th>
+                                <td id="material-name"></td>
+                            </tr>
+                            <tr>
+                                <th>Quantity Needed</th>
+                                <td id="quantity-needed"></td>
+                            </tr>
+                            <tr>
+                                <th>Batch Requirements</th>
+                                <td id="batch-requirements"></td>
+                            </tr>
+                            <tr>
+                                <th>Expected Delivery Date</th>
+                                <td id="expected-delivery-date"></td>
+                            </tr>
+                            <tr>
+                                <th>Vendor List</th>
+                                <td id="vendor-list"></td>
+                            </tr>
+                            <tr>
+                                <th>Quotation Deadline</th>
+                                <td id="quotation-deadline"></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td id="status"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Raw Material-RFQ -->
+<div class="modal fade" id="addRawMaterialModal" tabindex="-1" aria-labelledby="addRawMaterialModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRawMaterialModalLabel">New Request for Raw Material</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'create_rfq_raw_materials' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+ </div>
+</div>
+
 <script>
     function showDateFilter() {
-        // Toggle visibility of the date filter section
         const dateFilter = document.getElementById('date-filter-section');
         dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function openRFQModal(rfqId) {
+        // Example data for modal
+        const rfqDetails = {
+            RFQ001: {
+                rfqNumber: 'RFQ001',
+                requestDate: '2024-11-10',
+                requestTime: '10:30 AM',
+                departmentRequesting: 'Procurement',
+                requestedBy: 'John Doe',
+                approver: 'Jane Smith',
+                materialType: 'Preform',
+                materialCategory: 'Plastic',
+                materialName: 'High-Grade Preform',
+                quantityNeeded: '5000',
+                batchRequirements: 'Batch must adhere to ISO standards',
+                expectedDeliveryDate: '2024-12-15',
+                vendorList: 'Vendor 1, Vendor 2',
+                quotationDeadline: '2024-11-29',
+                status: 'Pending Approval'
+            },
+            RFQ002: {
+                rfqNumber: 'RFQ002',
+                requestDate: '2024-11-12',
+                requestTime: '02:00 PM',
+                departmentRequesting: 'Sales',
+                requestedBy: 'Alice Johnson',
+                approver: 'Bob Lee',
+                materialType: 'Cap',
+                materialCategory: 'Plastic',
+                materialName: 'Bottle Caps',
+                quantityNeeded: '3000',
+                batchRequirements: 'Batch must be BPA-free',
+                expectedDeliveryDate: '2024-12-20',
+                vendorList: 'Vendor A, Vendor B',
+                quotationDeadline: '2024-12-02',
+                status: 'Approved'
+            }
+        };
+
+        const details = rfqDetails[rfqId];
+        if (details) {
+            document.getElementById('rfq-number').textContent = details.rfqNumber;
+            document.getElementById('request-date').textContent = details.requestDate;
+            document.getElementById('request-time').textContent = details.requestTime;
+            document.getElementById('department-requesting').textContent = details.departmentRequesting;
+            document.getElementById('requested-by').textContent = details.requestedBy;
+            document.getElementById('approver').textContent = details.approver;
+            document.getElementById('material-type').textContent = details.materialType;
+            document.getElementById('material-category').textContent = details.materialCategory;
+            document.getElementById('material-name').textContent = details.materialName;
+            document.getElementById('quantity-needed').textContent = details.quantityNeeded;
+            document.getElementById('batch-requirements').textContent = details.batchRequirements;
+            document.getElementById('expected-delivery-date').textContent = details.expectedDeliveryDate;
+            document.getElementById('vendor-list').textContent = details.vendorList;
+            document.getElementById('quotation-deadline').textContent = details.quotationDeadline;
+            document.getElementById('status').textContent = details.status;
+
+            $('#rfqModal').modal('show');
+        }
+    }
+
+    function printRFQDetails() {
+        const content = document.getElementById('rfq-details-container').innerHTML;
+        const printWindow = window.open('', '', 'height=600,width=800');
+        printWindow.document.write('<html><head><title>Print RFQ Details</title></head><body>');
+        printWindow.document.write(content);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    function exportPDF() {
+        alert("Export to PDF functionality not implemented yet."); // Replace with actual PDF export logic
+    }
+
+    function exportExcel() {
+        alert("Export to Excel functionality not implemented yet."); // Replace with actual Excel export logic
     }
 </script>
 {% endblock %}

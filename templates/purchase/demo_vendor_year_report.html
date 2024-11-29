@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Shift Plan</h4>
+                    <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
+                        <!-- Date Filter -->
+                        <div class="position-relative" style="flex-shrink: 0;">
+                            <button type="button" class="btn btn-primary waves-effect waves-light" onclick="showDateFilter()" style="width: 200px;">
+                                <i class="mdi mdi-filter mr-2"></i>Date
+                            </button>
+                            <div id="date-filter-section" class="position-absolute bg-light p-3 shadow rounded" style="display: none; top: 40px; left: 0; z-index: 10; width: 220px;">
+                                <label for="from_date" class="form-label" style="font-size: 14px;">From Date</label>
+                                <input type="date" id="from_date" name="from_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                <label for="to_date" class="form-label" style="font-size: 14px;">To Date</label>
+                                <input type="date" id="to_date" name="to_date" class="form-control mb-2" style="font-size: 14px; padding: 6px 10px;" />
+                                <button class="btn btn-primary btn-block" type="submit">Apply</button>
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                                Status
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="?status=Pending">Planned</a>
+                                <a class="dropdown-item" href="?status=Approved">In Progress</a>
+                                <a class="dropdown-item" href="?status=Rejected">Completed</a>
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="input-group" style="flex-shrink: 0; width: 300px;">
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Create Plan Button -->
+                        <button type="button" class="btn btn-primary " style="margin: 20px;" data-toggle="modal" data-target="#shiftModal">
+                            <i class="fa fa-plus mr-2"></i>Create Shift
+                        </button>
+
+
+                        <!-- Action Buttons (Aligned to the Right) -->
+                        <div class="ml-auto d-flex align-items-center">
+                            <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
+                            <a href="" class="btn btn-primary" title="Home">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div style="max-width: 100%; background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; gap: 20px; align-items: flex-start;">
+                    <div style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 10px; font-family: Arial, sans-serif; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #dedcdc; margin-bottom: 20px; flex: 1;">
+                        <div>
+                            <span style="font-size: 16px; color: #605daf; font-weight: bold; margin-bottom: 5px;">Fin Year :</span>
+                            <span style="font-size: 16px; color: black; font-weight: bold; margin-bottom: 5px;"> 2022-23</span>
+                        </div>
+                        <div style="margin-bottom: 5px; font-size: 14px;">
+                                <span style="font-weight: bold; color: #333;">No. of Vendors:</span> 250
+                            </div>
+                            <div style="margin-bottom: 5px; font-size: 14px;">
+                                <span style="font-weight: bold; color: #333;">No. of Transactions:</span> 1,200
+                            </div>
+                        <br>
+                        <br>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="far fa-file-pdf fa-1x" title="PDF" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-file-excel fa-1x" title="EXCEL" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="max-width: 100%; border-radius: 5px; padding: 10px; font-family: Arial, sans-serif; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #dedcdc; flex: 1;">
+
+                        <!-- Financial Year Section -->
+                        <div style="margin-top: 20px; font-size: 14px; border-top: 1px solid #ccc; padding-top: 10px;">
+                            <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">Financial Year: 2023-2024</div>
+                            <div style="margin-bottom: 5px; font-size: 14px;">
+                                <span style="font-weight: bold; color: #333;">No. of Vendors:</span> 250
+                            </div>
+                            <div style="margin-bottom: 5px; font-size: 14px;">
+                                <span style="font-weight: bold; color: #333;">No. of Transactions:</span> 1,200
+                            </div>
+                        </div>
+
+                        <!-- Buttons Section -->
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <div class="fas fa-print fa-1x" title="Print" aria-label="Print" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;">
+                                Print
+                            </div>
+                            <div class="fas fa-file-pdf fa-1x" title="Export as PDF" aria-label="Export as PDF" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;">
+                                PDF
+                            </div>
+                            <div class="fas fa-file-excel fa-1x" title="Export as Excel" aria-label="Export as Excel" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;">
+                                Excel
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 10px; font-family: Arial, sans-serif; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #dedcdc; margin-bottom: 20px; flex: 1;">
+                        <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px;">Shift C</div>
+                        <div style="font-size: 14px; color: gray; margin-bottom: 10px;"> 5 hours</div>
+                        <div style="font-size: 14px; margin-bottom: 10px;">
+                            <div>
+                                <span style="color: #605daf; font-weight: bold;">Planned</span>
+                                <span style="color: black; font-weight: bold;">17-Nov</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                                <i class="fa fa-user-tie"></i> SUP15
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                                <i class="fa fa-user"></i> INC13
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                                <i class="fa fa-users"></i> GRP 5
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-eye fa-1x" title="View Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-pen fa-1x" title="Edit Details" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="shiftModal" tabindex="-1" role="dialog" aria-labelledby="shiftModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="shiftModalLabel">Create Shift</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body" style="padding: 20px;">
+                    <!-- Shift Details Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="shiftDate" class="form-label">Shift Date</label>
+                            <input type="date" class="form-control" id="shiftDate" name="shift_date" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="totalDuration" class="form-label">Total Duration (hours)</label>
+                            <input type="number" class="form-control" id="totalDuration" name="total_duration" min="1" required>
+                        </div>
+                    </div>
+
+                    <!-- Timing Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="startTime" class="form-label">Start Time</label>
+                            <input type="time" class="form-control" id="startTime" name="start_time" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="endTime" class="form-label">End Time</label>
+                            <input type="time" class="form-control" id="endTime" name="end_time" required>
+                        </div>
+                    </div>
+
+                    <!-- Team & Supervisor Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="shiftSupervisor" class="form-label">Shift Supervisor</label>
+                            <input type="text" class="form-control" id="shiftSupervisor" name="shift_supervisor" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="shiftIncharge" class="form-label">Shift Incharge</label>
+                            <input type="text" class="form-control" id="shiftIncharge" name="shift_incharge" required>
+                        </div>
+                    </div>
+
+                    <!-- Recess & Group Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="recessTime" class="form-label">Recess Time (minutes)</label>
+                            <input type="number" class="form-control" id="recessTime" name="recess_time" min="0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="shiftGroup" class="form-label">Shift Group</label>
+                            <select class="form-control" id="shiftGroup" name="shift_group" required>
+                                <option value="Group 1">Group 1</option>
+                                <option value="Group 2">Group 2</option>
+                                <option value="Group 3">Group 3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Remarks Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="remarks" class="form-label">Remarks</label>
+                            <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">Save & Add Another</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+ <!-- Page content Wrapper -->
+
+<script>
+    function showDateFilter() {
+        // Toggle visibility of the date filter section
+        const dateFilter = document.getElementById('date-filter-section');
+        dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
+    }
+
+    $(document).ready(function () {
+        $('#shiftModal').on('shown.bs.modal', function () {
+            $('#shiftDate').trigger('focus');
+        });
+    });
+</script>
+{%endblock%}

@@ -7,24 +7,20 @@
         <!-- Page Title -->
         <div class="row">
             <div class="col-sm-12">
-                <div class="page-title-box d-flex justify-content-between align-items-center">
-                    <h4 class="page-title">Dispatch Notifications</h4>
+                <div class="page-title-box ">
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Dispatch Notification</span>
+                    </h4>
                 </div>
-            </div>
-        </div>
-
-        <!-- Export Buttons -->
-        <div class="row mb-3">
-            <div class="col-12 d-flex justify-content-end">
-                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as PDF">
-                    <i class="far fa-file-pdf"></i>
-                </a>
-                <a href="#" class="btn btn-primary btn-sm mr-2" title="Export as Excel">
-                    <i class="fas fa-file-excel"></i>
-                </a>
-                <a href="#" class="btn btn-primary btn-sm" title="Print">
-                    <i class="fas fa-print"></i>
-                </a>
             </div>
         </div>
 
@@ -64,6 +60,21 @@
                             </button>
                         </div>
                     </div>
+                    <!-- Action Buttons (Aligned to the Right) -->
+                    <div class="ml-auto d-flex align-items-center">
+                        <a href="" class="btn btn-primary" title="Print" style="margin-right: 10px;">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Pdf" style="margin-right: 10px;">
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Excel" style="margin-right: 10px;">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        <a href="" class="btn btn-primary" title="Home">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -97,7 +108,7 @@
                                     <td>No Action</td>
                                     <td>
                                         <button class="btn btn-sm btn-primary" onclick="openDispatchDetailsPopup('DISP001')">
-                                            <i class="fas fa-eye"></i> View
+                                            <i class="fas fa-eye"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -111,7 +122,7 @@
                                     <td>Forwarded to Inventory</td>
                                     <td>
                                         <button class="btn btn-sm btn-primary" onclick="openDispatchDetailsPopup('DISP002')">
-                                            <i class="fas fa-eye"></i> View
+                                            <i class="fas fa-eye"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -126,9 +137,21 @@
         <div id="dispatch-details-popup" class="modal" style="display: none; position: fixed; top: 10%; left: 50%; transform: translate(-50%, 0); z-index: 1050; width: 50%; max-width: 600px; background: #ffffff; box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.25); border-radius: 12px; overflow: hidden;">
             <div class="modal-header" style="background: #f8f9fa; padding: 20px; color: #333; border-bottom: 2px solid #e4e4e4;">
                 <h5 class="modal-title" style="font-size: 18px; font-weight: 600;">Dispatch Details</h5>
-                <button type="button" class="close" onclick="closeDispatchDetailsPopup()" style="border: none; background: transparent; color: #333; font-size: 20px; line-height: 1;">
+                <div>
+                    <button class="btn btn-primary btn-sm mr-2" onclick="printPODetails()">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm mr-2" onclick="exportPDF()">
+                        <i class="far fa-file-pdf"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="exportExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </button>
+                    <button type="button" class="close" onclick="closeDispatchDetailsPopup()" style="border: none; background: transparent; color: #333; font-size: 20px; line-height: 1;">
                     &times;
                 </button>
+                </div>
+
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="row">

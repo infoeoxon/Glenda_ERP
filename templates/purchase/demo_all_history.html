@@ -8,8 +8,44 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Purchase History</h4>
-                    <p class="text-muted">Click on any section to view its history.</p>
+                    <!-- Title -->
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Purchase Reports</span>
+                    </h4>
+
+                    <div class="d-flex align-items-center" style="margin-top: 20px; gap: 20px;">
+                        <!-- Search Bar -->
+                        <div class="input-group" style="flex-shrink: 0; width: 300px; height: 40px;">
+                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search" style="height: 100%; box-sizing: border-box;">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit" style="height: 100%;">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Financial Year Filter -->
+                        <div class="dropdown" style="flex-shrink: 0; width: 200px; height: 40px;">
+                            <button class="btn btn-primary w-150 d-flex justify-content-between align-items-center dropdown-toggle" type="button" id="finYearDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 100%; padding: 0 10px; display: flex; align-items: center;">
+                                <span style="margin-right:10px;">Financial Year</span>
+                                <span>2023-2024</span>
+                            </button>
+                            <div class="dropdown-menu w-100" aria-labelledby="finYearDropdown">
+                                <a class="dropdown-item text-center" href="?financial_year=2023-2024">2023-2024</a>
+                                <a class="dropdown-item text-center" href="?financial_year=2022-2023">2022-2023</a>
+                                <a class="dropdown-item text-center" href="?financial_year=2021-2022">2021-2022</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -17,59 +53,101 @@
         <!-- Process History Cards -->
         <div class="row">
             <div class="col-md-4 mb-4">
-                <a href="{% url 'demo_add_vendor_history' %}" class="text-decoration-none">
-                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
-                        <div class="card-body" style="padding: 20px;">
-                            <h5 class="font-weight-bold text-primary">Adding Vendor History</h5>
-                            <p class="text-muted">Track the addition of new vendors into the system.</p>
+                <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body" style="padding: 20px;">
+                        <a href="{% url 'demo_add_vendor_history' %}" class="text-decoration-none">
+                            <h5 class="font-weight-bold text-primary">Vendor</h5>
+                        </a>
+                        <p class="text-muted">Track the purchase history with vendors and details.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="far fa-file-pdf fa-1x" title="PDF" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-file-excel fa-1x" title="EXCEL" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
 
             <div class="col-md-4 mb-4">
-                <a href="{% url 'demo_rfq_history' %}" class="text-decoration-none">
                     <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
                         <div class="card-body" style="padding: 20px;">
-                            <h5 class="font-weight-bold text-primary">Request for Quotation History</h5>
+                            <a href="{% url 'demo_rfq_history' %}" class="text-decoration-none">
+                                <h5 class="font-weight-bold text-primary">Requests for Quotation</h5>
+                            </a>
                             <p class="text-muted">Monitor the creation and submission of RFQs.</p>
+                            <div style="display: flex; gap: 10px;">
+                                <div class="fas fa-print fa-1x" title="Print Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                                <div class="far fa-file-pdf fa-1x" title="PDF" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                                <div class="fas fa-file-excel fa-1x" title="EXCEL" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            </div>
                         </div>
                     </div>
-                </a>
             </div>
 
             <div class="col-md-4 mb-4">
-                <a href="{% url 'demo_quotation_verification_history' %}" class="text-decoration-none">
-                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
-                        <div class="card-body" style="padding: 20px;">
-                            <h5 class="font-weight-bold text-primary">Quotation Verification History</h5>
-                            <p class="text-muted">View the details of received and verified quotations.</p>
+                <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body" style="padding: 20px;">
+                        <a href="{% url 'demo_quotation_verification_history' %}" class="text-decoration-none">
+                            <h5 class="font-weight-bold text-primary">Quotation Verification</h5>
+                        </a>
+                        <p class="text-muted">View the details of received and verified quotations.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="far fa-file-pdf fa-1x" title="PDF" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-file-excel fa-1x" title="EXCEL" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
 
             <div class="col-md-4 mb-4">
-                <a href="{% url 'demo_purchase_order_history' %}" class="text-decoration-none">
-                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
-                        <div class="card-body" style="padding: 20px;">
-                            <h5 class="font-weight-bold text-primary">Purchase Order History</h5>
-                            <p class="text-muted">Document the creation and dispatch of purchase orders.</p>
+                <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body" style="padding: 20px;">
+                        <a href="{% url 'demo_purchase_order_history' %}" class="text-decoration-none">
+                            <h5 class="font-weight-bold text-primary">Purchase Order</h5>
+                        </a>
+                        <p class="text-muted">Document the creation and dispatch of purchase orders.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="far fa-file-pdf fa-1x" title="PDF" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-file-excel fa-1x" title="EXCEL" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
 
             <div class="col-md-4 mb-4">
-                <a href="{% url 'demo_dispatch_notification_history' %}" class="text-decoration-none">
-                    <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
-                        <div class="card-body" style="padding: 20px;">
-                            <h5 class="font-weight-bold text-primary">Dispatch Details History</h5>
-                            <p class="text-muted">Track notifications for dispatches received from vendors.</p>
+                <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body" style="padding: 20px;">
+                        <a href="{% url 'demo_dispatch_notification_history' %}" class="text-decoration-none">
+                            <h5 class="font-weight-bold text-primary">Dispatch Details</h5>
+                        </a>
+                        <p class="text-muted">Track notifications for dispatches received from vendors.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="far fa-file-pdf fa-1x" title="PDF" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-file-excel fa-1x" title="EXCEL" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body" style="padding: 20px;">
+                        <a href="{% url 'demo_req_from_inventory_report' %}" class="text-decoration-none">
+                            <h5 class="font-weight-bold text-primary">Request from Inventory</h5>
+                        </a>
+                        <p class="text-muted">Monitor and track requests coming from Inventory to Purchase.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="fas fa-print fa-1x" title="Print Details" aria-label="View Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="far fa-file-pdf fa-1x" title="PDF" aria-label="Edit Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                            <div class="fas fa-file-excel fa-1x" title="EXCEL" aria-label="Print Details" style="width: 25px; height: 25px; display: inline-block; border-radius: 3px; text-align: center; line-height: 25px; font-size: 16px; cursor: pointer; background-color: #f5f5f5; color: #605daf; margin-right: 10px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
     </div>
 </div>

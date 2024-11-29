@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box d-flex justify-content-between align-items-center">
+                    <h4 class="page-title">Request For Quotation</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- RFQ Form -->
+        <div class="row mt-4">
+            <div class="col-md-10 mx-auto">
+                <div class="card" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body">
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <!-- Material Information -->
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="material_type" class="font-weight-bold">Material Type</label>
+                                    <select class="form-control" id="material_type" name="material_type" required>
+                                        <option value="" disabled selected>Select Material Type</option>
+                                        {% for type in material_types %}
+                                        <option value="{{ type.id }}">{{ type.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="material_category" class="font-weight-bold">Material Category</label>
+                                    <select class="form-control" id="material_category" name="material_category" required>
+                                        <option value="" disabled selected>Select Material Category</option>
+                                        {% for category in material_categories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="material_name" class="font-weight-bold">Material Name</label>
+                                    <select class="form-control" id="material_name" name="material_name" required>
+                                        <option value="" disabled selected>Select Material Name</option>
+                                        {% for material in materials %}
+                                        <option value="{{ material.id }}">{{ material.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Quantity & Batch Information -->
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="quantity_needed" class="font-weight-bold">Quantity Needed</label>
+                                    <input type="number" class="form-control" id="quantity_needed" name="quantity_needed" placeholder="Enter quantity" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="batch_requirements" class="font-weight-bold">Batch Requirements</label>
+                                    <textarea class="form-control" id="batch_requirements" name="batch_requirements" rows="3" placeholder="Enter batch requirements"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Quality Standards & Delivery -->
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="quality_standards" class="font-weight-bold">Quality Standards</label>
+                                    <input type="file" class="form-control" id="quality_standards" name="quality_standards">
+                                    <small class="text-muted">Upload quality standards document (if any).</small>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="expected_delivery_date" class="font-weight-bold">Expected Delivery Date</label>
+                                    <input type="date" class="form-control" id="expected_delivery_date" name="expected_delivery_date" required>
+                                </div>
+                            </div>
+
+                            <!-- Vendor & Quotation Information -->
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="vendor_list" class="font-weight-bold">Vendor List</label>
+                                    <textarea class="form-control" id="vendor_list" name="vendor_list" rows="3" placeholder="Enter vendor names"></textarea>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="preferred_vendors" class="font-weight-bold">Preferred Vendors</label>
+                                    <textarea class="form-control" id="preferred_vendors" name="preferred_vendors" rows="3" placeholder="Enter preferred vendor names"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="quotation_deadline" class="font-weight-bold">Quotation Deadline</label>
+                                <input type="date" class="form-control" id="quotation_deadline" name="quotation_deadline" required>
+                            </div>
+
+                            <!-- Additional Notes -->
+                            <div class="form-group">
+                                <label for="special_notes" class="font-weight-bold">Special Notes</label>
+                                <textarea class="form-control" id="special_notes" name="special_notes" rows="4" placeholder="Enter any additional notes"></textarea>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                <button type="reset" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
