@@ -37,8 +37,12 @@ class RFQ_raw_materials(models.Model):
     batch_requirements = models.TextField(null=True, blank=True)
     quality_standards = models.FileField(upload_to='quality_standards/', null=True, blank=True)
     expected_delivery_date = models.DateField()
+<<<<<<< HEAD
     vendor_list = models.ManyToManyField('vendor_app.vendor_register', related_name='vendor_list_rfq')  # Changed to ManyToManyField
     preferred_vendors = models.TextField(null=True)
+=======
+    vendor_list = models.ManyToManyField('vendor_app.vendor_register', related_name='vendor_list_rfq')  # Changed to ManyToManyField    preferred_vendors = models.TextField(null=True)
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
     quotation_deadline = models.DateField()
     delivery_address = models.TextField()
     spoc_name = models.CharField(max_length=220, null=True)

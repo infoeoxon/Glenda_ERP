@@ -19,7 +19,7 @@ urlpatterns = [
     path('login', views.vendor_login, name='login'),
     path('vendor_search_and_export',views.vendor_search_and_export,name='vendor_search_and_export'),
     path('signup', views.signup, name='signup'),
-    path('request', views.request, name='request'),
+    path('vendor_quatation_view/<int:id>', views.vendor_quotation_view, name='vendor_quatation_view'),
     path('my_profile', views.my_profile, name='my_profile'),
     path('front_logout', views.front_logout, name='front_logout'),
     path('vendor_request', views.vendor_request_list, name='vendor_request'),
@@ -27,6 +27,7 @@ urlpatterns = [
     path('approve_as_distributor/<int:id>', views.approve_as_distributor, name='approve_as_distributor'),
     path('approve_as_customer/<int:id>', views.approve_as_customer, name='approve_as_customer'),
     path('vendor_verification', views.vendor_verification, name='vendor_verification'),
-    path('approve_as_vendor_details/<int:id>',views.approve_as_vendor_details,name='approve_as_vendor_details')
+    path('approve_as_vendor_details/<int:id>',views.approve_as_vendor_details,name='approve_as_vendor_details'),
+    path('quotation_view', views.quotation_view, name='quotation_view'),
 
 ]

@@ -135,7 +135,11 @@
                                     <th>Name</th>
                                     <th>Required Quantity</th>
                                     <th>Expected Delivery Date</th>
+<<<<<<< HEAD
                                     <th>Vendor List</th>
+=======
+                                    <th>Vendor</th>
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                                     <th></th>
                                 </tr>
                             </thead>
@@ -183,50 +187,110 @@
             <div class="modal-body">
                 <form method="POST" enctype="multipart/form-data" action="{% url 'create_rfq_raw_materials' %}">
                     {% csrf_token %}
+<<<<<<< HEAD
+=======
+
+                    <!-- Material Category -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_material_category" class="form-label">Material Category</label>
                         {{ form.material_category }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Material Name -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_material_name" class="form-label">Material Name</label>
                         {{ form.material_name }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Quantity Needed -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_quantity_needed" class="form-label">Quantity Needed</label>
                         {{ form.quantity_needed }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Batch Requirements -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_batch_requirements" class="form-label">Batch Requirements</label>
                         {{ form.batch_requirements }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Quality Standards -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_quality_standards" class="form-label">Quality Standards</label>
                         {{ form.quality_standards }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Expected Delivery Date -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_expected_delivery_date" class="form-label">Expected Delivery Date</label>
                         {{ form.expected_delivery_date }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Quotation Deadline -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_quotation_deadline" class="form-label">Quotation Deadline</label>
                         {{ form.quotation_deadline }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Delivery Address -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_delivery_address" class="form-label">Delivery Address</label>
                         {{ form.delivery_address }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Special Notes -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_special_notes" class="form-label">Special Notes</label>
                         {{ form.special_notes }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- SPOC Name -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_spoc_name" class="form-label">SPOC Name</label>
                         {{ form.spoc_name }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- SPOC Number -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="id_spoc_number" class="form-label">SPOC Number</label>
                         {{ form.spoc_number }}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Vendor List Section -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <div class="mb-3">
                         <label for="vendor_list" class="form-label">Vendor List</label>
                         <!-- Select All Checkbox -->
@@ -255,6 +319,10 @@
                             {% endfor %}
                         </div>
                     </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <button class="btn btn-primary" type="submit">Submit</button>
                 </form>
             </div>

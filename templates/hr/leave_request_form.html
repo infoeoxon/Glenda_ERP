@@ -5,11 +5,23 @@
 <div class="page-content-wrapper">
 
     <div class="container-fluid">
-
+    <div class="page-content-wrapper">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Request Leave</h4>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    ">
+                        <span style="margin-left: 20px; margin-top: 50x;">Request Leave</span>
+                    </h4>
                 </div>
             </div>
         </div>
@@ -19,7 +31,6 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="mt-0 header-title">Request Leave</h4>
                         <form method="post">
                             {% csrf_token %}
                             <div class="form-group">
