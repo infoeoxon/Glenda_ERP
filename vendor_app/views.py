@@ -69,7 +69,10 @@ def signup(request):
 
 @login_required(login_url='login')
 def vendor_quotation_view(request, id):
+    u=request.user
+    v=vendor_register.objects.get(user_id=u.id)
     rfq = RFQ_raw_materials.objects.get(id=id)
+
     rfq.status='vendor quoted'
     rfq.save()
 
@@ -79,6 +82,7 @@ def vendor_quotation_view(request, id):
             lo = form.save(commit=False)
             lo.status = "pending"
             lo.quotation_id = id
+            lo.vendor_id=v.id
             lo.save()
             messages.success(request, "Quotation submitted successfully!")
             return redirect('quotation_view',)  # Redirect to the created quotation's detail view or another relevant page
