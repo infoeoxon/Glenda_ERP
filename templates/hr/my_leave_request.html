@@ -7,24 +7,37 @@
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-sm-12">
+           <div class="col-sm-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Leave Request Status History</h4>
+                    <h4 class="page-title mb-0" style="
+                        font-family: 'Arial', sans-serif;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #607D8B;
+                        letter-spacing: 2px;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                        Leave Request Status History
+                    </h4>
                 </div>
             </div>
         </div>
-        <!-- end page title end breadcrumb -->
-
-        <div class="row">
+        <div class="row mb-3 justify-content-start">
+            <div class="col-md-6">
+              <h4 class="mt-0 header-title">My Leave Requests</h4>
+              <p class="text-muted mb-4 font-13">Below is the history of your leave requests.</p>
+            </div>
+        </div>
+        <div class="row mb-3 justify-content-end text-right" style="margin-top:-90px;">
+            <div class="col-md-6">
+              <a type="button" class="btn btn-primary" href="{% url 'leave_request_form' %}"><i class="fa fa-plus"></i> Add Leave Request</a>
+            </div>
+        </div>
+        <div class="row" style="margin-top:40px;">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="col text-right">
-                            <a type="button" class="btn btn-primary" href="{% url 'leave_request_form' %}"><i class="fa fa-plus"></i> Add Leave Request</a>
-                        </div>
-                        <h4 class="mt-0 header-title">My Leave Requests</h4>
-                        <p class="text-muted mb-4 font-13">Below is the history of your leave requests.</p>
-
                         <table class="table mb-0" id="my-table">
                             <thead>
                                 <tr>
@@ -123,8 +136,6 @@
         </div> <!-- end row -->
 
     </div><!-- container -->
-
-</div> <!-- Page content Wrapper -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 

@@ -1,8 +1,7 @@
 from datetime import timedelta
 
 from django.db import models
-from production_app.models import damaged_Goods
-from production_app.models import water_Finished_Goods, water_Finished_goods_category
+from production_app.models import water_Finished_Goods, water_Finished_goods_category, damaged_Goods
 from purchase_app.models import RawMaterials, RawMaterialCategory
 from register_app.models import department
 
@@ -20,7 +19,7 @@ class RawMaterialsStock(models.Model):
 
 
 class Finished_Goods_Stock(models.Model):
-    finished_goods = models.ForeignKey(water_Finished_Goods, related_name='stocks', on_delete=models.CASCADE, null=True)
+    finished_goods = models.ForeignKey(water_Finished_Goods,on_delete=models.CASCADE, null=True)
     stock = models.IntegerField(null=True)  # Stock quantity
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True, null=True)

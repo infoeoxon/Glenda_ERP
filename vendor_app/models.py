@@ -1,7 +1,7 @@
 from django.db import models
 
 from inventory_app.models import Add_RawMaterial
-from purchase_app.models import RawMaterials
+from purchase_app.models import RawMaterials, RFQ_raw_materials
 from register_app.models import CustomUser
 
 
@@ -40,3 +40,24 @@ class vendor_register(models.Model):
 
     def __str__(self):
         return self.company_name or "Vendor"
+
+
+class vendor_quotation(models.Model):
+<<<<<<< HEAD
+    category = models.ForeignKey(RFQ_raw_materials, on_delete=models.CASCADE, null=True)
+=======
+    vendor=models.ForeignKey(vendor_register, on_delete=models.CASCADE, null=True)
+    quotation = models.ForeignKey(RFQ_raw_materials, on_delete=models.CASCADE, null=True)
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+    unit_Price=models.CharField(max_length=150, null=True)
+    total_Price=models.IntegerField( null=True)
+    discount=models.CharField(max_length=150, null=True)
+    payment_terms=models.CharField(max_length=150, null=True)
+    document=models.ImageField(upload_to='images/', null=True)
+    time_frame=models.CharField(max_length=150, null=True)
+    special_notes=models.CharField(max_length=150, null=True)
+<<<<<<< HEAD
+    status=models.CharField(max_length=150,null=True)
+=======
+    status=models.CharField(max_length=150, null=True)
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
