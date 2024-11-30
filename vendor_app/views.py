@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 from xhtml2pdf import pisa
 from django.db.models import Q
 from Glenda_App.models import Menu
+from customer_app.models import customer_registration
 from register_app.forms import CustomUserForm, CustomLoginForm
 from django.contrib import messages
 from register_app.models import CustomUser, MenuPermissions
@@ -165,19 +166,19 @@ def approve_as_vendor(request,id):
     messages.success(request, "approved.")
     return redirect('view_customers_list')  # Redirect to the list view
 
-# def approve_as_distributor(request,id):
-#     ven = get_object_or_404(CustomUser,id=id)
-#
-#     v=ven.id
-#     co = CustomUser.objects.get(id=v)
-#     co.is_active = True
-#     co.save()
-#     vendor =customer_registration()
-#     vendor.is_distributor=True
-#     vendor.user_id=v
-#     vendor.save()
-#     messages.success(request, "approved.")
-#     return redirect('view_customers_list')  # Redirect to the list view
+def approve_as_distributor(request,id):
+    ven = get_object_or_404(CustomUser,id=id)
+
+    v=ven.id
+    co = CustomUser.objects.get(id=v)
+    co.is_active = True
+    co.save()
+    vendor =customer_registration()
+    vendor.is_distributor=True
+    vendor.user_id=v
+    vendor.save()
+    messages.success(request, "approved.")
+    return redirect('view_customers_list')  # Redirect to the list view
 
 def approve_as_customer(request,id):
     ven = get_object_or_404(CustomUser,id=id)
@@ -302,7 +303,7 @@ def view_vendors(request):
 
     # Create a new dictionary for sorted menus
     sorted_allocated_menus = dict(sorted_menus)
-    view = vendor_register.objects.filter(status='pending')
+    view = vendor_register.objects.all()
     return render(request,'vendor/view_vendors.html',{'view':view,'allocated_menus':sorted_allocated_menus})
 
 
@@ -354,7 +355,7 @@ def vender_register_view(request):
             form.save_m2m()
 
             messages.success(request, "Registration successful!")
-            return redirect('view_vendor_list')  # Adjust the URL pattern name as needed
+            return redirect('view_customers_list')  # Adjust the URL pattern name as needed
         else:
             messages.error(request, "Please correct the errors below.")
     else:

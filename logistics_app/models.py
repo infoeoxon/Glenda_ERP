@@ -26,7 +26,6 @@ class Vehicle(models.Model):
         return f"{self.vehicle_name} ({self.vehicle_nbr})"
 
 
-import requests
 
 class Route(models.Model):
     route_name = models.CharField(max_length=200, null=True)
