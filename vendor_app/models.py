@@ -43,6 +43,7 @@ class vendor_register(models.Model):
 
 
 class vendor_quotation(models.Model):
+    vendor=models.ForeignKey(vendor_register, on_delete=models.CASCADE, null=True)
     quotation = models.ForeignKey(RFQ_raw_materials, on_delete=models.CASCADE, null=True)
     unit_Price=models.CharField(max_length=150, null=True)
     total_Price=models.IntegerField( null=True)
