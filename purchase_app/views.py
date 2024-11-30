@@ -1,3 +1,4 @@
+import datetime
 import random
 from itertools import chain
 
@@ -7,7 +8,7 @@ from purchase_app.forms import CategoryForm, RawMaterialForm, RFQRawMaterialsFor
 from inventory_app.forms import Raw_materials_StockForm
 from django.contrib import messages
 from django.db.models import Q
-from purchase_app.models import RawMaterials, RawMaterialCategory, RFQ_raw_materials
+from purchase_app.models import RawMaterials, RawMaterialCategory, RFQ_raw_materials, PurchaseOrder
 from inventory_app.models import Raw_material_request, RawMaterialsStock, Purchase_request_raw_material, \
     Purchase_request_semi_finished
 from rd_app.models import RD_stock
@@ -16,12 +17,13 @@ from django.utils.dateparse import parse_date
 from django.db.models.functions import Cast
 from django.db.models import DateField
 from django.template.loader import get_template
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from xhtml2pdf import pisa
 from openpyxl.styles import Font, Alignment
 from openpyxl import Workbook
 from django.core.paginator import Paginator
 
+from vendor_app.models import vendor_quotation
 
 
 # Create your views here.
@@ -648,6 +650,7 @@ def demo_rfq(request):
 def demo_quotations(request):
     use = request.user
 
+    # Fetch user permissions
     user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
     allocated_menus = {}
     for perm in user_permissions:
@@ -655,7 +658,75 @@ def demo_quotations(request):
             allocated_menus[perm.menu] = []
         allocated_menus[perm.menu].append(perm.sub_menu)
 
-    return render(request, 'purchase/demo_quotations.html', {'allocated_menus': allocated_menus})
+    # Fetch all vendor quotations
+    quotations = vendor_quotation.objects.select_related('category').all()
+
+    return render(request, 'purchase/demo_quotations.html', {
+        'allocated_menus': allocated_menus,
+        'quotations': quotations,  # Pass quotations to the template
+    })
+
+
+def update_status(request, quotation_id, status):
+    """
+    Updates the status of a vendor quotation.
+
+    Args:
+        request: The HTTP request object.
+        quotation_id: The ID of the quotation to update.
+        status: The new status ('Accept' or 'Reject').
+
+    Returns:
+        Redirects to the quotations list page.
+    """
+    # Fetch the quotation by ID
+    quotation = get_object_or_404(vendor_quotation, id=quotation_id)
+
+    # Update the status
+    quotation.status = status
+    quotation.save()
+
+    # Redirect to the quotations list page
+    return redirect('demo_quotations')  # Replace with the name of your quotations list view
+
+
+def create_po(request, quotation_id):
+    if request.method == "POST":
+        special_instructions = request.POST.get('special_instructions', '')
+
+        try:
+            # Fetch the related quotation data
+            quotation = vendor_quotation.objects.get(id=quotation_id)
+
+            # Generate a unique PO number
+            today = datetime.date.today().strftime('%Y%m%d')
+            po_number = f"PO-{today}-{quotation_id}"
+
+            # Create and save the PurchaseOrder instance
+            purchase_order = PurchaseOrder.objects.create(
+                quotation_data=quotation,
+                po_number=po_number,
+                verified_by="Pending",
+                special_instructions=special_instructions,
+                po_status="Pending"
+            )
+
+            # Update the quotation status
+            quotation.status = "PO Created"
+            quotation.save()
+
+            messages.success(request, f"Purchase Order {purchase_order.po_number} created successfully!")
+            return redirect('demo_quotations')
+
+        except vendor_quotation.DoesNotExist:
+            messages.error(request, "Quotation not found!")
+            return redirect('demo_quotations')
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+            return redirect('demo_quotations')
+    else:
+        messages.error(request, "Invalid Request!")
+        return redirect('demo_quotations')
 
 
 def demo_purchase_order_list(request):

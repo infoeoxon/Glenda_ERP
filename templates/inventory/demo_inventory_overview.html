@@ -107,6 +107,7 @@
                                 <tr style="background-color: #f1f1f1;">
                                     <th>Serial No</th>
                                     <th>Image</th>
+                                    <th>Material Type</th>
                                     <th>Category</th>
                                     <th>Name</th>
                                     <th>Size</th>
@@ -122,6 +123,7 @@
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
                                         <td><img src="{{ x.image.url }}" alt="Image description" width="120" height="70" /></td>
+                                        <td>{{ x.category.material_type }}</td>
                                         <td>{{ x.category.category_name }}</td>
                                         <td>{{ x.name }}</td>
                                         <td>{{ x.size }}</td>

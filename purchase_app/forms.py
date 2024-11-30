@@ -92,4 +92,9 @@ class RFQRawMaterialsForm(forms.ModelForm):
             'special_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter special notes'}),
             'spoc_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter SPOC name'}),
             'spoc_number': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter SPOC number'}),
+<<<<<<< HEAD
         }
+
+=======
+        }
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca

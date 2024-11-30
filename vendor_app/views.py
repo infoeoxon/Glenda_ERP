@@ -175,6 +175,7 @@ def approve_as_vendor(request,id):
     return redirect('view_customers_list')  # Redirect to the list view
 
 def approve_as_distributor(request,id):
+
     import random
 
     # Generate a random number
@@ -186,6 +187,7 @@ def approve_as_distributor(request,id):
 
     v=ven.id
     co = CustomUser.objects.get(id=v)
+    co.is_active = True
     co.unique_id=result
     co.save()
     vendor =customer_registration()
@@ -371,7 +373,7 @@ def vender_register_view(request):
             form.save_m2m()
 
             messages.success(request, "Registration successful!")
-            return redirect('view_vendor_list')  # Adjust the URL pattern name as needed
+            return redirect('view_customers_list')  # Adjust the URL pattern name as needed
         else:
             messages.error(request, "Please correct the errors below.")
     else:

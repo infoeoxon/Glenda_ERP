@@ -2,7 +2,6 @@ from django.db import models
 
 
 
-
 # Create your models here.
 class RawMaterialCategory(models.Model):
     category_name = models.CharField(max_length=150, null=True)
@@ -38,7 +37,12 @@ class RFQ_raw_materials(models.Model):
     batch_requirements = models.TextField(null=True, blank=True)
     quality_standards = models.FileField(upload_to='quality_standards/', null=True, blank=True)
     expected_delivery_date = models.DateField()
+<<<<<<< HEAD
+    vendor_list = models.ManyToManyField('vendor_app.vendor_register', related_name='vendor_list_rfq')  # Changed to ManyToManyField
+    preferred_vendors = models.TextField(null=True)
+=======
     vendor_list = models.ManyToManyField('vendor_app.vendor_register', related_name='vendor_list_rfq')  # Changed to ManyToManyField    preferred_vendors = models.TextField(null=True)
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
     quotation_deadline = models.DateField()
     delivery_address = models.TextField()
     spoc_name = models.CharField(max_length=220, null=True)
@@ -49,3 +53,18 @@ class RFQ_raw_materials(models.Model):
 
     def __str__(self):
         return f"RFQ {self.rfq_number} - {self.department_requesting}"
+
+
+
+class PurchaseOrder(models.Model):
+    quotation_data = models.ForeignKey('vendor_app.vendor_quotation', on_delete=models.CASCADE, null=True, related_name="purchase_orders")
+    po_number = models.CharField(max_length=50, unique=True)
+    po_date = models.DateField(auto_now_add=True)
+    po_time = models.TimeField(auto_now_add=True)
+    requested_by = models.CharField(max_length=150, null=True)
+    verified_by = models.CharField(max_length=150, null=True)
+    special_instructions = models.TextField(null=True, blank=True)
+    po_status = models.CharField(max_length=10)
+
+    def __str__(self):
+        return f"PO {self.po_number}"
