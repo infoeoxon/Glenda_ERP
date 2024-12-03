@@ -4,20 +4,21 @@ from django import forms
 
 from inventory_app.models import Add_RawMaterial
 from purchase_app.models import RawMaterials
-from vendor_app.models import vendor_register, vendor_request
+from vendor_app.models import vendor_register, vendor_quotation
 
 
-class vendor_request_form(forms.ModelForm):
+from django import forms
+from .models import vendor_quotation
+
+class VendorQuotationForm(forms.ModelForm):
     class Meta:
-        model = vendor_request
-        fields = ['upload_file', 'remarks']
+        model = vendor_quotation
+        fields = ['unit_Price', 'total_Price', 'discount', 'payment_terms', 'document', 'time_frame', 'special_notes']
         widgets = {
-            'upload_file': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),  # File input for uploading the license
-            'remarks': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter remarks'}),  # Text input for remarks
+            'time_frame': forms.TextInput(attrs={'placeholder': 'Enter time frame'}),
+            'special_notes': forms.TextInput(attrs={'placeholder': 'Enter any special notes'}),
+            'document': forms.ClearableFileInput(attrs={'multiple': True}),
         }
-
-
-
 
 class VendorRegisterForm(forms.ModelForm):
     materials_name = forms.ModelMultipleChoiceField(

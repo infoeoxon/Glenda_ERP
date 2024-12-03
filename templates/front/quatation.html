@@ -1,0 +1,86 @@
+{% extends 'front/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="sidebar-page-container blog-standard">
+    <div class="auto-container">
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12 col-sm-12 content-side">
+                <div class="blog-details-content">
+                    <div class="news-block-one">
+                        <div class="inner-box">
+                            <figure class="image-box">
+                                <img src="{% static 'assets/images/news/news-14.jpg' %}" alt="Quotation">
+                            </figure>
+                            <div class="lower-content">
+                                <h2>Quotation</h2>
+                                {% for rfq in rfq %}
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>Quotation Number</th>
+                                            <td>{{ rfq.rfq_number }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Requested By</th>
+                                            <td>{{ rfq.requested_by }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Approver</th>
+                                            <td>{{ rfq.approver }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Material Category</th>
+                                            <td>{{ rfq.material_category.name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Material Name</th>
+                                            <td>{{ rfq.material_name.name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Quantity Needed</th>
+                                            <td>{{ rfq.quantity_needed }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Expected Delivery Date</th>
+                                            <td>{{ rfq.expected_delivery_date }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Quotation Deadline</th>
+                                            <td>{{ rfq.quotation_deadline }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Delivery Address</th>
+                                            <td>{{ rfq.delivery_address }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Contact (SPOC)</th>
+                                            <td>{{ rfq.spoc_name }} ({{ rfq.spoc_number }})</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Special Notes</th>
+                                            <td>{{ rfq.special_notes }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status</th>
+                                            <td>{{ rfq.status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <td><a href="{% url 'vendor_quatation_view' rfq.id %}" class="btn btn-primary"><i class="fas fa-caret-right">Accept</i></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <hr>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'front/profile_slidebar.html' %}
+        </div>
+    </div>
+</section>
+{% endblock %}
