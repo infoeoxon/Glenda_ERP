@@ -7,7 +7,7 @@
     <div class="container-fluid">
 
         <div class="row">
-           <div class="col-sm-12">
+            <div class="col-sm-12">
                 <div class="page-title-box">
                     <h4 class="page-title mb-0" style="
                         font-family: 'Arial', sans-serif;
@@ -18,20 +18,17 @@
                         margin-bottom: 20px;
                         padding-bottom: 10px;
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                        Leave Request Status History
+                        Leave Record
                     </h4>
                 </div>
             </div>
         </div>
         <div class="row mb-3 justify-content-start">
-            <div class="col-md-6">
-              <h4 class="mt-0 header-title">My Leave Requests</h4>
-              <p class="text-muted mb-4 font-13">Below is the history of your leave requests.</p>
-            </div>
+
         </div>
-        <div class="row mb-3 justify-content-end text-right" style="margin-top:-90px;">
+        <div class="row mb-3 justify-content-end text-right" >
             <div class="col-md-6">
-              <a type="button" class="btn btn-primary" href="{% url 'leave_request_form' %}"><i class="fa fa-plus"></i> Add Leave Request</a>
+                <a type="button" class="btn btn-primary" href="{% url 'leave_request_form' %}"><i class="fa fa-plus"></i> Leave Request</a>
             </div>
         </div>
         <div class="row" style="margin-top:40px;">
@@ -41,7 +38,9 @@
                         <table class="table mb-0" id="my-table">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
+                                    <th>Request Date</th>
+                                    <th>Duration</th>
+                                    <th>Categories</th>
                                     <th>Reason</th>
                                     <th>Status</th>
                                 </tr>
@@ -50,14 +49,16 @@
                                 {% for request in leave_requests %}
                                 <tr>
                                     <td>{{ request.start_date }} to {{ request.end_date }}</td>
+                                    <td>{{ request.days_between }} days</td>
+                                    <td>{{ request.leave_type }}</td>
                                     <td>{{ request.reason }}</td>
-                                     <td>
-                                        {{request.approval_status}}
+                                    <td>
+                                        {{ request.approval_status }}
                                         {% if request.approval_status == 'REJECTED' %}
-                                            <button class="btn btn-sm btn-outline-danger" type="button" data-toggle="modal" data-target="#viewRejectionReasonModal" data-reason="{{ request.rejection_reason }}" aria-expanded="false" aria-controls="reason-{{ forloop.counter }}" title="View Reason"
-                                                    style="background: none; border: none; padding: 0; margin: 0; color: #dc3545;">
-                                                <i class="fas fa-eye" style="font-size: 1.2em; color: #6e54ab;"></i>
-                                            </button>
+                                        <button class="btn btn-sm btn-outline-danger" type="button" data-toggle="modal" data-target="#viewRejectionReasonModal" data-reason="{{ request.rejection_reason }}" aria-expanded="false" aria-controls="reason-{{ forloop.counter }}" title="View Reason"
+                                            style="background: none; border: none; padding: 0; margin: 0; color: #dc3545;">
+                                            <i class="fas fa-eye" style="font-size: 1.2em; color: #6e54ab;"></i>
+                                        </button>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -72,43 +73,56 @@
                         <!-- Pagination Controls -->
                         {% if leave_requests.has_other_pages %}
                         <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center mt-3">
-                                {% if leave_requests.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=1" aria-label="First">
-                                            <span aria-hidden="true">&laquo;&laquo;</span> <!-- First Page -->
-                                        </a>
+                            <div class="pull-right">
+                                <ul class="pagination" style="margin-top:0px;">
+                                    {% if not leave_requests.has_previous %}
+                                    <li class="disabled">
+                                        <span id="requestListTable-link" class="disabled">&lt;&lt;</span>
                                     </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ leave_requests.previous_page_number }}" aria-label="Previous">
-                                            &laquo; <!-- Previous Page -->
-                                        </a>
+                                    <li class="disabled">
+                                        <span id="requestListTable-link" class="disabled">&lt;</span>
                                     </li>
-                                {% endif %}
-
-                                {% for num in leave_requests.paginator.page_range %}
-                                    {% if num == leave_requests.number %}
-                                        <li class="page-item active"><span class="page-link">{{ num }}</span></li> <!-- Current Page -->
                                     {% else %}
-                                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li> <!-- Other Pages -->
+                                    <li>
+                                        <a id="requestListTable-link" href="?page=1" title="Go to first page">&lt;&lt;</a>
+                                    </li>
+                                    <li>
+                                        <a id="requestListTable-link" href="?page={{ leave_requests.previous_page_number }}" title="Go to previous page">&lt;</a>
+                                    </li>
                                     {% endif %}
-                                {% endfor %}
 
-                                {% if leave_requests.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ leave_requests.next_page_number }}" aria-label="Next">
-                                            &raquo; <!-- Next Page -->
-                                        </a>
+                                    {% for num in leave_requests.paginator.page_range %}
+                                    {% if num == leave_requests.number %}
+                                    <li class="active">
+                                        <span id="requestListTable-link">{{ num }}</span>
                                     </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ leave_requests.paginator.num_pages }}" aria-label="Last">
-                                            <span aria-hidden="true">&raquo;&raquo;</span> <!-- Last Page -->
-                                        </a>
+                                    {% else %}
+                                    <li>
+                                        <a id="requestListTable-link" href="?page={{ num }}" title="Go to page {{ num }}">{{ num }}</a>
                                     </li>
-                                {% endif %}
-                            </ul>
+                                    {% endif %}
+                                    {% endfor %}
+
+                                    {% if not leave_requests.has_next %}
+                                    <li class="disabled">
+                                        <span id="requestListTable-link" class="disabled">&gt;</span>
+                                    </li>
+                                    <li class="disabled">
+                                        <span id="requestListTable-link" class="disabled">&gt;&gt;</span>
+                                    </li>
+                                    {% else %}
+                                    <li>
+                                        <a id="requestListTable-link" href="?page={{ leave_requests.next_page_number }}" title="Go to next page">&gt;</a>
+                                    </li>
+                                    <li>
+                                        <a id="requestListTable-link" href="?page={{ leave_requests.paginator.num_pages }}" title="Go to last page">&gt;&gt;</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
                         </nav>
                         {% endif %}
+
                         <div class="modal fade" id="viewRejectionReasonModal" tabindex="-1" role="dialog" aria-labelledby="viewRejectionReasonModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -119,7 +133,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <p id="rejectionReasonText"></p> <!-- Placeholder for rejection reason -->
+                                        <p id="rejectionReasonText"></p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -130,12 +144,12 @@
 
                     </div>
 
-                    </div> <!-- end card body -->
-                </div> <!-- end card -->
-            </div> <!-- end col -->
-        </div> <!-- end row -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    </div><!-- container -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
@@ -149,4 +163,5 @@ $('#viewRejectionReasonModal').on('show.bs.modal', function (event) {
     modal.find('#rejectionReasonText').text(reason); // Update the modal's content
 });
 </script>
+
 {% endblock %}

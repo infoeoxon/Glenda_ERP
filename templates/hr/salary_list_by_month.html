@@ -17,7 +17,7 @@
                         padding-bottom: 10px;
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                     ">
-                        <span style="margin-left: 20px; margin-top: 50x;">Employee Salary List By Month</span>
+                        <span style="margin-left: 20px; margin-top: 50x;">Monthly Salaries</span>
                     </h4>
                     <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
                         <!-- Date Filter -->
@@ -37,7 +37,7 @@
                         <!-- Sort Filter -->
                         <div class="input-group" style="flex-shrink: 0; width: 200px;">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
-                                Sort
+                                <i class="fas fa-filter"></i>Sort
                             </button>
                            <div class="dropdown-menu">
                               <a class="dropdown-item" href="?sort=asc">Ascending</a>
@@ -95,7 +95,8 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>Employee</th>
+                        <th>Sl.no</th>
+                        <th>Name</th>
                         <th>Month</th>
                         <th>Year</th>
                         <th>Salary</th>
@@ -105,6 +106,7 @@
                     {% if payrolls %}
                         {% for payroll in payrolls %}
                             <tr>
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ payroll.employee.user.name }}</td>
                                 <td>{{ payroll.pay_date|date:"F" }}</td> <!-- Display month name -->
                                 <td>{{ payroll.pay_date|date:"Y" }}</td> <!-- Display year -->

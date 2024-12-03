@@ -1,5 +1,5 @@
 from datetime import datetime, date
-
+from django.utils import timezone
 from django.db import models
 from register_app.models import CustomUser
 from django.core.exceptions import ValidationError
@@ -51,7 +51,8 @@ class EmployeeDetails(models.Model):
     GENDER_TYPES = (
         ('MALE','MALE'),
         ('FEMALE','FEMALE'),
-        ('TRANSGENDER','TRANSGENDER')
+        ('OTHERS','OTHERS'),
+        ('PREFER NOT TO SAY','PREFER NOT TO SAY')
     )
     id_proof_type = models.CharField(max_length=20, choices=id_proof_types)
     other_id_proof_type = models.CharField(max_length=20, choices=other_id_proof_types, blank=True, null=True)
@@ -109,7 +110,14 @@ class EmployeeDetails(models.Model):
                     'id_proof_type_number': 'PASSPORT must follow the format: FB- followed by 10 digits (e.g., J8369854).'
                 })
 
-        # Check for duplicate ESI and PF numbers
+        if self.id_proof_type_number:
+            existing_id_proof = EmployeeDetails.objects.filter(
+                id_proof_type_number=self.id_proof_type_number
+            ).exclude(pk=self.pk)
+            if existing_id_proof.exists():
+                raise ValidationError({'id_proof_type_number': 'This ID proof number already exists.'})
+
+            # Validate ESI number for duplicates
         if self.employee_esi_no:
             existing_esi = EmployeeDetails.objects.filter(employee_esi_no=self.employee_esi_no).exclude(pk=self.pk)
             if existing_esi.exists():
@@ -119,6 +127,9 @@ class EmployeeDetails(models.Model):
             existing_pf = EmployeeDetails.objects.filter(pf_no=self.pf_no).exclude(pk=self.pk)
             if existing_pf.exists():
                 raise ValidationError({'pf_no': 'This PF number already exists.'})
+
+        if self.validity and self.validity < timezone.now():
+            raise ValidationError({'validity': 'The validity date cannot be in the past.'})
 
     def check_complete(self):
         # List of required fields to consider the details as complete
@@ -238,6 +249,8 @@ class Attendance(models.Model):
         choices=[('Present', 'Present'), ('Absent', 'Absent'), ('Leave', 'Leave')],
         default='Present'
     )
+    remarks = models.TextField(null=True, blank=True)  # Additional field for comments
+    department = models.CharField(max_length=50, null=True, blank=True)  # Employee department
 
     def __str__(self):
         return f"{self.employee} - {self.date} - {self.status}"
@@ -248,7 +261,7 @@ class Attendance(models.Model):
             return (datetime.combine(date.min, self.check_out_time) - datetime.combine(date.min, self.check_in_time)).seconds // 3600
         return None
 
-class AttendanceReport(models.Model):
+class AttendanceReports(models.Model):
     employee = models.ForeignKey(EmployeeDetails, on_delete=models.CASCADE, related_name="attendance_reports")
     report_month = models.DateField()  # Use the first day of the month to represent the month
     total_days_worked = models.PositiveIntegerField(default=0)
@@ -261,3 +274,8 @@ class AttendanceReport(models.Model):
 
     class Meta:
         unique_together = ("employee", "report_month")
+
+
+class PublicHoliday(models.Model):
+    title = models.CharField(max_length=200,null=True, blank=True)
+    date = models.DateField(null=True, blank=True)

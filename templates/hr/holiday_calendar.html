@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="calendar" style="max-width: 900px; margin: auto;"></div>
+
+<!-- Modal for Adding Holidays -->
+<div class="modal fade" id="addHolidayModal" tabindex="-1" role="dialog" aria-labelledby="addHolidayModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addHolidayModalLabel">Add Public Holiday</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="addHolidayForm" method="POST" action="{% url 'add_holiday' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title">Holiday Name</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Holiday Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Holiday</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.1.0/main.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.1.0/main.min.css">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: '/holidaycalendar/',  // Fetch holidays from this view (JSON response)
+        editable: true,  // Allow dragging events (optional)
+        selectable: true,  // Allow selection for adding holidays
+        dateClick: function(info) {
+            // Open the modal for adding a holiday
+            $('#date').val(info.dateStr);
+            $('#addHolidayModal').modal('show');
+        },
+    });
+    calendar.render();
+
+    // Handle the form submission to add a holiday
+    $('#addHolidayForm').on('submit', function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        // Serialize the form data
+        var formData = $(this).serialize();
+
+        // Send the form data via AJAX
+        $.ajax({
+            url: $(this).attr('action'),  // URL of the add_holiday view
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    // Add the new holiday to the calendar
+                    calendar.addEvent({
+                        title: response.holiday.title,
+                        start: response.holiday.start,
+                        end: response.holiday.end,
+                        backgroundColor: response.holiday.backgroundColor,
+                        borderColor: response.holiday.borderColor,
+                    });
+
+                    // Close the modal and reset the form
+                    $('#addHolidayModal').modal('hide');
+                    $('#addHolidayForm')[0].reset();
+                } else {
+                    alert('Error adding holiday');
+                }
+            },
+            error: function() {
+                alert('Error adding holiday');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

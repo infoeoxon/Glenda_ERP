@@ -17,7 +17,7 @@
                         padding-bottom: 10px;
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                     ">
-                        <span class="mt-0 header-title">Employee Leave Requests</span>
+                        <span style="margin-left: 20px; margin-top: 50x;">Time-off Requests</span>
                     </h4>
                     <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
                         <!-- Date Filter -->
@@ -37,7 +37,7 @@
                         <!-- Sort Filter -->
                         <div class="input-group" style="flex-shrink: 0; width: 200px;">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
-                                Sort
+                                <i class="fas fa-filter"></i>Sort
                             </button>
                            <div class="dropdown-menu">
                               <a class="dropdown-item" href="?sort=asc">Ascending</a>
@@ -92,7 +92,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <p class="text-muted mb-4 font-13">Below is the list of leave requests from employees.</p>
+
 
                         <table class="table mb-0" id="leave-requests-table">
                             <thead>
@@ -102,6 +102,7 @@
                                     <th>Department</th>
                                     <th>Designation</th>
                                     <th>Status</th>
+                                    <th>Categories</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -114,6 +115,7 @@
                                     <td>{{ entry.employee.user.department }}</td>
                                     <td>{{ entry.employee.user.designation }}</td>
                                     <td>{{ request.approval_status }}</td>
+                                    <td>{{ request.leave_type }}</td>
                                     <td>
                                         {% if request.approval_status == 'Pending' %}
                                             <button class="btn btn-primary approve-btn" data-id="{{ request.id }}">Approve</button>

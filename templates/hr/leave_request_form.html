@@ -22,6 +22,9 @@
                     ">
                         <span style="margin-left: 20px; margin-top: 50x;">Request Leave</span>
                     </h4>
+                    <br>
+                    <br>
+                    <a type="submit" class="btn btn-primary text-right" href="{% url 'view_my_profile' %}"><i class="fas fa-arrow-left"></i></a>
                 </div>
             </div>
         </div>
@@ -52,8 +55,7 @@
                                 <label>Reason</label>
                                 {{ form.reason }}
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit Leave Request</button>
-                            <a type="submit" class="btn btn-primary text-right" href="{% url 'my_profile' %}">Back to My Profile</a>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>
                 </div>
