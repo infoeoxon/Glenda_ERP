@@ -120,38 +120,63 @@
                                     <th>Quoted Price</th>
                                     <th>Delivery Date</th>
                                     <th>Status</th>
-                                    <th>Validity</th>
+                                    <th></th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for quotation in quotations %}
                                 <tr>
-                                    <td>Q001</td>
-                                    <td>Vendor A</td>
-                                    <td>₹ 5,00,000</td>
-                                    <td>20-Dec-2024</td>
-                                    <td>Pending</td>
-                                    <td>29-Dec-2024</td>
+                                    <td>{{ quotation.category.rfq_number }}</td>
+                                    <td>{{ quotation.unit_Price }}</td>
+                                    <td>{{ quotation.total_Price }}</td>
+                                    <td>{{ quotation.status }}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary" onclick="openQuotationDetails('Q001')">
-                                            <i class="fas fa-eye"></i> Verify
+                                        <button
+                                            class="btn btn-primary btn-sm"
+                                            title="View Details"
+                                            data-toggle="modal"
+                                            data-target="#quotationModal"
+                                            data-id="{{ quotation.id }}"
+                                            data-category="{{ quotation.category.rfq_number }}"
+                                            data-unit-price="{{ quotation.unit_Price }}"
+                                            data-total-price="{{ quotation.total_Price }}"
+                                            data-discount="{{ quotation.discount }}"
+                                            data-payment-terms="{{ quotation.payment_terms }}"
+                                            data-time-frame="{{ quotation.time_frame }}"
+                                            data-special-notes="{{ quotation.special_notes }}"
+                                            data-status="{{ quotation.status }}"
+                                            onclick="populateQuotationModal(this)"
+                                        >
+                                            <i class="fas fa-eye"></i>
                                         </button>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>Q002</td>
-                                    <td>Vendor B</td>
-                                    <td>₹ 2,00,000</td>
-                                    <td>18-Dec-2024</td>
-                                    <td>Approved</td>
-                                    <td>28-Dec-2024</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary" onclick="openQuotationDetails('Q002')">
-                                            <i class="fas fa-eye"></i> Verify
-                                        </button>
+                                        <a
+                                            href="javascript:void(0);"
+                                            class="btn btn-success btn-sm {% if quotation.status == 'Pending' or quotation.status == 'Rejected' %}disabled{% endif %}"
+                                            title="Create Purchase Order"
+                                            data-toggle="modal"
+                                            data-target="#poModal"
+                                            data-quotation-id="{{ quotation.id }}"
+                                            data-vendor-name="{{ quotation.category.vendor_list.first }}"
+                                            data-material-category="{{ quotation.category.material_category }}"
+                                            data-material-name="{{ quotation.category.material_name }}"
+                                            data-quantity="{{ quotation.category.quantity_needed }}"
+                                            data-unit-price="{{ quotation.unit_Price }}"
+                                            data-total-price="{{ quotation.total_Price }}"
+                                            data-discount="{{ quotation.discount }}"
+                                            data-expected-delivery-date="{{ quotation.category.expected_delivery_date }}"
+                                            data-delivery-address="{{ quotation.category.delivery_address }}"
+                                            data-payment-terms="{{ quotation.payment_terms }}"
+                                            data-special-notes="{{ quotation.category.special_notes }}"
+                                            onclick="populatePOModal(this)"
+                                        >
+                                            <i class="fas fa-file-alt"></i> Create PO
+                                        </a>
                                     </td>
                                 </tr>
-                                <!-- Additional rows as needed -->
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -160,133 +185,221 @@
         </div>
     </div>
 </div>
-
 <!-- Quotation Details Modal -->
 <div class="modal fade" id="quotationModal" tabindex="-1" aria-labelledby="quotationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header d-flex justify-content-between align-items-center">
+            <div class="modal-header">
                 <h5 class="modal-title" id="quotationModalLabel">Quotation Details</h5>
-                <!-- Export Buttons -->
-                <div>
-                    <button class="btn btn-primary btn-sm mr-2" onclick="printQuotationDetails()">
-                        <i class="fas fa-print"></i>
-                    </button>
-                    <button class="btn btn-primary btn-sm mr-2" onclick="exportPDF()">
-                        <i class="far fa-file-pdf"></i>
-                    </button>
-                    <button class="btn btn-primary btn-sm" onclick="exportExcel()">
-                        <i class="fas fa-file-excel"></i>
-                    </button>
-                    <button type="button" class="close ml-2" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <th>Quotation No.</th>
-                            <td id="quotation-number"></td>
+                            <th>Category</th>
+                            <td id="modal-category"></td>
                         </tr>
                         <tr>
-                            <th>Vendor</th>
-                            <td id="vendor-name"></td>
+                            <th>Unit Price</th>
+                            <td id="modal-unit-price"></td>
                         </tr>
                         <tr>
-                            <th>Quoted Price</th>
-                            <td id="quoted-price"></td>
+                            <th>Total Price</th>
+                            <td id="modal-total-price"></td>
                         </tr>
                         <tr>
-                            <th>Delivery Date</th>
-                            <td id="delivery-date"></td>
+                            <th>Discount</th>
+                            <td id="modal-discount"></td>
+                        </tr>
+                        <tr>
+                            <th>Payment Terms</th>
+                            <td id="modal-payment-terms"></td>
+                        </tr>
+                        <tr>
+                            <th>Time Frame</th>
+                            <td id="modal-time-frame"></td>
+                        </tr>
+                        <tr>
+                            <th>Special Notes</th>
+                            <td id="modal-special-notes"></td>
                         </tr>
                         <tr>
                             <th>Status</th>
-                            <td id="quotation-status"></td>
-                        </tr>
-                        <tr>
-                            <th>Validity</th>
-                            <td id="validity-date"></td>
+                            <td id="modal-status"></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onclick="acceptQuotation()">Accept</button>
-                <button class="btn btn-primary" onclick="rejectQuotation()">Reject</button>
+                <a id="acceptButton" href="#" class="btn btn-primary">Accept</a>
+                <a id="rejectButton" href="#" class="btn btn-danger">Reject</a>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="poModal" tabindex="-1" role="dialog" aria-labelledby="poModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document"> <!-- Use modal-lg for a wider modal -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="poModalLabel">Create Purchase Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createPoForm" method="POST" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="quotation_id" id="quotation_id">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vendor_name">Vendor Name</label>
+                                <input type="text" class="form-control" id="vendor_name" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="material_category">Material Category</label>
+                                <input type="text" class="form-control" id="material_category" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="material_name">Material Name</label>
+                                <input type="text" class="form-control" id="material_name" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="quantity">Quantity Needed</label>
+                                <input type="text" class="form-control" id="quantity" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="unit_price">Unit Price</label>
+                                <input type="text" class="form-control" id="unit_price" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="total_price">Total Price</label>
+                                <input type="text" class="form-control" id="total_price" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="discount">Discount</label>
+                                <input type="text" class="form-control" id="discount" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="expected_delivery_date">Expected Delivery Date</label>
+                                <input type="text" class="form-control" id="expected_delivery_date" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="delivery_address">Delivery Address</label>
+                        <textarea class="form-control" id="delivery_address" rows="2" readonly></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment_terms">Payment Terms</label>
+                        <input type="text" class="form-control" id="payment_terms" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="special_notes">Special Notes</label>
+                        <textarea class="form-control" id="special_notes" rows="2" readonly></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="special_instructions">Special Instructions</label>
+                        <textarea class="form-control" id="special_instructions" name="special_instructions" rows="2"></textarea>
+                    </div>
+
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary">Submit PO</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script>
+
     function showDateFilter() {
         const dateFilter = document.getElementById('date-filter-section');
         dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
     }
 
-    function openQuotationDetails(quotationId) {
-        const data = {
-            Q001: {
-                quotationNumber: "Q001",
-                vendor: "Vendor A",
-                quotedPrice: "₹ 5,00,000",
-                deliveryDate: "20-Dec-2024",
-                status: "Pending",
-                validity: "29-Dec-2024"
-            },
-            Q002: {
-                quotationNumber: "Q002",
-                vendor: "Vendor B",
-                quotedPrice: "₹ 2,00,000",
-                deliveryDate: "18-Dec-2024",
-                status: "Approved",
-                validity: "28-Dec-2024"
-            }
-        };
+    let currentQuotationId = null;
 
-        const details = data[quotationId];
-        if (details) {
-            document.getElementById('quotation-number').textContent = details.quotationNumber;
-            document.getElementById('vendor-name').textContent = details.vendor;
-            document.getElementById('quoted-price').textContent = details.quotedPrice;
-            document.getElementById('delivery-date').textContent = details.deliveryDate;
-            document.getElementById('quotation-status').textContent = details.status;
-            document.getElementById('validity-date').textContent = details.validity;
+    function populateQuotationModal(button) {
+    // Extract data attributes from the button
+    const quotationId = button.getAttribute('data-id');
+    const category = button.getAttribute('data-category');
+    const unitPrice = button.getAttribute('data-unit-price');
+    const totalPrice = button.getAttribute('data-total-price');
+    const discount = button.getAttribute('data-discount');
+    const paymentTerms = button.getAttribute('data-payment-terms');
+    const timeFrame = button.getAttribute('data-time-frame');
+    const specialNotes = button.getAttribute('data-special-notes');
+    const status = button.getAttribute('data-status');
 
-            $('#quotationModal').modal('show');
-        }
+    // Populate the modal fields
+    document.getElementById('modal-category').textContent = category;
+    document.getElementById('modal-unit-price').textContent = unitPrice;
+    document.getElementById('modal-total-price').textContent = totalPrice;
+    document.getElementById('modal-discount').textContent = discount;
+    document.getElementById('modal-payment-terms').textContent = paymentTerms;
+    document.getElementById('modal-time-frame').textContent = timeFrame;
+    document.getElementById('modal-special-notes').textContent = specialNotes;
+    document.getElementById('modal-status').textContent = status;
+
+    // Update modal buttons to include the quotation ID in URLs
+    document.getElementById('acceptButton').href = `/update_quotation_status/${quotationId}/Accept/`;
+    document.getElementById('rejectButton').href = `/update_quotation_status/${quotationId}/Reject/`;
     }
 
-    function acceptQuotation() {
-        alert("Quotation Accepted");
-        $('#quotationModal').modal('hide');
+    function populatePOModal(button) {
+    // Populate the form fields
+    document.getElementById('quotation_id').value = button.getAttribute('data-quotation-id');
+    document.getElementById('vendor_name').value = button.getAttribute('data-vendor-name');
+    document.getElementById('material_category').value = button.getAttribute('data-material-category');
+    document.getElementById('material_name').value = button.getAttribute('data-material-name');
+    document.getElementById('quantity').value = button.getAttribute('data-quantity');
+    document.getElementById('unit_price').value = button.getAttribute('data-unit-price');
+    document.getElementById('total_price').value = button.getAttribute('data-total-price');
+    document.getElementById('discount').value = button.getAttribute('data-discount');
+    document.getElementById('expected_delivery_date').value = button.getAttribute('data-expected-delivery-date');
+    document.getElementById('delivery_address').value = button.getAttribute('data-delivery-address');
+    document.getElementById('payment_terms').value = button.getAttribute('data-payment-terms');
+    document.getElementById('special_notes').value = button.getAttribute('data-special-notes');
+
+    // Set the form's action dynamically
+    document.getElementById('createPoForm').action = `/create_po/${button.getAttribute('data-quotation-id')}/`;
     }
 
-    function rejectQuotation() {
-        alert("Quotation Rejected");
-        $('#quotationModal').modal('hide');
-    }
-
-    function printQuotationDetails() {
-        const content = document.querySelector('.modal-body').innerHTML;
-        const printWindow = window.open('', '', 'height=600,width=800');
-        printWindow.document.write('<html><head><title>Print Quotation Details</title></head><body>');
-        printWindow.document.write(content);
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.print();
-    }
-
-    function exportPDF() {
-        alert("Export to PDF functionality not implemented yet."); // Replace with actual implementation
-    }
-
-    function exportExcel() {
-        alert("Export to Excel functionality not implemented yet."); // Replace with actual implementation
-    }
 </script>
 {% endblock %}

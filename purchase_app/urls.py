@@ -40,5 +40,6 @@ urlpatterns = [
     path('demo_vendor_year_report', views.demo_vendor_year_report, name='demo_vendor_year_report'),
     path('demo_req_from_inventory_report', views.demo_req_from_inventory_report, name='demo_req_from_inventory_report'),
     path('create_rfq_raw_materials', views.create_rfq_raw_materials, name='create_rfq_raw_materials'),
-
+    path('update_quotation_status/<int:quotation_id>/<str:status>/', views.update_status, name='update_quotation_status'),
+    path('create_po/<int:quotation_id>/', views.create_po, name='create_po'),
 ]

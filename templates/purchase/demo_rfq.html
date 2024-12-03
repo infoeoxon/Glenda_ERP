@@ -128,145 +128,49 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Request No.</th>
+                                    <th>SL NO</th>
+                                    <th>RFQ no.</th>
                                     <th>Material Type</th>
-                                    <th>Quantity Required</th>
+                                    <th>Category</th>
+                                    <th>Name</th>
+                                    <th>Required Quantity</th>
                                     <th>Expected Delivery Date</th>
+<<<<<<< HEAD
                                     <th>Vendor List</th>
-                                    <th>Quotation Deadline</th>
+=======
+                                    <th>Vendor</th>
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for x in rfq %}
                                 <tr>
-                                    <td>1</td>
-                                    <td>Preform</td>
-                                    <td>5000</td>
-                                    <td>15-Dec-24</td>
-                                    <td>Vendor 1, Vendor 2</td>
-                                    <td>29-Nov-24</td>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{x.rfq_number}}</td>
+                                    <td>{{x.material_category.material_type}}</td>
+                                    <td>{{x.material_category.category_name}}</td>
+                                    <td>{{x.material_name.name}}</td>
+                                    <td>{{x.quantity_needed}}</td>
+                                    <td>{{x.expected_delivery_date}}</td>
+                                    <td>
+                                        {% for vendor in x.vendor_list.all %}
+                                            {{ vendor.company_name }}{% if not forloop.last %}, {% endif %}
+                                        {% empty %}
+                                            No vendors assigned
+                                        {% endfor %}
+                                    </td>
                                     <td>
                                         <button class="btn btn-sm btn-primary" onclick="openRFQModal('RFQ001')">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Cap</td>
-                                    <td>3000</td>
-                                    <td>20-Dec-24</td>
-                                    <td>Vendor A, Vendor B</td>
-                                    <td>02-Dec-24</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-primary" onclick="openRFQModal('RFQ002')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- RFQ Details Modal -->
-<div class="modal fade" id="rfqModal" tabindex="-1" aria-labelledby="rfqModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="rfqModalLabel">RFQ Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Action Buttons -->
-                <div class="mb-3 text-right">
-                    <button class="btn btn-primary btn-sm" onclick="printRFQDetails()">
-                        <i class="fas fa-print"></i>
-                    </button>
-                    <button class="btn btn-primary btn-sm" onclick="exportPDF()">
-                        <i class="far fa-file-pdf"></i>
-                    </button>
-                    <button class="btn btn-primary btn-sm" onclick="exportExcel()">
-                        <i class="fas fa-file-excel"></i>
-                    </button>
-                </div>
-
-                <!-- RFQ Details Table -->
-                <div id="rfq-details-container">
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <th style="width: 30%;">RFQ Number</th>
-                                <td id="rfq-number" style="width: 70%;"></td>
-                            </tr>
-                            <tr>
-                                <th>Request Date</th>
-                                <td id="request-date"></td>
-                            </tr>
-                            <tr>
-                                <th>Request Time</th>
-                                <td id="request-time"></td>
-                            </tr>
-                            <tr>
-                                <th>Department Requesting</th>
-                                <td id="department-requesting"></td>
-                            </tr>
-                            <tr>
-                                <th>Requested By</th>
-                                <td id="requested-by"></td>
-                            </tr>
-                            <tr>
-                                <th>Approver</th>
-                                <td id="approver"></td>
-                            </tr>
-                            <tr>
-                                <th>Material Type</th>
-                                <td id="material-type"></td>
-                            </tr>
-                            <tr>
-                                <th>Material Category</th>
-                                <td id="material-category"></td>
-                            </tr>
-                            <tr>
-                                <th>Material Name</th>
-                                <td id="material-name"></td>
-                            </tr>
-                            <tr>
-                                <th>Quantity Needed</th>
-                                <td id="quantity-needed"></td>
-                            </tr>
-                            <tr>
-                                <th>Batch Requirements</th>
-                                <td id="batch-requirements"></td>
-                            </tr>
-                            <tr>
-                                <th>Expected Delivery Date</th>
-                                <td id="expected-delivery-date"></td>
-                            </tr>
-                            <tr>
-                                <th>Vendor List</th>
-                                <td id="vendor-list"></td>
-                            </tr>
-                            <tr>
-                                <th>Quotation Deadline</th>
-                                <td id="quotation-deadline"></td>
-                            </tr>
-                            <tr>
-                                <th>Status</th>
-                                <td id="status"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -283,13 +187,149 @@
             <div class="modal-body">
                 <form method="POST" enctype="multipart/form-data" action="{% url 'create_rfq_raw_materials' %}">
                     {% csrf_token %}
-                    {{ form.as_p }}
+<<<<<<< HEAD
+=======
+
+                    <!-- Material Category -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_material_category" class="form-label">Material Category</label>
+                        {{ form.material_category }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Material Name -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_material_name" class="form-label">Material Name</label>
+                        {{ form.material_name }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Quantity Needed -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_quantity_needed" class="form-label">Quantity Needed</label>
+                        {{ form.quantity_needed }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Batch Requirements -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_batch_requirements" class="form-label">Batch Requirements</label>
+                        {{ form.batch_requirements }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Quality Standards -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_quality_standards" class="form-label">Quality Standards</label>
+                        {{ form.quality_standards }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Expected Delivery Date -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_expected_delivery_date" class="form-label">Expected Delivery Date</label>
+                        {{ form.expected_delivery_date }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Quotation Deadline -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_quotation_deadline" class="form-label">Quotation Deadline</label>
+                        {{ form.quotation_deadline }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Delivery Address -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_delivery_address" class="form-label">Delivery Address</label>
+                        {{ form.delivery_address }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Special Notes -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_special_notes" class="form-label">Special Notes</label>
+                        {{ form.special_notes }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- SPOC Name -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_spoc_name" class="form-label">SPOC Name</label>
+                        {{ form.spoc_name }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- SPOC Number -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="id_spoc_number" class="form-label">SPOC Number</label>
+                        {{ form.spoc_number }}
+                    </div>
+<<<<<<< HEAD
+=======
+
+                    <!-- Vendor List Section -->
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
+                    <div class="mb-3">
+                        <label for="vendor_list" class="form-label">Vendor List</label>
+                        <!-- Select All Checkbox -->
+                        <div class="form-check">
+                            <input
+                                type="checkbox"
+                                class="form-check-input"
+                                id="select-all-vendors"
+                                onclick="toggleVendorSelection(this)"
+                            >
+                            <label class="form-check-label" for="select-all-vendors">Select All Vendors</label>
+                        </div>
+                        <!-- Scrollable Vendor Checkboxes -->
+                        <div id="vendor-checkbox-list" style="max-height: 150px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+                            {% for vendor in form.fields.vendor_list.queryset %}
+                            <div class="form-check">
+                                <input
+                                    type="checkbox"
+                                    name="vendor_list"
+                                    value="{{ vendor.id }}"
+                                    class="form-check-input vendor-checkbox"
+                                    id="vendor-{{ vendor.id }}"
+                                >
+                                <label class="form-check-label" for="vendor-{{ vendor.id }}">{{ vendor.company_name }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
                     <button class="btn btn-primary" type="submit">Submit</button>
                 </form>
             </div>
         </div>
- </div>
+    </div>
 </div>
+
 
 <script>
     function showDateFilter() {
@@ -297,83 +337,10 @@
         dateFilter.style.display = dateFilter.style.display === 'none' ? 'block' : 'none';
     }
 
-    function openRFQModal(rfqId) {
-        // Example data for modal
-        const rfqDetails = {
-            RFQ001: {
-                rfqNumber: 'RFQ001',
-                requestDate: '2024-11-10',
-                requestTime: '10:30 AM',
-                departmentRequesting: 'Procurement',
-                requestedBy: 'John Doe',
-                approver: 'Jane Smith',
-                materialType: 'Preform',
-                materialCategory: 'Plastic',
-                materialName: 'High-Grade Preform',
-                quantityNeeded: '5000',
-                batchRequirements: 'Batch must adhere to ISO standards',
-                expectedDeliveryDate: '2024-12-15',
-                vendorList: 'Vendor 1, Vendor 2',
-                quotationDeadline: '2024-11-29',
-                status: 'Pending Approval'
-            },
-            RFQ002: {
-                rfqNumber: 'RFQ002',
-                requestDate: '2024-11-12',
-                requestTime: '02:00 PM',
-                departmentRequesting: 'Sales',
-                requestedBy: 'Alice Johnson',
-                approver: 'Bob Lee',
-                materialType: 'Cap',
-                materialCategory: 'Plastic',
-                materialName: 'Bottle Caps',
-                quantityNeeded: '3000',
-                batchRequirements: 'Batch must be BPA-free',
-                expectedDeliveryDate: '2024-12-20',
-                vendorList: 'Vendor A, Vendor B',
-                quotationDeadline: '2024-12-02',
-                status: 'Approved'
-            }
-        };
-
-        const details = rfqDetails[rfqId];
-        if (details) {
-            document.getElementById('rfq-number').textContent = details.rfqNumber;
-            document.getElementById('request-date').textContent = details.requestDate;
-            document.getElementById('request-time').textContent = details.requestTime;
-            document.getElementById('department-requesting').textContent = details.departmentRequesting;
-            document.getElementById('requested-by').textContent = details.requestedBy;
-            document.getElementById('approver').textContent = details.approver;
-            document.getElementById('material-type').textContent = details.materialType;
-            document.getElementById('material-category').textContent = details.materialCategory;
-            document.getElementById('material-name').textContent = details.materialName;
-            document.getElementById('quantity-needed').textContent = details.quantityNeeded;
-            document.getElementById('batch-requirements').textContent = details.batchRequirements;
-            document.getElementById('expected-delivery-date').textContent = details.expectedDeliveryDate;
-            document.getElementById('vendor-list').textContent = details.vendorList;
-            document.getElementById('quotation-deadline').textContent = details.quotationDeadline;
-            document.getElementById('status').textContent = details.status;
-
-            $('#rfqModal').modal('show');
-        }
+    function toggleVendorSelection(checkbox) {
+        const vendorCheckboxes = document.querySelectorAll('.vendor-checkbox');
+        vendorCheckboxes.forEach(cb => cb.checked = checkbox.checked);
     }
 
-    function printRFQDetails() {
-        const content = document.getElementById('rfq-details-container').innerHTML;
-        const printWindow = window.open('', '', 'height=600,width=800');
-        printWindow.document.write('<html><head><title>Print RFQ Details</title></head><body>');
-        printWindow.document.write(content);
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.print();
-    }
-
-    function exportPDF() {
-        alert("Export to PDF functionality not implemented yet."); // Replace with actual PDF export logic
-    }
-
-    function exportExcel() {
-        alert("Export to Excel functionality not implemented yet."); // Replace with actual Excel export logic
-    }
 </script>
 {% endblock %}
