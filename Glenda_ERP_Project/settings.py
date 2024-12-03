@@ -48,9 +48,20 @@ INSTALLED_APPS = [
     'hr_app',
     'customer_app',
     'rd_app',
-    'accounting_app'
+    'accounting_app',
+    'file_resubmit',
 
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    "file_resubmit": {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        "LOCATION": os.path.join(BASE_DIR, 'data', 'cache', 'file_resubmit')
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

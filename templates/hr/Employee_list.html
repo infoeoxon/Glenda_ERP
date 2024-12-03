@@ -2,6 +2,39 @@
 {% load static %}
 {% block content %}
 
+<style>
+    .btn:disabled {
+       background-color: #d3d3d3;  /* Light grey background */
+       border-color: #d3d3d3;      /* Light grey border */
+       cursor: not-allowed;        /* Change cursor to indicate button is not clickable */
+                            }
+</style>
+<style>
+    .card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+    }
+
+    .card img {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover img {
+        transform: scale(1.1);
+    }
+    .row {
+        gap: 10px; /* Adjust this value to decrease spacing */
+    }
+
+    .card {
+        margin: 5px; /* Further reduces spacing between cards */
+    }
+    .img-bordered {
+        border: 3px solid #ddd; /* Border color */
+        border-radius: 50%;     /* Keep the circular shape */
+        padding: 3px;           /* Optional padding for spacing inside the border */
+    }
+</style>
 <div class="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
@@ -17,7 +50,7 @@
                         padding-bottom: 10px;
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                     ">
-                        <span style="margin-left: 20px; margin-top: 50x;">Employee List</span>
+                        <span style="margin-left: 20px; margin-top: 50x;">Staff Directory</span>
                     </h4>
                     <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
                         <!-- Date Filter -->
@@ -37,7 +70,7 @@
                         <!-- Sort Filter -->
                         <div class="input-group" style="flex-shrink: 0; width: 200px;">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
-                                Sort
+                                <i class="fas fa-filter"></i> Sort
                             </button>
                            <div class="dropdown-menu">
                               <a class="dropdown-item" href="?sort=asc">Ascending</a>
@@ -89,71 +122,29 @@
 
 
         <!-- Employee Table -->
-        <div class="card">
-            <div class="card-body">
-                <table class="table mb-0" id="my-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th>Department</th>
-                            <th>Designation</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for i in page_obj %}
-                        <tr>
-                            <td>
-                                <img src="{{ i.image.url }}" alt="Image of {{ i.name }}" width="70" height="70" />
-                                {{ i.name }}
-                            </td>
-                            <td>{{ i.email }}</td>
-                            <td>{{ i.phone_number }}</td>
-                            <td>{{ i.department.dept_Name }}</td>
-                            <td>{{ i.designation.user_type }}</td>
-                            <td>
-                                <button class="btn btn-primary verify-button"
-                                        data-id="{{ i.id }}"
-                                        data-name="{{ i.name }}"
-                                        data-email="{{ i.email }}"
-                                        data-phone="{{ i.phone_number }}"
-                                        data-pincode="{{ this.pincode }}"
-                                        data-district="{{ this.district }}"
-                                        data-state="{{ this.state }}"
-                                        data-country="{{ this.country }}"
-                                        data-street="{{ this.street }}"
-                                        data-landmark="{{ this.landmark }}"
-                                        data-idproof="{{ this.id_proof_type }}"
-                                        data-idnumber="{{ this.id_proof_type_number }}"
-                                        data-dob="{{ this.date_of_birth }}"
-                                        data-bloodgroup="{{ this.employee_blood_groups }}"
-                                        {% if user.employeedetails.status == verified %}disabled{% endif %}>
-                                        {% if user.employeedetails.status == verified %}Verified{% else %}Verify{% endif %}
-                                </button>
-                                <button class="btn btn-primary" onclick="openAddModal({{ i.id }})"><i class="fa fa-plus fa-sm"></i></button>
-                            </td>
-                            <td>
-                                {% if not i.details_added %}
-                                    <button type="button" class="btn btn-secondary" style="width: 120px;" disabled>
-                                        Not added
-                                    </button>
-                                {% else %}
-                                    <a href="{% url 'view_employee_profile' i.id %}">
-                                        <button type="button" class="btn btn-primary waves-effect waves-light">
-                                            <i class="fa fa-user"></i>  View Profile
-                                        </button>
-                                    </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="row mt-3 g-2" style="gap: 10px;">
+            {% for i in page_obj %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
+                <div class="card shadow-sm text-center h-100"
+                     style="border-radius: 10px; width: 220px; overflow: hidden; background-color:#ebebeb;">
+                    <img src="{{ i.image.url }}" alt="Avatar" class="card-img-top mx-auto d-block mt-3"
+                         style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd;">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary" style="font-weight: bold;">{{ i.name }}</h5>
+                        <p class="card-text text-muted">
+                            <span style="font-size: 0.9rem;">{{ i.department.dept_Name }}</span><br>
+                            <span style="font-size: 0.8rem;">{{ i.designation.user_type }}</span>
+                        </p>
+                        <a href="{% url 'view_employee_profile' i.id %}">
+                            <button type="button" class="btn btn-primary waves-effect waves-light">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </a>
+                        <button class="btn btn-primary" onclick="openAddModal({{ i.id }})"><i class="fa fa-plus fa-sm"></i></button>
+                    </div>
+                </div>
             </div>
+            {% endfor %}
         </div>
         {% if page_obj.has_other_pages %}
                     <nav aria-label="Page navigation">
@@ -203,7 +194,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Employee Details</h5>
+                    <h5 class="modal-title">Update Info</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -227,59 +218,56 @@
             </div>
         </div>
     </div>
-
-    <!-- Add Employee Modal -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form id="addForm" method="POST" action="">
-                    {% csrf_token %}
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Add Employee Details</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="employee_id" id="addEmployeeId" value="{{ employee.id }}">
-
-                        <!-- Basic Salary -->
-                        <div class="form-group">
-                            <label for="basic">Basic Salary</label>
-                            <input type="text" class="form-control" name="basic" id="basic" value="{{ form.basic.value }}" required>
-                            {% if form.basic.errors %}
-                                <small class="text-danger">{{ form.basic.errors.0 }}</small>
-                            {% endif %}
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form id="addForm" method="POST" action="">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addModalLabel">Add Employee Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="employee_id" id="addEmployeeId" value="{{ employee.id }}">
 
-                        <!-- PF No -->
-                        <div class="form-group">
-                            <label for="pf_no">PF No</label>
-                            <input type="text" class="form-control" name="pf_no" id="pf_no" value="{{ form.pf_no.value }}" required>
-                            {% if form.pf_no.errors %}
-                                <small class="text-danger">{{ form.pf_no.errors.0 }}</small>
-                            {% endif %}
-                        </div>
+                            <!-- Basic Salary -->
+                            <div class="form-group">
+                                <label for="basic">Basic Salary</label>
+                                <input type="text" class="form-control" name="basic" id="basic" value="{{ form.basic.value }}" required>
+                                {% if form.basic.errors %}
+                                    <small class="text-danger">{{ form.basic.errors.0 }}</small>
+                                {% endif %}
+                            </div>
 
-                        <!-- ESI No -->
-                        <div class="form-group">
-                            <label for="employee_esi_no">ESI No</label>
-                            <input type="text" class="form-control" name="employee_esi_no" id="employee_esi_no" value="{{ form.employee_esi_no.value }}" required>
-                            {% if form.employee_esi_no.errors %}
-                                <small class="text-danger">{{ form.employee_esi_no.errors.0 }}</small>
-                            {% endif %}
+                            <!-- PF No -->
+                            <div class="form-group">
+                                <label for="pf_no">PF No</label>
+                                <input type="text" class="form-control" name="pf_no" id="pf_no" value="{{ form.pf_no.value }}" required>
+                                {% if form.pf_no.errors %}
+                                    <small class="text-danger">{{ form.pf_no.errors.0 }}</small>
+                                {% endif %}
+                            </div>
+
+                            <!-- ESI No -->
+                            <div class="form-group">
+                                <label for="employee_esi_no">ESI No</label>
+                                <input type="text" class="form-control" name="employee_esi_no" id="employee_esi_no" value="{{ form.employee_esi_no.value }}" required>
+                                {% if form.employee_esi_no.errors %}
+                                    <small class="text-danger">{{ form.employee_esi_no.errors.0 }}</small>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    </div>
-</div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
     let currentEmployeeId;
@@ -366,4 +354,5 @@
 }
 
 </script>
+
 {% endblock %}

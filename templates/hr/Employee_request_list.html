@@ -2,6 +2,32 @@
 {% load static %}
 {% block content %}
 
+<style>
+    .card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+    }
+
+    .card img {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover img {
+        transform: scale(1.1);
+    }
+    .row {
+        gap: 10px; /* Adjust this value to decrease spacing */
+    }
+
+    .card {
+        margin: 5px; /* Further reduces spacing between cards */
+    }
+    .img-bordered {
+        border: 3px solid #ddd; /* Border color */
+        border-radius: 50%;     /* Keep the circular shape */
+        padding: 3px;           /* Optional padding for spacing inside the border */
+    }
+</style>
 <div class="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
@@ -17,7 +43,7 @@
                         padding-bottom: 10px;
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                     ">
-                        <span style="margin-left: 20px; margin-top: 50x;">Employee List</span>
+                        <span style="margin-left: 20px; margin-top: 50x;">Staff Validation</span>
                     </h4>
                     <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
                         <!-- Date Filter -->
@@ -37,7 +63,7 @@
                         <!-- Sort Filter -->
                         <div class="input-group" style="flex-shrink: 0; width: 200px;">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
-                                Sort
+                                <i class="fas fa-filter"></i>
                             </button>
                            <div class="dropdown-menu">
                               <a class="dropdown-item" href="?sort=asc">Ascending</a>
@@ -85,37 +111,20 @@
 
                 </div>
 
-        <div class="card" style="margin-top:12px;">
-            <div class="card-body">
-
-                <h4 class="mt-0 header-title"></h4>
-                <p class="text-muted mb-4 font-13"></p>
-
-                        <!-- Add User Button -->
-
-
-                        <!-- Users Table -->
-                <table class="table mb-0" id="my-table">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone Number</th>
-                        <th>Department</th>
-                        <th>Designation</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for i in page_obj %}
-                    <tr>
-                        <td><img src="{{i.image.url}}" alt="Image description" width="70" height="70" />{{ i.name }}</td>
-                        <td>{{ i.email }}</td>
-                        <td>{{ i.phone_number }}</td>
-                        <td>{{ i.department.dept_Name }}</td>
-                        <td>{{ i.designation.user_type }}</td>
-                        <td>
-                            <button class="btn btn-primary verify-button"
+        <div class="row mt-3 g-2" style="gap: 10px;">
+            {% for i in page_obj %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
+                <div class="card shadow-sm text-center h-100"
+                     style="border-radius: 10px; width: 220px; overflow: hidden; background-color:#ebebeb;">
+                    <img src="{{ i.image.url }}" alt="Avatar" class="card-img-top mx-auto d-block mt-3"
+                         style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd;">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary" style="font-weight: bold;">{{ i.name }}</h5>
+                        <p class="card-text text-muted">
+                            <span style="font-size: 0.9rem;">{{ i.department.dept_Name }}</span><br>
+                            <span style="font-size: 0.8rem;">{{ i.designation.user_type }}</span>
+                        </p>
+                        <button class="btn btn-primary verify-button"
                                     data-id="{{ i.id }}"
                                     data-name="{{ i.name }}"
                                     data-email="{{ i.email }}"
@@ -130,14 +139,12 @@
                                     data-idnumber="{{ this.id_proof_type_number }}"
                                     data-dob="{{ this.date_of_birth }}"
                                     data-bloodgroup="{{ this.employee_blood_groups }}">
-                                Verify
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                                <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
+            {% endfor %}
         </div>
         {% if page_obj.has_other_pages %}
         <nav aria-label="Page navigation">

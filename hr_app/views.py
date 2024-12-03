@@ -1,9 +1,12 @@
 import json
 from datetime import datetime, timedelta, date
 import calendar
+import re
+from django.http import HttpResponseForbidden
 from django.shortcuts import render,redirect,get_object_or_404,reverse
 from register_app.models import CustomUser, MenuPermissions
-from hr_app.models import EmployeeDetails, RequestLeave, Payroll, Attendance, Remarks, Resignation, AttendanceReport
+from hr_app.models import EmployeeDetails, RequestLeave, Payroll, Attendance, Remarks, Resignation, AttendanceReports, \
+    PublicHoliday
 from Glenda_App.models import Menu
 from .forms import EmployeeDetailsForm,LeaveRequestForm,PayrollForm,ResignationForm,BasicForm
 from django.db.models import Q
@@ -25,7 +28,12 @@ from django.db.models import Count
 from django.db.models import Sum, Count
 from django.core.management.base import BaseCommand
 from django.utils.timezone import now
-
+from django.core.cache import cache
+import tempfile
+from django.core.files.storage import FileSystemStorage
+import os
+from django.conf import settings
+import pandas as pd
 
 @login_required
 def employee_list_and_verify(request):
@@ -132,7 +140,6 @@ def verify_employee(request):
 
 @login_required
 def AddDetails(request):
-
     use = request.user
 
     # Get user's permissions
@@ -145,6 +152,9 @@ def AddDetails(request):
             allocated_menus[perm.menu] = []
         allocated_menus[perm.menu].append(perm.sub_menu)
 
+    # Setup file system storage
+    fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_files'))
+
     if request.method == 'POST':
         form = EmployeeDetailsForm(request.POST, request.FILES)
 
@@ -153,17 +163,46 @@ def AddDetails(request):
             employee.user = use
             employee.status = 'pending_verification'
             employee.save()
+
+            # Save the files temporarily
+            for field_name in form.files:
+                file = form.files[field_name]
+                # Store file in temp directory and save the path in session
+                file_path = fs.save(file.name, file)
+                request.session[f"{field_name}_file_path"] = file_path
+
             messages.success(request, "Details submitted successfully for verification.")
             return redirect('view_my_profile')
-
         else:
-            # Form contains errors
-            messages.error(request, "Please correct the errors below.")
+            # Retain uploaded file paths in session
+            files_to_cache = ['id_proof_file', 'qualification_file', 'experience_file', 'pcc', 'nsr', 'resume', 'bank_details']
+            for file_field in files_to_cache:
+                file = request.FILES.get(file_field)
+                if file:
+                    file_path = fs.save(file.name, file)
+                    request.session[f"{file_field}_file_path"] = file_path
 
+            messages.error(request, "Please correct the errors below.")
+            return render(request, 'hr/add_employee_details.html', {
+                'form': form,
+                'allocated_menus': allocated_menus
+            })
     else:
         form = EmployeeDetailsForm()
 
-    return render(request, 'hr/add_employee_details.html', {'form': form, 'allocated_menus': allocated_menus})
+        # Retrieve file paths from session and reattach files
+        files_to_cache = ['id_proof_file', 'qualification_file', 'experience_file', 'pcc', 'nsr', 'resume', 'bank_details']
+        fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'temp_files'))
+        for file_field in files_to_cache:
+            file_path = request.session.get(f"{file_field}_file_path")
+            if file_path and fs.exists(file_path):
+                file = fs.open(file_path)
+                form.fields[file_field].initial = file
+
+    return render(request, 'hr/add_employee_details.html', {
+        'form': form,
+        'allocated_menus': allocated_menus
+    })
 
 def view_employee_profile(request,id):
     use = request.user  # Get the current user
@@ -426,14 +465,16 @@ def reject_leave_request(request):
             return JsonResponse({'success': False, 'error': 'Leave request not found'})
 
 
-
 def my_leave_request(request):
     user = request.user
-    leave_requests = RequestLeave.objects.filter(employee__user=user).order_by('-start_date')  # Order by date
-    use = request.user  # Get the current user
+    leave_requests = RequestLeave.objects.filter(employee__user=user).order_by('-start_date')
+
+    # Add the days difference as an attribute to each leave request
+    for leave in leave_requests:
+        leave.days_between = (leave.end_date - leave.start_date).days + 1  # Inclusive of the start date
 
     # Get user's permissions
-    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+    user_permissions = MenuPermissions.objects.filter(user=user).select_related('menu', 'sub_menu')
 
     # Create a dictionary to hold menus and their allocated submenus
     allocated_menus = {}
@@ -468,15 +509,25 @@ def leave_request_form(request):
         allocated_menus[perm.menu].append(perm.sub_menu)
 
     user = request.user
-    emp=EmployeeDetails.objects.get(user_id=user)
+
     if request.method == 'POST':
-        form = LeaveRequestForm(request.POST)
-        if form.is_valid():
-            leave_request = form.save(commit=False)
-            # Set the employee based on the logged-in user
-            leave_request.employee_id =emp.id
-            leave_request.save()
-            return redirect('my_leave_request')  # Redirect after saving
+        try:
+            emp = EmployeeDetails.objects.get(user=user)
+            form = LeaveRequestForm(request.POST)
+
+            if form.is_valid():
+                leave_request = form.save(commit=False)
+                # Set the employee based on the logged-in user
+                leave_request.employee_id = emp.id
+                leave_request.save()
+                return redirect('my_leave_request')
+
+        except EmployeeDetails.DoesNotExist:
+            # If EmployeeDetails entry does not exist, show an error message and redirect
+            error = "You must complete your employee profile before applying for leave."
+            return render(request, 'hr/404.html', {'error': error})
+
+          # Redirect after saving
     else:
         form = LeaveRequestForm()
 
@@ -548,7 +599,7 @@ def employee_detail(request):
         allocated_menus[perm.menu].append(perm.sub_menu)
 
     # Get initial queryset for finished goods based on the provided ID
-    Employee = EmployeeDetails.objects.all()
+    employee = EmployeeDetails.objects.all()
 
     # Get filter type and query date from the request
     filter_type = request.GET.get('filter')
@@ -557,12 +608,12 @@ def employee_detail(request):
 
     # Apply filtering if filter type is 'date' and query_date is provided
     if filter_type == 'date' and query_date:
-        employee_list = Employee.filter(date=query_date)
+        employee_list = EmployeeDetails.filter(date=query_date)
         is_filtered = True  # Flag to indicate that a filter has been applied
 
     # Prepare context for rendering template
     context = {
-        'data': Employee,
+        'data': EmployeeDetails,
         'allocated_menus': allocated_menus,
         'filter_type': filter_type,
         'query_date': query_date,
@@ -783,6 +834,7 @@ def payroll_by_month(request):
 
     return render(request, 'hr/salary_list_by_month.html', context)
 
+
 def add_employee_details(request, id):
     employee = get_object_or_404(EmployeeDetails, user_id=id)
     if request.method == "POST":
@@ -933,7 +985,8 @@ def reject_verify_leave_request(request):
         rejection_reason = request.POST.get('rejection_reason')
         try:
             leave_request = RequestLeave.objects.get(id=user_id)
-            leave_request.verification_status = 'REJECTED'  # Update status to 'rejected'
+            leave_request.verification_status = 'REJECTED'
+            leave_request.approval_status = leave_request.verification_status
             leave_request.rejection_reason = rejection_reason
             leave_request.save()
             return JsonResponse({'success': True})
@@ -1142,6 +1195,7 @@ def Resign_list_for_hr(request):
 
     return render(request, 'hr/Resign_list_for_hr.html', context)
 
+
 @csrf_exempt
 def mark_attendance(request):
     use = request.user
@@ -1177,7 +1231,9 @@ def mark_attendance(request):
             attendance.status = 'Present'
 
         elif action == 'check_out':
-            if attendance.check_out_time:
+            if not attendance.check_in_time:
+                return JsonResponse({'error': 'Check-in must be recorded before check-out'}, status=400)
+            elif attendance.check_out_time:
                 return JsonResponse({'error': 'Check-out already recorded'}, status=400)
             attendance.check_out_time = datetime.now().time()
 
@@ -1196,8 +1252,7 @@ def mark_attendance(request):
 
     # If not POST, render the attendance page
     employees = EmployeeDetails.objects.all()
-    return render(request, 'hr/attendance.html', {'employees': employees,'allocated_menus':allocated_menus})
-
+    return render(request, 'hr/attendance.html', {'employees': employees, 'allocated_menus': allocated_menus})
 
 
 class Command(BaseCommand):
@@ -1223,11 +1278,11 @@ class Command(BaseCommand):
             total_leaves = attendances.filter(status='Leave').count()
             total_absent = attendances.filter(status='Absent').count()
             total_hours_worked = sum(
-                attendance.worked_hours for attendance in attendances if attendance.worked_hours
+                (attendance.worked_hours or 0) for attendance in attendances
             )
 
             # Create or update the report
-            AttendanceReport.objects.update_or_create(
+            AttendanceReports.objects.update_or_create(
                 employee_id=employee,
                 report_month=first_day_of_previous_month,
                 defaults={
@@ -1240,11 +1295,13 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS("Attendance reports generated successfully."))
 
+
 @csrf_exempt
 def fetch_attendance(request):
     if request.method == 'GET':
         today = now().date()
         attendance_records = Attendance.objects.filter(date=today).select_related('employee')
+
         data = [
             {
                 'employee_id': attendance.employee.id,
@@ -1255,9 +1312,121 @@ def fetch_attendance(request):
             }
             for attendance in attendance_records
         ]
+
         return JsonResponse({'attendance': data}, safe=False)
+
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+
 def attendance_reports(request):
-    reports = AttendanceReport.objects.all().select_related('employee').order_by('-report_month')
+    reports = AttendanceReports.objects.all().select_related('employee').order_by('-report_month')
     return render(request, 'hr/attendance_reports.html', {'reports': reports})
+
+
+@csrf_exempt
+def upload_attendance_file(request):
+    if request.method == 'POST' and request.FILES['attendance_file']:
+        attendance_file = request.FILES['attendance_file']
+        fs = FileSystemStorage()
+        filename = fs.save(attendance_file.name, attendance_file)
+
+        # Read the Excel file
+        df = pd.read_excel(fs.url(filename))
+
+        # Process each row in the DataFrame
+        for index, row in df.iterrows():
+            employee_id = row['Employee ID']  # Adjust column name based on your Excel file
+            check_in_time = row['Check In']  # Adjust column name based on your Excel file
+            check_out_time = row['Check Out']  # Adjust column name based on your Excel file
+            status = row['Status']  # Adjust column name based on your Excel file
+
+            try:
+                employee = EmployeeDetails.objects.get(pk=employee_id)
+                attendance, created = Attendance.objects.get_or_create(employee=employee, date=date.today())
+
+                if status in ['Present', 'Absent', 'Leave']:
+                    attendance.status = status
+
+                if check_in_time:
+                    attendance.check_in_time = pd.to_datetime(check_in_time).time()
+
+                if check_out_time:
+                    attendance.check_out_time = pd.to_datetime(check_out_time).time()
+
+                attendance.save()
+            except EmployeeDetails.DoesNotExist:
+                return JsonResponse({'error': f'Employee ID {employee_id} not found'}, status=404)
+
+        return JsonResponse({'message': 'Attendance records uploaded successfully'})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+def holiday_calendar(request):
+    use = request.user
+    user_permissions = MenuPermissions.objects.filter(user=use).select_related('menu', 'sub_menu')
+    allocated_menus = {}
+    for perm in user_permissions:
+        if perm.menu not in allocated_menus:
+            allocated_menus[perm.menu] = []
+        allocated_menus[perm.menu].append(perm.sub_menu)
+
+    holidays = PublicHoliday.objects.all()
+
+    # Format holidays for FullCalendar (to display events)
+    events = []
+    for holiday in holidays:
+        events.append({
+            'title': holiday.title,
+            'date': holiday.date.strftime("%Y-%m-%d"),  # End date is same for a single day holiday
+            'backgroundColor': 'blue',  # You can customize this if needed
+            'borderColor': 'blue',
+        })
+
+    # Return events as JSON
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse(events, safe=False)
+
+    return render(request, 'hr/holiday_calendar.html',{'allocated_menus':allocated_menus})
+
+def fetch_holidays(request):
+    holidays = PublicHoliday.objects.all()
+    holiday_events = [
+        {
+            "title": holiday.title,
+            "start": holiday.start_date.strftime("%Y-%m-%d"),
+            "end": (holiday.end_date.strftime("%Y-%m-%d") if holiday.end_date else holiday.start_date.strftime("%Y-%m-%d")),
+            'backgroundColor': 'blue',  # Set background color to blue
+            'borderColor': 'blue',
+        }
+        for holiday in holidays
+    ]
+    return JsonResponse(holiday_events, safe=False)
+
+
+def add_holiday(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        date_str = request.POST['date'] # Default to start_date if end_date is empty
+
+        # Convert string to datetime object
+        date = datetime.strptime(date_str, "%Y-%m-%d")
+          # Make sure it's the correct format
+
+        # Create the new holiday
+        holiday = PublicHoliday.objects.create(
+            title=title,
+            date=date,
+        )
+
+        # Return a success response with the holiday data for FullCalendar
+        return JsonResponse({
+            'success': True,
+            'holiday': {
+                'title': holiday.title,
+                'date': holiday.date.strftime("%Y-%m-%d"),
+                'backgroundColor': 'blue',  # Set the background color for the new holiday
+                'borderColor': 'blue',      # Optional: Set the border color for the new holiday
+            }
+        })
+    return redirect('holiday_calendar')  # Or another view as needed

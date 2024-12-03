@@ -35,5 +35,9 @@ urlpatterns = [
     path('attendance/reports/', views.attendance_reports, name='attendance_reports'),
     path('attendance/', views.mark_attendance, name='mark_attendance'),
     path('fetch_attendance',views.fetch_attendance,name='fetch_attendance'),
-    path('verify_employee_by_senior',views.verify_employee_by_senior,name='verify_employee_by_senior')
+    path('verify_employee_by_senior',views.verify_employee_by_senior,name='verify_employee_by_senior'),
+    path('holiday-calendar/', views.holiday_calendar, name='holiday_calendar'),
+    path('fetch-holidays/', views.fetch_holidays, name='fetch_holidays'),
+    path('add-holiday/', views.add_holiday, name='add_holiday'),
+    path('upload-attendance/', views.upload_attendance_file, name='upload_attendance'),
 ]

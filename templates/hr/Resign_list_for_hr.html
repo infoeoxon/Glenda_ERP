@@ -17,7 +17,7 @@
                         padding-bottom: 10px;
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                     ">
-                        <span style="margin-left: 20px; margin-top: 50x;">Resignation List</span>
+                        <span style="margin-left: 20px; margin-top: 50x;">Exit Records</span>
                     </h4>
                     <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
                         <!-- Date Filter -->
@@ -37,7 +37,7 @@
                         <!-- Sort Filter -->
                         <div class="input-group" style="flex-shrink: 0; width: 200px;">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
-                                Sort
+                                <i class="fas fa-filter"></i>Sort
                             </button>
                            <div class="dropdown-menu">
                               <a class="dropdown-item" href="?sort=asc">Ascending</a>
@@ -97,6 +97,7 @@
                         <table class="table table-bordered table-hover table-responsive-md">
                             <thead class="table-light">
                                 <tr>
+                                    <th>Sl.no</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone Number</th>
@@ -108,6 +109,7 @@
                             <tbody>
                                 {% for i in page_obj %}
                                     <tr>
+                                        <td>{{ forloop.counter }}</td>
                                         <td>
                                             <img src="{{ i.image.url }}"
                                                  alt="Image description"

@@ -1,160 +1,145 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<style>
+    .btn:disabled {
+        background-color: #d3d3d3; /* Light grey background */
+        border-color: #d3d3d3; /* Light grey border */
+        cursor: not-allowed; /* Change cursor to indicate button is not clickable */
+    }
+</style>
 
 <div class="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <h4 class="page-title mb-0" style="
-                        font-family: 'Arial', sans-serif;
-                        font-size: 22px;
-                        font-weight: bold;
-                        color: #607D8B;
-                        letter-spacing: 2px;
-                        margin-bottom: 20px;
-                        padding-bottom: 10px;
-                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    ">
-                        <span style="margin-left: 20px; margin-top: 50x;">User List</span>
+                    <h4 class="page-title mb-0" style="font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; color: #607D8B; letter-spacing: 2px; margin-bottom: 20px; padding-bottom: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                        <span style="margin-left: 20px; margin-top: 50px;">Daily Attendance</span>
                     </h4>
                     <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
-                        <!-- Date Filter -->
-
-                        <!-- Status Filter -->
-<!--                        <div class="input-group" style="flex-shrink: 0; width: 200px;">-->
-<!--                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">-->
-<!--                                Status-->
-<!--                            </button>-->
-<!--                            <div class="dropdown-menu">-->
-<!--                                <a class="dropdown-item" href="?status=Pending">Planned</a>-->
-<!--                                <a class="dropdown-item" href="?status=Approved">In Progress</a>-->
-<!--                                <a class="dropdown-item" href="?status=Rejected">Completed</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-                        <!-- Sort Filter -->
                         <div class="form-group w-100">
-                         <form id="attendanceForm" method="POST">
-                            {% csrf_token %}
-                                <select name="employee_id" class="form-control">
+                            <form id="attendanceForm" method="POST">
+                                {% csrf_token %}
+                                <select name="employee_id" class="form-control" required>
                                     {% for employee in employees %}
                                         <option value="{{ employee.id }}">{{ employee.user.name }}</option>
                                     {% endfor %}
                                 </select>
                                 <br><br>
-                         </form>
+                            </form>
                             <button type="button" class="btn btn-primary" id="checkInBtn" onclick="markAttendance('check_in')">Check In</button>
-                        <button type="button" class="btn btn-primary" id="checkOutBtn" onclick="markAttendance('check_out')">Check Out</button>
-                        <button type="button" class="btn btn-primary" id="absentBtn" onclick="markAttendance('status_update', 'Absent')">Mark Absent</button>
-                        <button type="button" class="btn btn-primary" id="leaveBtn" onclick="markAttendance('status_update', 'Leave')">Mark Leave</button>
+                            <button type="button" class="btn btn-primary" id="checkOutBtn" onclick="markAttendance('check_out')">Check Out</button>
+                            <button type="button" class="btn btn-primary" id="absentBtn" onclick="markAttendance('status_update', 'Absent')">Mark Absent</button>
+                            <button type="button" class="btn btn-primary" id="leaveBtn" onclick="markAttendance('status_update', 'Leave')">Mark Leave</button>
                         </div>
+<!--                        <form id="uploadForm" method="POST" enctype="multipart/form-data">-->
+<!--                            {% csrf_token %}-->
+<!--                                <input type="file" name="attendance_file" accept=".xls,.xlsx" required>-->
+<!--                            <br><br>-->
+<!--                             <button type="submit" class="btn btn-primary">Upload</button>-->
+<!--                        </form>-->
                     </div>
                 </div>
             </div>
 
-                </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <hr>
-                        <h4 class="mt-0 header-title">Today's Attendance</h4>
-                        <table class="table table-striped" id="attendanceTable">
-                            <thead>
-                                <tr>
-                                    <th>Employee Name</th>
-                                    <th>Status</th>
-                                    <th>Check-In Time</th>
-                                    <th>Check-Out Time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Rows will be dynamically populated -->
-                            </tbody>
-                        </table>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <hr>
+                            <table class="table table-striped" id="attendanceTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Check-In</th>
+                                        <th>Check-Out</th>
+                                        <th>Remarks</th> <!-- New Column for Remarks -->
+                                        <th>Department</th> <!-- New Column for Department -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows will be dynamically populated -->
+                                </tbody>
+                            </table>
 
-                        <script>
-                            function markAttendance(action, status = null) {
-                                const form = document.getElementById('attendanceForm');
-                                const data = new FormData(form);
-                                data.append('action', action);
-                                if (status) {
-                                    data.append('status', status);
-                                }
-
-                                fetch("{% url 'mark_attendance' %}", {
-                                    method: 'POST',
-                                    body: data,
-                                })
+                            <script>
+                                function markAttendance(action, status = null) {
+                                    const form = document.getElementById('attendanceForm');
+                                    const data = new FormData(form);
+                                    data.append('action', action);
+                                    if (status) {
+                                        data.append('status', status);
+                                    }
+                                    fetch("{% url 'mark_attendance' %}", {
+                                        method: 'POST',
+                                        body: data,
+                                    })
                                     .then(response => response.json())
                                     .then(data => {
                                         alert(data.message || data.error); // Display success or error message
                                         fetchAttendance(); // Refresh the attendance table and button states
                                     })
                                     .catch(error => console.error('Error:', error)); // Log network errors
-                            }
+                                }
 
-                            function fetchAttendance() {
-                                fetch("{% url 'fetch_attendance' %}")
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        const tableBody = document.querySelector('#attendanceTable tbody');
-                                        tableBody.innerHTML = ''; // Clear existing rows
+                                function fetchAttendance() {
+                                    fetch("{% url 'fetch_attendance' %}")
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            const tableBody = document.querySelector('#attendanceTable tbody');
+                                            tableBody.innerHTML = ''; // Clear existing rows
+                                            resetButtons(); // Reset all buttons to enabled state before re-disabling based on fetched data
 
-                                        // Reset all buttons to enabled state before re-disabling based on fetched data
-                                        resetButtons();
+                                            data.attendance.forEach(record => {
+                                                // Populate the table
+                                                const row = `
+                                                    <tr>
+                                                        <td>${record.employee_name}</td>
+                                                        <td>${record.status}</td>
+                                                        <td>${record.check_in_time}</td>
+                                                        <td>${record.check_out_time}</td>
+                                                        <td>${record.remarks || 'N/A'}</td> <!-- Display Remarks -->
+                                                        <td>${record.department || 'N/A'}</td> <!-- Display Department -->
+                                                    </tr>`;
+                                                tableBody.innerHTML += row;
 
-                                        data.attendance.forEach(record => {
-                                            // Populate the table
-                                            const row = `
-                                                <tr>
-                                                    <td>${record.employee_name}</td>
-                                                    <td>${record.status}</td>
-                                                    <td>${record.check_in_time}</td>
-                                                    <td>${record.check_out_time}</td>
-                                                </tr>`;
-                                            tableBody.innerHTML += row;
+                                                // Disable buttons based on current status
+                                                if (record.status === 'Present') {
+                                                    disableButtons(['absentBtn', 'leaveBtn']);
+                                                } else if (record.status === 'Absent' || record.status === 'Leave') {
+                                                    disableButtons(['checkInBtn', 'checkOutBtn']);
+                                                }
+                                            });
+                                        })
+                                        .catch(error => console.error('Error fetching attendance:', error));
+                                }
 
-                                            // Disable buttons based on current status
-                                            if (record.status === 'Present') {
-                                                disableButtons(['absentBtn', 'leaveBtn']);
-                                            } else if (record.status === 'Absent' || record.status === 'Leave') {
-                                                disableButtons(['checkInBtn', 'checkOutBtn']);
-                                            }
-                                        });
-                                    })
-                                    .catch(error => console.error('Error fetching attendance:', error));
-                            }
+                                function resetButtons() {
+                                    document.getElementById('checkInBtn').disabled = false;
+                                    document.getElementById('checkOutBtn').disabled = false;
+                                    document.getElementById('absentBtn').disabled = false;
+                                    document.getElementById('leaveBtn').disabled = false;
+                                }
 
-                            function resetButtons() {
-                                document.getElementById('checkInBtn').disabled = false;
-                                document.getElementById('checkOutBtn').disabled = false;
-                                document.getElementById('absentBtn').disabled = false;
-                                document.getElementById('leaveBtn').disabled = false;
-                            }
+                                function disableButtons(buttonIds) {
+                                    buttonIds.forEach(buttonId => {
+                                        const button = document.getElementById(buttonId);
+                                        if (button) {
+                                            button.disabled = true;
+                                        }
+                                    });
+                                }
 
-                            function disableButtons(buttonIds) {
-                                buttonIds.forEach(buttonId => {
-                                    const button = document.getElementById(buttonId);
-                                    if (button) {
-                                        button.disabled = true;
-                                    }
-                                });
-                            }
+                                // Fetch attendance data and adjust buttons on page load
+                                document.addEventListener('DOMContentLoaded', fetchAttendance);
+                            </script>
 
-                            // Fetch attendance data and adjust buttons on page load
-                            document.addEventListener('DOMContentLoaded', fetchAttendance);
-                        </script>
-
-
-                    </div>
-                </div>
-            </div> <!-- end col -->
-        </div> <!-- end row -->
-
-    </div><!-- container -->
-</div> <!-- Page content Wrapper -->
-
+                        </div> <!-- end card-body -->
+                    </div> <!-- end card -->
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div><!-- container -->
+    </div> <!-- Page content Wrapper -->
 {% endblock %}

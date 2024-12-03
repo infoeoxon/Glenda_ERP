@@ -17,7 +17,7 @@
                         padding-bottom: 10px;
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                     ">
-                        <span style="margin-left: 20px; margin-top: 50x;">Employee Profile</span>
+                        <span style="margin-left: 20px; margin-top: 50x;">Staff Profile</span>
                     </h4>
                     <div class="d-flex align-items-center" style="gap: 10px; margin-top: 20px">
                         <!-- Date Filter -->
@@ -35,41 +35,16 @@
 <!--                        </div>-->
 
                         <!-- Sort Filter -->
-                        <div class="input-group" style="flex-shrink: 0; width: 200px;">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 180px;;">
-                                Sort
-                            </button>
-                           <div class="dropdown-menu">
-                              <a class="dropdown-item" href="?sort=asc">Ascending</a>
-                              <a class="dropdown-item" href="?sort=desc">Descending</a>
-                           </div>
-                        </div>
 
-                        <!-- Search Bar -->
-                        <form method="get" action="{% url 'view_users' %}">
-                        <div class="input-group" style="flex-shrink: 0; width: 500px;">
 
-                            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary btn-sm" type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
 
-                        </div>
-                        </form>
 
-                        <!-- Create Plan Button -->
-                        <a href="{% url 'register_view' %}" class="btn btn-primary" title="Add User" style="margin-right: 10px;">
-                                <i class="fas fa-plus"></i>
-                        </a>
 
 
                         <!-- Action Buttons (Aligned to the Right) -->
-                        <div class="ml-auto d-flex align-items-center">
-                             <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'update_employee_details' view.user.id %}"><i class="mdi mdi-alert-outline mr-2"></i> Update </a>
-                            <a type="button" class="btn btn-primary waves-effect waves-light" href=""><i class="mdi mdi-power mr-2"></i>Delete</a>
-                            <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'create_payroll' view.user.id %}"><i class="mdi mdi-send mr-2"></i>Salary addition</a>
+                        <div class="ml-auto  align-items-center">
+                             <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'update_employee_details' view.user.id %}"><i class="fas fa-edit"></i> Update </a>
+                             <a type="button" class="btn btn-primary waves-effect waves-light" href="{% url 'create_payroll' view.user.id %}"><i class="fas fa-wallet"></i> Pay Boost</a>
                         </div>
                     </div>
 
