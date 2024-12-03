@@ -43,12 +43,9 @@ class vendor_register(models.Model):
 
 
 class vendor_quotation(models.Model):
-<<<<<<< HEAD
     category = models.ForeignKey(RFQ_raw_materials, on_delete=models.CASCADE, null=True)
-=======
     vendor=models.ForeignKey(vendor_register, on_delete=models.CASCADE, null=True)
     quotation = models.ForeignKey(RFQ_raw_materials, on_delete=models.CASCADE, null=True)
->>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
     unit_Price=models.CharField(max_length=150, null=True)
     total_Price=models.IntegerField( null=True)
     discount=models.CharField(max_length=150, null=True)
@@ -56,8 +53,4 @@ class vendor_quotation(models.Model):
     document=models.ImageField(upload_to='images/', null=True)
     time_frame=models.CharField(max_length=150, null=True)
     special_notes=models.CharField(max_length=150, null=True)
-<<<<<<< HEAD
-    status=models.CharField(max_length=150,null=True)
-=======
     status=models.CharField(max_length=150, null=True)
->>>>>>> 7d22e91bc8778f55f4dc906564f7e597ff7568ca
